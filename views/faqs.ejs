@@ -1,12 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <p>this is faqs page</p>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Faqs</title>
+    </head>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            background-color: #f7fafc;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .content-box {
+            width: 50vw;
+            margin: 0 auto;
+        }
+        .content-box h1 {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 50px;
+        }
+        .content-box .question-div {
+            margin-top: 2rem;
+        }
+        .question-div .answer,
+        .question-div .question {
+            font-size: x-large;
+        }
+        .question-div .answer {
+            margin-top: 0.3rem;
+        }
+    </style>
+    <body>
+        <div class="content-box">
+            <h1>FAQ's</h1>
+            <div class="question-div">
+                <p class="question">How does your website work?</p>
+                <p class="answer">
+                    Our website connects patients with doctors in a digital
+                    space, allowing patients to book appointments, consult with
+                    doctors, and receive prescriptions and medical advice
+                    online.
+                </p>
+            </div>
+            <div class="question-div">
+                <p class="question">
+                    Is it safe to consult with doctors on your website?
+                </p>
+                <p class="answer">
+                    Yes, our website is secure and compliant with all relevant
+                    privacy laws and regulations. We use industry-standard
+                    encryption to protect patient data and ensure that all
+                    consultations are confidential.
+                </p>
+            </div>
+            <div class="question-div">
+                <p class="question">
+                    How much does it cost to use your website?
+                </p>
+                <p class="answer">
+                    Our website is free for patients to use, but doctors may
+                    charge fees for consultations, prescriptions, and other
+                    services. The fees are set by the doctors themselves and
+                    vary depending on the service provided.
+                </p>
+            </div>
+        </div>
+    </body>
 </html>

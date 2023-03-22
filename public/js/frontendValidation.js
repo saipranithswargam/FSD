@@ -89,11 +89,13 @@ function doctorValidation() {
 }
 
 function hospitalValidation() {
+    const regex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    let passwordError = false;
     let confirmationError = false;
     let passwordPara = "";
     const passwordInput = document.getElementById("input--password");
     const conformInput = document.getElementById("confirmPassword");
-
     passwordInput.addEventListener("focus", () => {
         passwordError = false;
         passwordPara = "";
@@ -102,17 +104,23 @@ function hospitalValidation() {
     });
     const password = document.getElementById("input--password").value;
     const confirmPass = conformInput.value;
+    if (!regex.test(password)) {
+        passwordPara =
+            "password should be of minimum length 8 and must include one lowercase, one uppercase, one special symbol and one numerical";
+        document.getElementById("passwordErrorPara").innerHTML = passwordPara;
+        passwordError = true;
+        return false;
+    }
     if (password !== confirmPass) {
         document.getElementById("confirmPassError").innerHTML =
             "password doesn't match confirm password";
         confirmationError = true;
         return false;
     }
-    if (!confirmationError) {
+    if (!passwordError && !confirmationError) {
         return true;
     }
 }
-
 
 function patientValidation() {
     const regex =

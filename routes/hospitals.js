@@ -11,6 +11,7 @@ router.get("/hospitalList", (req, res) => {
 router.get("/login", (req, res) => {
     res.render("auth/hospitalLogin", {
         path: "/hospitals/register",
+        path2:"/hospitals/login",
     });
 });
 router.get("/register", (req, res) => {

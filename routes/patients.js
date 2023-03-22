@@ -7,6 +7,7 @@ const Patient = require("../db/Patient");
 router.get("/login", (req, res) => {
     res.render("auth/login", {
         path: "/patients/register",
+        path2:"/patients/login"
     });
 });
 
