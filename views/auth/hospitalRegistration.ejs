@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SignUp</title>
+    </head>
+    <link rel="stylesheet" href="/css/hospitalRegistration.css" />
+    <body>
+        <div class="main">
+            <div class="image-div">
+                <h1 class="brand">CHS</h1>
+                <h4 class="tag-line">India's First CHR Portal</h4>
+            </div>
+            <div class="form-div">
+                <h3>Ready to start Partnership with CHS ?</h3>
+                <p>Complete the form below and get started:</p>
+
+                <form
+                    action="/hospitals/register"
+                    method="post"
+                    onsubmit="return hospitalValidation()"
+                >
+                    <h5>Hospital Details</h5>
+                    <div class="input-group">
+                        <input
+                            placeholder="Hospital Name"
+                            name="hname"
+                            class="full-width"
+                            required
+                        />
+                    </div>
+                    <div class="input-group">
+                        <input
+                            placeholder="Registration No."
+                            name="regNo"
+                            class="full-width"
+                            required
+                        />
+                    </div>
+                    <div class="input-group">
+                        <input
+                            placeholder="Password"
+                            name="password"
+                            class="full-width"
+                            required
+                            type="password"
+                            id="input--password"
+                        />
+                        <input
+                            placeholder="Confirm Password"
+                            name="confirmPassword"
+                            class="full-width"
+                            required
+                            type="password"
+                            id="confirmPassword"
+                        />
+                    </div>
+                    <div class="errorParas">
+                        <p id="emailErrorPara" class="invalid"></p>
+                        <p id="passwordErrorPara" class="invalid"></p>
+                        <p id="confirmPassError" class="invalid"></p>
+                    </div>
+                    <div class="input-group float-left">
+                        <label class="on-top">Government</label>
+                        <select name="government">
+                            <option>Yes</option>
+                            <option>No</option>
+                            <option>Semi</option>
+                        </select>
+                    </div>
+                    <h5>Address:</h5>
+                    <div class="input-group">
+                        <input placeholder="State" name="state" required />
+                        <input placeholder="City" name="city" required />
+                    </div>
+                    <div class="input-group">
+                        <input
+                            placeholder="Pincode"
+                            name="pincode"
+                            class="full-width"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <button type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script type="text/javascript" src="/js/frontendValidation.js"></script>
+    </body>
+</html>

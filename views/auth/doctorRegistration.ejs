@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SignUp</title>
+    </head>
+    <link rel="stylesheet" href="/css/doctorSignup.css" />
+    <body>
+        <div class="main">
+            <div class="image-div">
+                <h1 class="brand">CHS</h1>
+                <h4 class="tag-line">India's First CHR Portal</h4>
+            </div>
+            <div class="form-div">
+                <h3>Ready to get started with CHS ?</h3>
+                <p>Join us by filling the following form</p>
+                <form
+                    action="/doctors/register"
+                    method="post"
+                    onsubmit="return doctorValidation()"
+                >
+                    <h5>Personal Details</h5>
+                    <div class="input-group">
+                        <input placeholder="Name" name="name" required />
+                        <input placeholder="Age" name="age" required />
+                    </div>
+                    <div class="input-group float-left">
+                        <label class="on-top"
+                            >Gender:
+                            <select name="gender" aria-placeholder="Gender">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </label>
+                    </div>
+                    <h5>Practice Details:</h5>
+                    <div class="input-group">
+                        <input
+                            placeholder="Liscence No"
+                            name="liscenceNo"
+                            required
+                            type="text"
+                        />
+                        <input
+                            placeholder="Experience"
+                            name="experience"
+                            type="number"
+                            min="0"
+                            required
+                        />
+                    </div>
+                    <div class="input-group">
+                        <input
+                            placeholder="Speciality"
+                            name="Speciality"
+                            class="full-width"
+                            required
+                            type="text"
+                        />
+                    </div>
+                    <div class="input-group float-left">
+                        <label class="on-top"
+                            >Treatment:
+                            <select
+                                name="treatment"
+                                aria-placeholder="treatment"
+                            >
+                                <option value="therapy">therapy</option>
+                                <option value="surgery">surgery</option>
+                                <option value="medication">medication</option>
+                            </select>
+                        </label>
+                    </div>
+                    <h5>Practice Address:</h5>
+                    <div class="input-group">
+                        <input
+                            placeholder="State"
+                            name="state"
+                            required
+                            type="text"
+                        />
+                        <input
+                            placeholder="City"
+                            name="city"
+                            required
+                            type="text"
+                        />
+                    </div>
+                    <div class="input-group">
+                        <input
+                            placeholder="Pincode"
+                            name="pincode"
+                            required
+                            title="please enter a 6 digit valid pincode"
+                        />
+                    </div>
+                    <h5>Contact Details:</h5>
+                    <div class="input-group">
+                        <input
+                            placeholder="Mobile Number"
+                            name="mobileNum"
+                            class="full-width"
+                            pattern="^[6-9]\d{9}$"
+                            title="mobile number must be of 10 digits"
+                            required
+                        />
+                    </div>
+                    <div class="last-details">
+                        <input
+                            placeholder="Registration No."
+                            name="regNo"
+                            class="full-width"
+                            required
+                            title="Hospital Registration Number"
+                        />
+                        <input
+                            placeholder="Email"
+                            name="email"
+                            type="email"
+                            required
+                            id="input--email"
+                        />
+                        <input
+                            placeholder="Password"
+                            name="password"
+                            type="password"
+                            id="input--password"
+                            required
+                        />
+                        <input
+                            placeholder="Confirm Password"
+                            name="confirmPassword"
+                            required
+                            type="password"
+                            id="confirmPassword"
+                        />
+                        <div class="errorParas">
+                            <p id="emailErrorPara" class="invalid"></p>
+                            <p id="passwordErrorPara" class="invalid"></p>
+                            <p id="confirmPassError" class="invalid"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script type="text/javascript" src="/js/frontendValidation.js"></script>
+    </body>
+</html>

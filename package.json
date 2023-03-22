@@ -1,0 +1,33 @@
+{
+    "name": "ffsd-project",
+    "version": "1.0.0",
+    "description": "FSSD college Project",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node app.js",
+        "dev": "nodemon app.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@adminjs/express": "^5.1.0",
+        "@adminjs/mongoose": "^3.0.3",
+        "adminjs": "^6.8.7",
+        "bcrypt": "^5.1.0",
+        "body-parser": "^1.20.2",
+        "connect-pg-simple": "^8.0.0",
+        "dotenv": "^16.0.3",
+        "ejs": "^3.1.8",
+        "express": "^4.18.2",
+        "express-formidable": "^1.2.0",
+        "express-session": "^1.17.3",
+        "mongoose": "^7.0.0",
+        "sequelize": "^6.29.3",
+        "sqlite3": "^5.1.6",
+        "tslib": "^2.5.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.20"
+    }
+}
