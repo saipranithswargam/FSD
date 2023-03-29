@@ -4,7 +4,6 @@ const app = express();
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
-
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -49,32 +48,43 @@ const port = process.env.PORT || 3000;
 app.get("/", (req, res) => {
     res.render("home/home");
 });
-app.get("/about",(req,res)=>{
-    res.render("about")
-})
-app.get("/faqs",(req,res)=>{
-    res.render("faqs")
-})
-app.get("/docList",(req,res)=>{
-    res.render("listDoc");
-})
-app.get("/booked",(req,res)=>{
+app.get("/about", (req, res) => {
+    res.render("about");
+});
+app.get("/faqs", (req, res) => {
+    res.render("faqs");
+});
+app.get("/docList", (req, res) => {
+    Doctor.findAll({})
+        .then((doctors) => {
+            console.log(doctors);
+            res.render("listDoc",{doctors:doctors});
+        })
+        .catch((err) => {
+            console.log(err);
+            res.send("<h1>Something went wrong please try again !! </h1>");
+        });
+});
+app.get("/booked", (req, res) => {
     res.render("booked");
-})
+});
 
-app.get("/serverError",(req,res)=>{
-    res.render("error/500")
-})
-app.get("/closeCase",(req,res)=>{
+app.get("/serverError", (req, res) => {
+    res.render("error/500");
+});
+app.get("/closeCase", (req, res) => {
     res.render("caseClosed");
-})
+});
 app.use("/patients", patientsRouter);
 app.use("/doctors", doctorsRouter);
 app.use("/hospitals", hospitalsRouter);
 
 app.use((req, res, next) => {
-    res.status(404).render('error/404', { pageTitle: 'Page Not Found', path: '/404' });
-  })
+    res.status(404).render("error/404", {
+        pageTitle: "Page Not Found",
+        path: "/404",
+    });
+});
 app.listen(port, () => {
     console.log("Running on port 3000");
 });
