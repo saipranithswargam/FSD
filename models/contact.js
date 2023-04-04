@@ -14,14 +14,6 @@ const contactSchema = new mongoose.Schema({
 
 },{timestamps:true})
 
-const Contacts = new mongoose.model("Contacts", contactSchema);
-
-const c1 = new Contacts({
-    name: "Dhrupad",
-    email: "thedhrupad@gmail.com",
-    message: "Home page broken",
-});
-
-c1.save();
+const Contacts =  mongoose.model("Contacts", contactSchema);
 
 module.exports = Contacts;

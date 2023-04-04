@@ -66,7 +66,7 @@
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
-                                href="/"
+                                href="/patients/logout"
                                 >Logout</a
                             >
                             <a
@@ -99,12 +99,17 @@
                     </tr>
                     <tr>
                         <td>Address :</td>
-                        <td><%=data.city%>,<%=data.state%></td>
+                        <td><%=data.city%>,<%=data.state%>,<%=data.pincode%>.</td>
                     </tr>
                 </table>
             </div>
         </div>
         <div class="medical-history">
+        <% if(data.medicalRecords.length===0) { %>
+        <h1>No Previous Medical Records Found !</h5>
+        <% } %>
+        <% if(data.medicalRecords.length!==0) { %>
+        <% for (let medicalRecord of data.medicalRecords) {%>
             <h1>Previous Medical Records</h1>
             <div class="medical-record">
                 <table class="medical-record-table">
@@ -126,6 +131,11 @@
                     </tr>
                 </table>
             </div>
+            <% } %>
         </div>
+    </div>
+    <% } %>
+
+
     </body>
 </html>

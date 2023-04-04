@@ -39,6 +39,28 @@
                             required
                         />
                     </div>
+                    <div class="input-group float-left">
+                        <label class="on-top">Speciality</label>
+                        <select name="speciality">
+                            <option>MultiSpeciality</option>
+                            <option>Dermatology</option>
+                            <option>GeneralSurgery</option>
+                            <option>Gastroenterology</option>
+                            <option>Oncology</option>
+                            <option>Orthopaedics</option>
+                            <option>ENT</option>
+                            <option>ophthalmology</option>
+                            <option>other</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <input
+                            placeholder="Spacify Speciality"
+                            name="otherSpeciality"
+                            class="full-width"
+                            type="hidden"
+                        />
+                    </div>
                     <div class="input-group">
                         <input
                             placeholder="Password"
@@ -61,6 +83,7 @@
                         <p id="emailErrorPara" class="invalid"></p>
                         <p id="passwordErrorPara" class="invalid"></p>
                         <p id="confirmPassError" class="invalid"></p>
+                        <p class="invalid"><%=errorMessage%></p>
                     </div>
                     <div class="input-group float-left">
                         <label class="on-top">Government</label>

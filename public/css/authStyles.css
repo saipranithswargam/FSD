@@ -225,3 +225,10 @@ img {
         border-radius: 7px;
     }
 }
+
+.invalid{
+    text-align: center;
+    width: 100%;
+    color: red;
+    font-size: 16px;
+}

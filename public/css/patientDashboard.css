@@ -111,3 +111,9 @@ body::-webkit-scrollbar {
 td{
     padding: 10px;
 }
+
+.recordMessage{
+    text-align: center;
+    font-size: large;
+    margin-top: 2rem;
+}

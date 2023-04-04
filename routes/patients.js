@@ -1,75 +1,21 @@
-const express = require("express");
-const router = express.Router();
-const Patients = require("../models/patients");
-const bcrypt = require("bcrypt");
-const Patient = require("../db/Patient");
+const express = require('express');
 
-router.get("/login", (req, res) => {
-    res.render("auth/login", {
-        path: "/patients/register",
-        path2:"/patients/login"
-    });
-});
+const Router = express.Router();
 
-router.get("/register", (req, res) => {
-    res.render("auth/patientSignup");
-});
+const isAuth = require("../middleware/is-auth");
 
-router.get("/dashboard/:id", (req, res) => {
-    const id = req.params.id;
-    Patient.findByPk(id).then((patientDetails) => {
-        res.render("dashboard/patientDashboard", { data: patientDetails });
-    });
-});
+const PatientController = require("../controllers/patients");
 
-router.post("/register", (req, res) => {
-    const details = req.body;
-    Patient.create({
-        name: details.name,
-        gender: details.gender,
-        height: details.height,
-        weight: details.weight,
-        bloodGroup: details.bloodGroup,
-        married: details.maritalStatus,
-        allergies: details.allergies,
-        age: details.age,
-        state: details.state,
-        city: details.city,
-        pincode: details.pincode,
-        mobileNum: details.mobileNumber,
-        emergencyContact: details.emergencyContact,
-        password: details.password,
-        email: details.email,
-    })
-        .then((result) => {
-            res.redirect(`/patients/dashboard/${result.id}`);
-        })
-        .catch((err) => {
-            console.error(err.message);
-        });
-});
+Router.get("/login",PatientController.getLogin);
 
-router.post("/login", (req, res) => {
-    console.log(req.body);
-    const email = req.body.email;
-    const password = req.body.password;
-    Patient.findOne({
-        where: { email: email },
-    }).then((data) => {
-        if (!data) {
-            res.render("error/incPass.ejs", {
-                path: "/patients/login",
-            });
-            return 
-        }
-        if (data.password === password) {
-            res.redirect(`/patients/dashboard/${data.id}`);
-        } else {
-            res.render("error/incPass.ejs", {
-                path: "/patients/login",
-            });
-        }
-    });
-});
+Router.post("/login",PatientController.postLogin);
 
-module.exports = router;
+Router.get("/register",PatientController.getRegister);
+
+Router.post("/register",PatientController.postRegister);
+
+Router.get("/dashboard",isAuth,PatientController.getDashboard);
+
+Router.get("/logout",isAuth,PatientController.Logout);
+
+module.exports = Router;

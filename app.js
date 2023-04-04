@@ -4,87 +4,74 @@ const app = express();
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+const flash = require("connect-flash");
+const Patient = require("./models/patients");
+const Doctor = require("./models/doctors");
+const Hospital = require("./models/hospitals");
+const store = new MongoDBStore({
+    uri: process.env.MONGO_URI,
+    collection: "sessions",
+});
+
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
-
-const Doctor = require("./db/Doctor");
-const Patient = require("./db/Patient");
-const Hospital = require("./db/Hospital");
-const MedicalRec = require("./db/MedicalRec");
-
-Doctor.hasMany(Patient);
-Patient.belongsTo(Doctor, { constraints: true, onDelete: "CASCADE" });
-Hospital.hasMany(Doctor);
-Doctor.belongsTo(Hospital, { constraints: true, onDelete: "CASCADE" });
-Patient.hasMany(MedicalRec);
-MedicalRec.belongsTo(Patient, { constraints: true, onDelete: "CASCADE" });
-Doctor.hasMany(MedicalRec);
-MedicalRec.belongsTo(Doctor, { constraints: true, onDelete: "CASCADE" });
-
-//creation of chs database
-const sequelize = require("./db/database");
-sequelize.sync().then(() => {
-    console.log("Database is ready");
-});
-
-const patientsRouter = require("./routes/patients");
-const doctorsRouter = require("./routes/doctors");
-const hospitalsRouter = require("./routes/hospitals");
-
-// const Doctor = require("./db/Doctor");
-// const Patient = require("./db/Patient");
-// const Hospital = require("./db/Hospital");
-Doctor.hasMany(Patient);
-Patient.belongsTo(Doctor, { constraints: true, onDelete: "CASCADE" });
-Hospital.hasMany(Doctor);
-Doctor.belongsTo(Hospital, { constraints: true, onDelete: "CASCADE" });
-Patient.hasMany(MedicalRec);
-MedicalRec.belongsTo(Patient, { constraints: true, onDelete: "CASCADE" });
-Doctor.hasMany(MedicalRec);
-MedicalRec.belongsTo(Doctor, { constraints: true, onDelete: "CASCADE" });
-const port = process.env.PORT || 3000;
-
-app.get("/", (req, res) => {
-    res.render("home/home");
-});
-app.get("/about", (req, res) => {
-    res.render("about");
-});
-app.get("/faqs", (req, res) => {
-    res.render("faqs");
-});
-app.get("/docList", (req, res) => {
-    Doctor.findAll({})
-        .then((doctors) => {
-            console.log(doctors);
-            res.render("listDoc",{doctors:doctors});
-        })
-        .catch((err) => {
-            console.log(err);
-            res.send("<h1>Something went wrong please try again !! </h1>");
-        });
-});
-app.get("/booked", (req, res) => {
-    res.render("booked");
-});
-
-app.get("/serverError", (req, res) => {
-    res.render("error/500");
-});
-app.get("/closeCase", (req, res) => {
-    res.render("caseClosed");
-});
-app.use("/patients", patientsRouter);
-app.use("/doctors", doctorsRouter);
-app.use("/hospitals", hospitalsRouter);
+app.use(
+    session({
+        secret: process.env.SECRET,
+        resave: false,
+        saveUninitialized: false,
+        store: store,
+    })
+);
+app.use(flash());
 
 app.use((req, res, next) => {
-    res.status(404).render("error/404", {
-        pageTitle: "Page Not Found",
-        path: "/404",
+    if (!req.session.user) {
+        return next();
+    }
+    if (req.session.type === "patient") {
+        Patient.findById(req.session.patient._id)
+            .then((patient) => {
+                req.patient = patient;
+                next();
+            })
+            .catch((err) => console.log(err));
+    }
+    if (req.session.type === "doctor") {
+        Doctor.findById(req.session.doctor._id)
+            .then((doctor) => {
+                req.doctor = doctor;
+                next();
+            })
+            .catch((err) => console.log(err));
+    }
+    if (req.session.type === "hospital") {
+        Hospital.findById(req.session.hospital._id)
+            .then((hospital) => {
+                req.hospital = hospital;
+                next();
+            })
+            .catch((err) => console.log(err));
+    }
+});
+const homeRoutes = require("./routes/index");
+const patientRoutes = require("./routes/patients");
+const hospitalRoutes = require("./routes/hospitals");
+const doctorRoutes = require("./routes/doctors");
+app.use(homeRoutes);
+app.use("/patients", patientRoutes);
+app.use("/hospitals",hospitalRoutes);
+app.use("/doctors",doctorRoutes)
+mongoose
+    .connect(process.env.DB_URI)
+    .then((result) => {
+        app.listen(3000, () => {
+            console.log("Connected to database !");
+        });
+    })
+    .catch((err) => {
+        console.log(err);
     });
-});
-app.listen(port, () => {
-    console.log("Running on port 3000");
-});
