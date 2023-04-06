@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>addHospital</title>
+        <link rel="stylesheet" href="/css/addHospital.css" />
+    </head>
+    <body>
+        <div class="mainDiv">
+            <h1>Add Hospital</h1>
+            <form method="post" action="/doctors/addhospital">
+                <input name="hname" placeholder="Hospital Name" class="name"/>
+                <input name="regNo" placeholder="Hospital RegNo." class="regNo"/>
+                <button type="submit">Add Hospital</button>
+                <p class="invalid"><%=errorMessage%></p>
+            </form>
+        </div>
+    </body>
+</html>

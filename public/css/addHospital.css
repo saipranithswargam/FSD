@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400&family=Space+Grotesk&display=swap");
+body {
+    height: 100vh;
+    padding: 0.5% 3%;
+    background-color: #effaf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+body::-webkit-scrollbar {
+    display: none;
+}
+
+.mainDiv {
+    box-shadow: 1px 0px 16px #b1b6b3;
+    border-radius: 9px;
+}
+
+.mainDiv form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
+    width: 40vw;
+}
+form button {
+    padding: 0.5rem 1rem;
+    border-radius: 100px;
+    background-color: #0b8470;
+    border: none;
+    color: white;
+    font-weight: 700;
+}
+
+form button:hover {
+    background-color: transparent;
+    border: 1px solid #0b8470;
+    color: #0b8470;
+}
+
+form input {
+    padding: 1rem 3rem;
+    border-radius: 9px;
+    border: none;
+}
+
+.regNo:active,
+.regNo:focus {
+    border: 2px solid grey;
+    outline: none !important;
+}
+.name:active,
+.name:focus {
+    border: 2px solid grey;
+    outline: none !important;
+}
+.invalid {
+    color: red;
+    text-align: center;
+}
+
+.mainDiv h1 {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-family: 'Poppins', sans-serif;
+}

@@ -29,7 +29,7 @@ app.use(
 app.use(flash());
 
 app.use((req, res, next) => {
-    if (!req.session.user) {
+    if (!req.session.doctor && !req.session.hospital && !req.session.patient) {
         return next();
     }
     if (req.session.type === "patient") {
@@ -57,6 +57,7 @@ app.use((req, res, next) => {
             .catch((err) => console.log(err));
     }
 });
+
 const homeRoutes = require("./routes/index");
 const patientRoutes = require("./routes/patients");
 const hospitalRoutes = require("./routes/hospitals");

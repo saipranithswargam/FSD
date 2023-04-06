@@ -115,6 +115,7 @@ exports.postRegister = (req, res) => {
 };
 
 exports.getDashboard = (req, res) => {
+    console.log(req.session)
     const data = {
         name: req.session.patient.name,
         age: req.session.patient.age,

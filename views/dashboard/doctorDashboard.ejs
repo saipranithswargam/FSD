@@ -65,6 +65,12 @@
                         >
                             <a
                                 class="nav-item nav-link custom-col"
+                                title="add another hospital you are working"
+                                href="/doctors/addhospital"
+                                >Add Hospital</a
+                            >
+                            <a
+                                class="nav-item nav-link custom-col"
                                 aria-current="page"
                                 href="/"
                                 >Logout</a
@@ -85,7 +91,7 @@
             <div class="patient-details">
                 <table>
                     <tr>
-                        <td>Name</td>
+                        <td>Name:</td>
                         <td><%=data.name%></td>
                     </tr>
                     <tr>
@@ -93,12 +99,21 @@
                         <td><%=data.age%></td>
                     </tr>
                     <tr>
-                        <td>Address</td>
+                        <td>Address:</td>
                         <td><%=data.state%>,<%=data.city%></td>
                     </tr>
                     <tr>
-                        <td>Speciality</td>
-                        <td><%=data.Speciality%></td>
+                        <td>Speciality:</td>
+                        <td><%=data.speciality%></td>
+                    </tr>
+                    <tr>
+                        <td>Hospitals Working In: </td> 
+                            <% data.hospitalsWorkingFor.forEach(hospital=>{ %>
+                            <td>
+                                <%=hospital%>
+                            </td>
+                            <% }) %>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -131,6 +146,5 @@
                 </div>
             </div>
         </div>
-        
     </body>
 </html>

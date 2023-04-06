@@ -52,27 +52,18 @@
                             required
                         />
                     </div>
-                    <div class="input-group">
-                        <input
-                            placeholder="Speciality"
-                            name="Speciality"
-                            class="full-width"
-                            required
-                            type="text"
-                        />
-                    </div>
                     <div class="input-group float-left">
-                        <label class="on-top"
-                            >Treatment:
-                            <select
-                                name="treatment"
-                                aria-placeholder="treatment"
-                            >
-                                <option value="therapy">therapy</option>
-                                <option value="surgery">surgery</option>
-                                <option value="medication">medication</option>
-                            </select>
-                        </label>
+                        <label class="on-top">Speciality</label>
+                        <select name="speciality">
+                            <option>Dermatologist</option>
+                            <option>GeneralSurgeon</option>
+                            <option>Gastroenterologist</option>
+                            <option>Oncologist</option>
+                            <option>orthopedic</option>
+                            <option>ENT</option>
+                            <option>ophthalmologist</option>
+                            <option>other</option>
+                        </select>
                     </div>
                     <h5>Practice Address:</h5>
                     <div class="input-group">
@@ -110,7 +101,7 @@
                     </div>
                     <div class="last-details">
                         <input
-                            placeholder="Registration No."
+                            placeholder="Hospital Registration No."
                             name="regNo"
                             class="full-width"
                             required
@@ -141,6 +132,7 @@
                             <p id="emailErrorPara" class="invalid"></p>
                             <p id="passwordErrorPara" class="invalid"></p>
                             <p id="confirmPassError" class="invalid"></p>
+                            <p class="invalid"><%=errorMessage%></p>
                         </div>
                     </div>
                     <div>
