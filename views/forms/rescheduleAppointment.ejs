@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Book Doctor</title>
+        <link rel="stylesheet" href="/css/bookDoctor.css" />
+    </head>
+    <body>
+        <div class="formDiv">
+            <h2>Re-Schedule Appointment Request</h2>
+            <form
+                class="bookdoctor"
+                action="/patients/bookdoctor"
+                method="post"
+            >
+                <input
+                    type="hidden"
+                    value="<%=patientId%>"
+                    name="patientId"
+                />
+                <input
+                    type="hidden"
+                    value="<%=doctorId%>"
+                    name="doctorId"
+                />
+                <input
+                    type="hidden"
+                    value="<%=appointmentId%>"
+                    name="appointmentId"
+                />
+                <div class="input-group">
+                    <label>Appointment Date</label>
+                    <input name="appointmentDate" type="date" required value="<%=date%>"/>
+                </div>
+                <div class="input-group">
+                    <label>Appointment Time</label>
+                    <input name="appointmentTime" type="time" required value="<%=time%>"/>
+                </div>
+                <button type="submit">Request Appointment</button>
+            </form>
+        </div>
+    </body>
+</html>
