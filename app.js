@@ -71,6 +71,7 @@ mongoose
     .then((result) => {
         app.listen(3000, () => {
             console.log("Connected to database !");
+            console.log("Server Started");
         });
     })
     .catch((err) => {

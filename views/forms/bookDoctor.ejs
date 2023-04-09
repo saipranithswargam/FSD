@@ -27,20 +27,21 @@
                 />
                 <div class="input-group">
                     <label>Appointment Date</label>
-                    <input name="appointmentDate" type="date" />
+                    <input name="appointmentDate" type="date" required/>
                 </div>
                 <div class="input-group">
                     <label>Appointment Time</label>
-                    <input name="appointmentTime" type="time" />
+                    <input name="appointmentTime" type="time" required/>
                 </div>
                 <input
                     type="text"
                     placeholder="Description of Disease"
                     name="diseaseDescription"
+                    required
                 />
                 <div class="input-group">
                     <label>Type</label>
-                    <select name="type">
+                    <select name="type" required>
                         <option>New Case</option>
                         <option>Existing Case</option>
                     </select>
