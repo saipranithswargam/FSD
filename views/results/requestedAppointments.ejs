@@ -10,23 +10,47 @@
     <body>
         <div class="appointment-requests">
             <h1>Requested Appointments</h1>
+            <% if(data.length===0) { %>
+            <h4>No Requested Appointments Found !</h4>
+            <%}%> <% if(data.length!==0) { %> <% for (let appointment of data) {
+            %>
             <div class="appointment-request">
                 <table class="request">
                     <tr>
-                        <td>title</td>
-                        <td>title Of Disease</td>
+                        <td>PatientName</td>
+                        <td><%=appointment.patientId.name%></td>
+                    </tr>
+                    <tr>
+                        <td>Patient Number</td>
+                        <td><%=appointment.patientId.mobileNum%></td>
+                    </tr>
+                    <tr>
+                        <td>Patient Email</td>
+                        <td><%=appointment.patientId.email%></td>
+                    </tr>
+                    <tr>
+                        <td>DoctorName</td>
+                        <td><%=appointment.doctorId.name%></td>
+                    </tr>
+                    <tr>
+                        <td>DoctorSpeciality</td>
+                        <td><%=appointment.doctorId.Speciality%></td>
                     </tr>
                     <tr>
                         <td>Description</td>
-                        <td>Description about disease</td>
+                        <td><%=appointment.diseaseDescription%></td>
                     </tr>
                     <tr>
-                        <td>Date</td>
-                        <td>DateOfAppointment</td>
+                        <td>RequestedDate</td>
+                        <td><%=appointment.appointmentDate%></td>
                     </tr>
                     <tr>
-                        <td>time</td>
-                        <td>TimeOfAppointment</td>
+                        <td>RequestedTime</td>
+                        <td><%=appointment.appointmentTime%></td>
+                    </tr>
+                    <tr>
+                        <td>CaseType</td>
+                        <td><%=appointment.type%></td>
                     </tr>
                     <tr>
                         <td>
@@ -42,6 +66,7 @@
                     </tr>
                 </table>
             </div>
+            <%}%> <%}%>
         </div>
     </body>
 </html>

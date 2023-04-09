@@ -131,8 +131,11 @@ exports.getBookedAppointments = (req, res) => {
 
 exports.getRequestedAppointments = (req, res) => {
     Appointments.find({ hospitalId: req.hospital._id })
-        .then((result) => {
-            res.send(result);
+        .populate("doctorId patientId")
+        .then((data) => {
+            res.render("results/requestedAppointments", {
+                data: data,
+            });
         })
         .catch((error) => {
             console.log(error);
