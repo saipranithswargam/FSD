@@ -272,7 +272,7 @@ exports.postBookDoctor = (req, res) => {
         .save()
         .then((result) => {
             console.log(result);
-            res.send("working");
+            res.render("booked");
         })
         .catch((err) => {
             console.log(err);
