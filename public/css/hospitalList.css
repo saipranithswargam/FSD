@@ -90,3 +90,25 @@ body::-webkit-scrollbar {
 .outer-container a{
     text-decoration: none;
 }
+.filter-div form{
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+.filter-div{
+    text-align: center;
+    margin-top: 2rem;
+}
+.filter-div form{
+    margin: 0 auto;
+    text-align: center;
+}
+.filter-form button{
+    background-color: #00856f;
+    padding: 0px 10px;
+    color: white;
+    font-weight: 700;
+    border: none;
+}

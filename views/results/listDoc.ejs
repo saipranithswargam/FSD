@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PatientDashboard</title>
+        <title>DoctorsList</title>
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -63,58 +63,17 @@
                         <div
                             class="navbar-nav justify-content-end flex-grow-1 pe-3"
                         >
-                            <li class="nav-item dropdown">
-                                <a
-                                    class="nav-link dropdown-toggle custom-col"
-                                    href="#"
-                                    role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    Location
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="/hospitals/hospitalList"
-                                            >Mumbai</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="/hospitals/hospitalList"
-                                            >Chennai</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="/hospitals/hospitalList"
-                                            >Delhi</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="/hospitals/hospitalList"
-                                            >Hyderabad</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="/hospitals/hospitalList"
-                                            >Ahmedabad</a
-                                        >
-                                    </li>
-                                </ul>
-                            </li>
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
-                                href="#"
+                                href="/patients/dashboard"
+                                >Home</a
+                            >
+
+                            <a
+                                class="nav-item nav-link custom-col"
+                                aria-current="page"
+                                href="/patients/logout"
                                 >Logout</a
                             >
                         </div>
@@ -122,8 +81,28 @@
                 </div>
             </div>
         </nav>
+        <%if (type === 'MultiSpeciality' && doctors.length === 0 ) {%>
+        <div class="filter-div">
+            <form class="filter-form">
+                <label class="on-top">Filter by Speciality:</label>
+                <select name="speciality">
+                    <option>All</option>
+                    <option>Dermatologist</option>
+                    <option>Gastroenterologist</option>
+                    <option>Oncologist</option>
+                    <option>orthopedic</option>
+                    <option>ENT</option>
+                    <option>ophthalmologist</option>
+                    <option>other</option>
+                </select>
+            </form>
+        </div>
+        <%}%> <% if (doctors.length === 0 ) { %>
+        <h1 class="empty">Doctors are yet to be Registered !</h1>
+        <%} %>
         <div class="outer-container">
-            <% for (let doctor of doctors) { %>
+            <% if (doctors.length !==0 ) { %> <% for (let doctor of doctors) {
+            %>
             <div class="hospital-card">
                 <div class="image-div">
                     <svg
@@ -136,15 +115,17 @@
                     </svg>
                 </div>
                 <div class="hospital-details">
-                    <h5> <%=doctor.name %> </h5>
+                    <h5><%=doctor.name %></h5>
                     <div class="button-div">
-                        <a href="/booked">
+                        <a
+                            href="/patients/bookdoctor/<%=hospitalId%>/<%=doctor._id%>"
+                        >
                             <button>Book Now</button>
                         </a>
                     </div>
                 </div>
             </div>
-            <% } %>
+            <% } %> <%} %>
         </div>
     </body>
 </html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>My Appointments</title>
+    </head>
+    <body>
+        <div class="pendingAppointments">
+            <h1>Requested Appointments</h1>
+            <% if(appointments.length===0) {%>
+            <h3>No Pending Appointments Found</h3>
+            <% } %> <% if(appointments.length !==0 ) { %> <% for (let
+            appointment of appointments ) {%>
+            <div class="pAppointment">
+                <p>HospitalName :<%=appointment.hospitalId.hName%></p>
+                <p>DoctorName :<%=appointment.doctorId.name%></p>
+                <p>AppointmentDate :<%=appointment.appointmentDate%></p>
+                <p>appointmentTime :<%=appointment.appointmentTime%></p>
+            </div>
+            <form action="/patients/cancleRequestedAppointment" method="post">
+                <input
+                    value="<%=appointment._id%>"
+                    name="appointmentId"
+                    type="hidden"
+                />
+                <button type="submit">Cancle appointment</button>
+            </form>
+            <%}%> <%}%>
+        </div>
+        <div class="confimedAppointments">
+            <h1>Booked Appointments</h1>
+            <% if(cappointments.length===0) {%>
+            <h3>No Booked Found</h3>
+            <% } %> <% if(cappointments.length !==0 ) { %> <% for (let
+            appointment of cappointments ) {%>
+            <div class="cAppointment">
+                <p>HospitalName :<%=appointment.hospitalId.hName%></p>
+                <p>DoctorName :<%=appointment.doctorId.name%></p>
+                <p>AppointmentDate :<%=appointment.appointmentDate%></p>
+                <p>appointmentTime :<%=appointment.appointmentTime%></p>
+            </div>
+            <form action="/patients/cancleRequestedAppointment" method="post">
+                <input
+                    value="<%=appointment._id%>"
+                    name="appointmentId"
+                    type="hidden"
+                />
+                <button type="submit">Cancle appointment</button>
+            </form>
+            <%}%> <%}%>
+        </div>
+    </body>
+</html>

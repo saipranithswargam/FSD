@@ -34,11 +34,13 @@ const doctorSchema = new mongoose.Schema(
             },
         },
 
-        Speciality: [{ type: String }],
+        Speciality: { type: String },
 
         password: { type: String },
 
-        hospitalsWorkingFor: [{ type: mongoose.Types.ObjectId,ref: "Hospitals" }],
+        hospitalsWorkingFor: [
+            { type: mongoose.Types.ObjectId, ref: "Hospitals" },
+        ],
     },
     { timestamps: true }
 );

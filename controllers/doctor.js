@@ -117,7 +117,10 @@ exports.postRegister = (req, res) => {
                         return newDoc.save();
                     })
                     .then((finalResult) => {
-                        console.log(finalResult);
+                        hospital.doctorsWorking.push(finalResult._id);
+                        return hospital.save();
+                    })
+                    .then((result) => {
                         res.redirect("/doctors/login");
                     });
             });
@@ -143,7 +146,7 @@ exports.getDashboard = async (req, res) => {
         city: req.session.doctor.city,
         state: req.session.doctor.state,
         pincode: req.session.doctor.pincode,
-        speciality: req.session.doctor.Speciality[0],
+        speciality: req.session.doctor.Speciality,
         hospitalsWorkingFor: namesOfHospitals,
     };
     res.render("dashboard/doctorDashboard", {
@@ -186,14 +189,18 @@ exports.postAddHospital = (req, res) => {
                 );
                 return res.redirect("/doctors/addhospital");
             }
-            Doctor.findById(req.doctor._id).then((doctor) => {
-                doctor.hospitalsWorkingFor.push(hospital._id);
-                doctor.save();
-                res.redirect("/doctors/dashboard");
+            hospital.doctorsWorking.push(req.session.doctor._id);
+            hospital.save().then((result) => {
+                console.log(result);
+                Doctor.findById(req.doctor._id).then((doctor) => {
+                    doctor.hospitalsWorkingFor.push(hospital._id);
+                    doctor.save();
+                    res.redirect("/doctors/dashboard");
+                });
             });
         })
-        .catch((error) => {
-            console.log(error);
+        .catch((err) => {
+            console.log(err);
         });
 };
 

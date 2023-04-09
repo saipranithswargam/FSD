@@ -63,58 +63,16 @@
                         <div
                             class="navbar-nav justify-content-end flex-grow-1 pe-3"
                         >
-                            <li class="nav-item dropdown">
-                                <a
-                                    class="nav-link dropdown-toggle custom-col"
-                                    href="#"
-                                    role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    Location
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="/hospitals/hospitalList"
-                                            >Mumbai</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="/hospitals/hospitalList"
-                                            >Chennai</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="/hospitals/hospitalList"
-                                            >Delhi</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="/hospitals/hospitalList"
-                                            >Hyderabad</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a
-                                            class="dropdown-item"
-                                            href="/hospitals/hospitalList"
-                                            >Ahmedabad</a
-                                        >
-                                    </li>
-                                </ul>
-                            </li>
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
-                                href="#"
+                                href="/patients/dashboard"
+                                >Home</a
+                            >
+                            <a
+                                class="nav-item nav-link custom-col"
+                                aria-current="page"
+                                href="/patients/logout"
                                 >Logout</a
                             >
                         </div>
@@ -122,9 +80,44 @@
                 </div>
             </div>
         </nav>
+        <div class="filter-div">
+            <form
+                class="filter-form"
+                method="post"
+                action="/patients/hospitals/filtered"
+            >
+                <div>
+                    <label class="on-top">Filter by Speciality:</label>
+                    <select name="speciality">
+                        <option>All</option>
+                        <option>MultiSpeciality</option>
+                        <option>Dermatology</option>
+                        <option>GeneralSurgery</option>
+                        <option>Gastroenterology</option>
+                        <option>Oncology</option>
+                        <option>Orthopaedics</option>
+                        <option>ENT</option>
+                        <option>ophthalmology</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="on-top">Filter by Location:</label>
+                    <select name="location">
+                        <option>All</option>
+                        <option>Chennai</option>
+                        <option>Hyderabad</option>
+                        <option>Ahmedabad</option>
+                        <option>Delhi</option>
+                        <option>Banglore</option>
+                        <option>Mumbai</option>
+                    </select>
+                </div>
+                <button>Filter</button>
+            </form>
+        </div>
         <div class="outer-container">
             <% for (let hospital of hospitals) { %>
-            <a href="/docList">
+            <a href="/patients/doctorlist/<%=hospital._id%>">
                 <div class="hospital-card">
                     <div class="image-div">
                         <svg
@@ -137,7 +130,7 @@
                         </svg>
                     </div>
                     <div class="hospital-details">
-                        <h5><%=hospital.hname%></h5>
+                        <h5><%=hospital.hName%></h5>
                         <h5>
                             Location:<%=hospital.city%>,<%=hospital.pincode%>
                         </h5>

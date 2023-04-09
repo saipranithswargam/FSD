@@ -90,6 +90,12 @@ body::-webkit-scrollbar {
     text-decoration: none;
 }
 
+.empty{
+    text-align: center;
+    margin-top: 4rem;
+    color: #0b8470;
+}
+
 button {
     padding: 0.5rem 1rem;
     border-radius: 100px;
