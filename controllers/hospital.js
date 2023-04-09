@@ -1,4 +1,5 @@
 const Hospital = require("../models/hospitals");
+const Appointments = require("../models/appointments");
 const bcrypt = require("bcrypt");
 exports.getLogin = (req, res) => {
     let message = req.flash("error");
@@ -110,15 +111,33 @@ exports.postRegister = (req, res) => {
         });
 };
 
-exports.getDashboard = (req,res)=>{
+exports.getDashboard = (req, res) => {
     const data = {
-        hname:req.session.hospital.hName,
+        hname: req.session.hospital.hName,
         city: req.session.hospital.city,
         state: req.session.hospital.state,
         pincode: req.session.hospital.pincode,
-    }
-    res.render("dashboard/hospitalDashboard",{data:data});
-}
+    };
+    res.render("dashboard/hospitalDashboard", { data: data });
+};
+
+exports.getTreated = (req, res) => {
+    res.send("treated patients page");
+};
+
+exports.getBookedAppointments = (req, res) => {
+    res.render("results/bookedAppointments");
+};
+
+exports.getRequestedAppointments = (req, res) => {
+    Appointments.find({ hospitalId: req.hospital._id })
+        .then((result) => {
+            res.send(result);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
 
 exports.Logout = (req, res, next) => {
     req.session.destroy((err) => {

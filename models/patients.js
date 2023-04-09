@@ -40,14 +40,6 @@ const patientSchema = new mongoose.Schema(
         },
 
         allergies: { type: String },
-
-        medicalRecords: [
-            {
-                doctorId: mongoose.Types.ObjectId,
-                hospitalId: mongoose.Types.ObjectId,
-                prescription: mongoose.Types.ObjectId,
-            },
-        ],
     },
     { timestamps: true }
 );
