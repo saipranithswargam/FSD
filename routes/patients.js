@@ -35,4 +35,5 @@ Router.get("/bookdoctor/:hospitalId/:doctorId", isAuth ,PatientController.getBoo
 Router.post("/bookdoctor",isAuth,PatientController.postBookDoctor);
 
 Router.post("/cancleRequestedAppointment",isAuth,PatientController.cancleRequestedAppointment)
+
 module.exports = Router;

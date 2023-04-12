@@ -135,13 +135,24 @@
                     />
                 </div>
                 <div class="input-group">
-                    <input
-                        placeholder="Note"
-                        name="note"
-                        class="full-width"
-                    />
+                    <input placeholder="Note" name="note" class="full-width" />
                 </div>
                 <div>
+                    <input
+                        type="hidden"
+                        name="patientId"
+                        value="<%=patientId%>"
+                    />
+                    <input
+                        type="hidden"
+                        name="hospitalId"
+                        value="<%=hospitalId%>"
+                    />
+                    <input 
+                    type="hidden"
+                    name="appointmentId"
+                    value="<%=appointmentId%>"
+                    />
                     <button type="submit">Submit</button>
                 </div>
             </form>

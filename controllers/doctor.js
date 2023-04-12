@@ -1,6 +1,8 @@
 const Doctor = require("../models/doctors");
 const bcrypt = require("bcrypt");
 const Hospital = require("../models/hospitals");
+const ConfirmedAppointments = require("../models/confirmedAppointments");
+const MedicalRecords = require("../models/medicalRecords");
 exports.getLogin = (req, res) => {
     let message = req.flash("error");
     if (message.length > 0) {
@@ -154,6 +156,17 @@ exports.getDashboard = async (req, res) => {
     });
 };
 
+exports.getBookedAppointments = (req, res) => {
+    ConfirmedAppointments.find({ doctorId: req.doctor._id })
+        .populate("patientId")
+        .then((appointments) => {
+            console.log(appointments);
+            res.render("results/confirmedDocAppointments", {
+                appointments: appointments,
+            });
+        });
+};
+
 exports.addHospital = (req, res) => {
     let message = req.flash("error");
     if (message.length > 0) {
@@ -198,6 +211,55 @@ exports.postAddHospital = (req, res) => {
                     res.redirect("/doctors/dashboard");
                 });
             });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+
+exports.getPrescribe = (req, res) => {
+    console.log(req.params);
+    res.render("results/prescription", {
+        patientId: req.params.patientId,
+        hospitalId: req.params.hospitalId,
+        appointmentId: req.params.appointmentId,
+    });
+};
+
+exports.postPrescribe = (req, res) => {
+    console.log(req.body);
+    const medicalRecord = new MedicalRecords({
+        hospitalId: req.body.hospitalId,
+        patientId: req.body.patientId,
+        doctorId: req.doctor._id,
+        bloodPressure: req.body.bloodPressure,
+        temperature: req.body.temperature,
+        height: req.body.height,
+        weight: req.body.weight,
+        oxygen: req.body.oxygen,
+        surgery: req.body.surgery,
+        medicalTests: req.body.medicalTests,
+        note: req.body.note,
+        medicines:req.body.medicines,
+    });
+    medicalRecord
+        .save()
+        .then((medicalrecord) => {
+            return ConfirmedAppointments.findById(req.body.appointmentId);
+        })
+        .then((appointment) => {
+            return appointment.deleteOne();
+        })
+        .then((result) => {
+            console.log(result);
+            res.send("working");
+        });
+};
+
+exports.getMedicalRecords = (req, res) => {
+    MedicalRecords.find({ patientId: req.params.patientId })
+        .then((medicalRecords) => {
+            res.send(medicalRecords);
         })
         .catch((err) => {
             console.log(err);

@@ -22,4 +22,24 @@ Router.get("/addhospital", isAuth, doctorController.addHospital);
 
 Router.post("/addhospital", isAuth, doctorController.postAddHospital);
 
+Router.get(
+    "/prescribe/:patientId/:hospitalId/:appointmentId",
+    isAuth,
+    doctorController.getPrescribe
+);
+
+Router.post("/prescribe", isAuth, doctorController.postPrescribe);
+
+Router.get(
+    "/bookedappointments",
+    isAuth,
+    doctorController.getBookedAppointments
+);
+
+Router.get(
+    "/medicalrecords/:patientId",
+    isAuth,
+    doctorController.getMedicalRecords
+);
+
 module.exports = Router;

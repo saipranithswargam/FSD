@@ -12,22 +12,22 @@
             <h2>Re-Schedule Appointment Request</h2>
             <form
                 class="bookdoctor"
-                action="/patients/bookdoctor"
+                action="/hospitals/resheduleappointment"
                 method="post"
             >
                 <input
                     type="hidden"
-                    value="<%=patientId%>"
+                    value="<%=data.patientId%>"
                     name="patientId"
                 />
                 <input
                     type="hidden"
-                    value="<%=doctorId%>"
+                    value="<%=data.doctorId%>"
                     name="doctorId"
                 />
                 <input
                     type="hidden"
-                    value="<%=appointmentId%>"
+                    value="<%=data._id%>"
                     name="appointmentId"
                 />
                 <div class="input-group">
@@ -38,7 +38,7 @@
                     <label>Appointment Time</label>
                     <input name="appointmentTime" type="time" required value="<%=time%>"/>
                 </div>
-                <button type="submit">Request Appointment</button>
+                <button type="submit">Re-Schedule Appointment</button>
             </form>
         </div>
     </body>

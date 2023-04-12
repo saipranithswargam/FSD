@@ -280,13 +280,25 @@ exports.postBookDoctor = (req, res) => {
 };
 
 exports.cancleRequestedAppointment = (req, res) => {
-    Appointments.deleteOne({ _id: req.body.appointmentId })
-        .then(() => {
-            res.redirect("/patients/myappointments");
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+    console.log(req.body);
+    if (req.body.type === "requested") {
+        Appointments.deleteOne({ _id: req.body.appointmentId })
+            .then(() => {
+                res.redirect("/patients/myappointments");
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+    if (req.body.type === "confirmed") {
+        ConfirmedAppointments.deleteOne({ _id: req.body.appointmentId })
+            .then(() => {
+                res.redirect("/patients/myappointments");
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
 };
 
 exports.Logout = (req, res, next) => {

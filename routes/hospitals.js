@@ -27,9 +27,27 @@ Router.get(
 );
 
 Router.get(
+    "/acceptappointment/:appointmentId",
+    isAuth,
+    hospitalController.getAcceptAppointment
+);
+
+Router.get(
     "/requestedappointments",
     isAuth,
     hospitalController.getRequestedAppointments
+);
+
+Router.post(
+    "/resheduleappointment",
+    isAuth,
+    hospitalController.postResheduleAppointment
+);
+
+Router.get(
+    "/resheduleappointment/:appointmentId",
+    isAuth,
+    hospitalController.getResheduleAppointment
 );
 
 module.exports = Router;

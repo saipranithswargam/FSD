@@ -1,5 +1,7 @@
 const Hospital = require("../models/hospitals");
 const Appointments = require("../models/appointments");
+const ConfirmedAppointments = require("../models/confirmedAppointments");
+const MedicalRecords = require("../models/medicalRecords");
 const bcrypt = require("bcrypt");
 exports.getLogin = (req, res) => {
     let message = req.flash("error");
@@ -122,14 +124,28 @@ exports.getDashboard = (req, res) => {
 };
 
 exports.getTreated = (req, res) => {
-    res.send("treated patients page");
+    MedicalRecords.find({ hospitalId: req.hospital._id })
+        .then((result) => {
+            res.send(result);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 };
 
 exports.getBookedAppointments = (req, res) => {
-    res.render("results/bookedAppointments");
+    ConfirmedAppointments.find({ hospitalId: req.hospital._id })
+        .populate("doctorId patientId")
+        .then((data) => {
+            res.render("results/bookedAppointments", { data: data });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 };
 
 exports.getRequestedAppointments = (req, res) => {
+    console.log(req.hospital);
     Appointments.find({ hospitalId: req.hospital._id })
         .populate("doctorId patientId")
         .then((data) => {
@@ -139,6 +155,71 @@ exports.getRequestedAppointments = (req, res) => {
         })
         .catch((error) => {
             console.log(error);
+        });
+};
+
+exports.getResheduleAppointment = (req, res) => {
+    const id = req.params.appointmentId;
+    Appointments.findById(id).then((data) => {
+        res.render("forms/rescheduleAppointment", {
+            date: data.appointmentDate,
+            time: data.appointmentTime,
+            data: data,
+        });
+    });
+};
+
+exports.getAcceptAppointment = (req, res) => {
+    Appointments.findById(req.params.appointmentId).then((newAppointment) => {
+        const confirmAppointment = new ConfirmedAppointments({
+            hospitalId: newAppointment.hospitalId,
+            doctorId: newAppointment.doctorId,
+            patientId: newAppointment.patientId,
+            appointmentDate: newAppointment.appointmentDate,
+            appointmentTime: newAppointment.appointmentTime,
+            diseaseDescription: newAppointment.diseaseDescription,
+            type: newAppointment.type,
+        });
+        confirmAppointment
+            .save()
+            .then((result) => {
+                return newAppointment.deleteOne();
+            })
+            .then((result) => {
+                console.log(result);
+                res.send("sucessfully confirmed the appointment");
+            });
+    });
+};
+
+exports.postResheduleAppointment = (req, res) => {
+    Appointments.findById(req.body.appointmentId)
+        .then((result) => {
+            result.appointmentDate = req.body.appointmentDate;
+            result.appointmentTime = req.body.appointmentTime;
+            return result.save();
+        })
+        .then((newAppointment) => {
+            const confirmAppointment = new ConfirmedAppointments({
+                hospitalId: newAppointment.hospitalId,
+                doctorId: newAppointment.doctorId,
+                patientId: newAppointment.patientId,
+                appointmentDate: newAppointment.appointmentDate,
+                appointmentTime: newAppointment.appointmentTime,
+                diseaseDescription: newAppointment.diseaseDescription,
+                type: newAppointment.type,
+            });
+            confirmAppointment
+                .save()
+                .then((result) => {
+                    return newAppointment.deleteOne();
+                })
+                .then((result) => {
+                    console.log(result);
+                    res.send(
+                        "sucessfully resheduled and confirmed the appointment"
+                    );
+                });
         });
 };
 
