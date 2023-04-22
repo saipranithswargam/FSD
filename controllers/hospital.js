@@ -2,7 +2,16 @@ const Hospital = require("../models/hospitals");
 const Appointments = require("../models/appointments");
 const ConfirmedAppointments = require("../models/confirmedAppointments");
 const MedicalRecords = require("../models/medicalRecords");
+const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
+let config = {
+    service: "gmail",
+    auth: {
+        user: "testingnode061229@gmail.com",
+        pass: "xzentliyxvefqpwl",
+    },
+};
+let transporter = nodemailer.createTransport(config);
 exports.getLogin = (req, res) => {
     let message = req.flash("error");
     if (message.length > 0) {
@@ -128,11 +137,23 @@ exports.getTreated = (req, res) => {
     MedicalRecords.find({ hospitalId: req.hospital._id })
         .populate("doctorId patientId hospitalId")
         .then((result) => {
-            console.log();
             res.render("results/getHospitalTreatedPatients", { data: result });
         })
         .catch((err) => {
             console.log(err);
+        });
+};
+
+exports.getSearchPatientTreated = (req, res) => {
+    MedicalRecords.find({ hospitalId: req.hospital._id })
+        .populate("doctorId patientId")
+        .then((result) => {
+            const filteredList = result.filter((document) => {
+                return document.patientId.email === req.body.email;
+            });
+            res.render("results/getHospitalTreatedPatients", {
+                data: filteredList,
+            });
         });
 };
 
@@ -172,26 +193,44 @@ exports.getResheduleAppointment = (req, res) => {
 };
 
 exports.getAcceptAppointment = (req, res) => {
-    Appointments.findById(req.params.appointmentId).then((newAppointment) => {
-        const confirmAppointment = new ConfirmedAppointments({
-            hospitalId: newAppointment.hospitalId,
-            doctorId: newAppointment.doctorId,
-            patientId: newAppointment.patientId,
-            appointmentDate: newAppointment.appointmentDate,
-            appointmentTime: newAppointment.appointmentTime,
-            diseaseDescription: newAppointment.diseaseDescription,
-            type: newAppointment.type,
-        });
-        confirmAppointment
-            .save()
-            .then((result) => {
-                return newAppointment.deleteOne();
-            })
-            .then((result) => {
-                console.log(result);
-                res.render("success/appointmentConfirmed");
+    Appointments.findById(req.params.appointmentId)
+        .then((newAppointment) => {
+            email = newAppointment.patientId.email;
+            doctorName = newAppointment.doctorId.name;
+            hospitalName = req.hospital.hName;
+            appointmentDate = newAppointment.appointmentDate;
+            appointmentTime = newAppointment.appointmentTime;
+            const confirmAppointment = new ConfirmedAppointments({
+                hospitalId: newAppointment.hospitalId,
+                doctorId: newAppointment.doctorId,
+                patientId: newAppointment.patientId,
+                appointmentDate: newAppointment.appointmentDate,
+                appointmentTime: newAppointment.appointmentTime,
+                diseaseDescription: newAppointment.diseaseDescription,
+                type: newAppointment.type,
             });
-    });
+            confirmAppointment.save().then((result) => {
+                result.populate("doctorId patientId").then((Confirmed) => {
+                    res.render("success/appointmentConfirmed");
+                    let message = {
+                        from: "testingnode061229@gmail.com",
+                        // to: Confirmed.patientId.email,
+                        to:'saipranithswargam@gmail.com',
+                        subject: "Appointment Confirmed",
+                        html: `
+                            <p>You Appointment for the doctor ${Confirmed.doctorId.name} has been confirmed by hospital ${req.hospital.hName}</p>
+                            <p>Appointment Date : ${Confirmed.appointmentDate}</p>
+                            <p>Appointment Time : ${Confirmed.appointmentTime} </p>
+                            `,
+                    };
+                    transporter.sendMail(message);
+                    return newAppointment.deleteOne();
+                });
+            });
+        })
+        .then((error) => {
+            console.log(error);
+        });
 };
 
 exports.postResheduleAppointment = (req, res) => {
@@ -211,15 +250,26 @@ exports.postResheduleAppointment = (req, res) => {
                 diseaseDescription: newAppointment.diseaseDescription,
                 type: newAppointment.type,
             });
-            confirmAppointment
-                .save()
-                .then((result) => {
-                    return newAppointment.deleteOne();
-                })
-                .then((result) => {
-                    console.log(result);
+            confirmAppointment.save().then((result) => {
+                result.populate("doctorId patientId").then((Confirmed) => {
                     res.render("success/appointmentConfirmed");
+                    let message = {
+                        from: "testingnode061229@gmail.com",
+                        to: Confirmed.patientId.email,
+                        subject: "Appointment Confirmed",
+                        html: `
+                                <p>You Appointment for the doctor ${Confirmed.doctorId.name} has been Resheduled by hospital ${req.hospital.hName}</p>
+                                <p>Resheduled Appointment Date : ${Confirmed.appointmentDate}</p>
+                                <p>Resheduled Appointment Time : ${Confirmed.appointmentTime} </p>
+                                `,
+                    };
+                    transporter.sendMail(message);
+                    return newAppointment.deleteOne();
                 });
+            });
+        })
+        .then((error) => {
+            console.log(error);
         });
 };
 

@@ -20,7 +20,7 @@
             src="https://kit.fontawesome.com/0e6c012114.js"
             crossorigin="anonymous"
         ></script>
-        <link rel="stylesheet" href="/css/patientMedicalRecords.css" />
+        <link rel="stylesheet" href="/css/hospitalList.css" />
     </head>
     <body>
         <nav class="navbar navbar-expand-lg custom" id="home">
@@ -63,31 +63,16 @@
                         <div
                             class="navbar-nav justify-content-end flex-grow-1 pe-3"
                         >
-                        <form
-                                class="ms-auto me-auto"
-                                action="/hospitals/patientstreated/searchpatient"
-                                method="post"
-                            >
-                                <div class="search-bar">
-                                    <input
-                                        placeholder="search patient"
-                                        title="input patient email"
-                                        name="email"
-                                        type="email"
-                                    />
-                                    <button type="submit">Search</button>
-                                </div>
-                            </form>
-                        <a
-                        class="nav-item nav-link custom-col"
-                        aria-current="page"
-                        href="/hospitals/dashboard"
-                        >Home</a
-                    >
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
-                                href="/hospitals/logout"
+                                href="/patients/dashboard"
+                                >Home</a
+                            >
+                            <a
+                                class="nav-item nav-link custom-col"
+                                aria-current="page"
+                                href="/patients/logout"
                                 >Logout</a
                             >
                         </div>
@@ -95,36 +80,22 @@
                 </div>
             </div>
         </nav>
-        <div class="medical-history">
-            <% if(data.length===0) { %>
-            <h1>No Records Found !</h5>
-            <% } %>
-            <% if(data.length!==0) { %>
-                <h1>Patients Treated</h1>
-            <% for (let medicalRecord of data) {%>
-                <div class="medical-record">
-                    <table class="medical-record-table">
-                        <tr>
-                            <td>Doctor Name :</td>
-                            <td><%=medicalRecord.doctorId.name%></td>
-                        </tr>
-                        <tr>
-                            <td>Patient Name:</td>
-                            <td><%=medicalRecord.patientId.name%></td>
-                        </tr>
-                        <tr>
-                            <td>Doctors Note:</td>
-                            <td><%=medicalRecord.note%></td>
-                        </tr>
-                        <tr>
-                            <td>Date:</td>
-                            <td><%=medicalRecord.date%></td>
-                        </tr>
-
-                    </table>
+        <% if (hospitals.length === 0 ) {%>
+        <h1 style="text-align: center; color: #0b8470;margin-top: 2rem;">No hospitals Found !</h1>
+        <%}%>
+        <div class="outer-container">
+            <% if (hospitals.length !== 0 ) { %> <% for (let hospital of
+            hospitals) { %>
+            <div class="hospital-card">
+                <div class="image-div">
+                    <img src="/images/HospitalIcon.svg" />
                 </div>
-                <% } %>
+                <div class="hospital-details">
+                    <h5><%=hospital.hName%></h5>
+                    <h5>Location:<%=hospital.city%>,<%=hospital.pincode%></h5>
+                </div>
+            </div>
+            <% }%> <%}%>
         </div>
-        <% } %>
     </body>
 </html>

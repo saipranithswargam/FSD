@@ -242,7 +242,7 @@ exports.postRemoveHospital = (req, res) => {
         if (!match) {
             req.flash(
                 "error",
-                "Hospital Trying to Add isn't there in your working hospital list "
+                "Hospital Trying to remove isn't there in your working hospital list "
             );
             return res.redirect("/doctors/removehospital");
         }
@@ -300,13 +300,15 @@ exports.postPrescribe = (req, res) => {
         })
         .then((result) => {
             console.log(result);
-            res.send("working");
+            res.render("success/prescriptionSuccess")
         });
 };
 
 exports.getHospitalsWorkingFor = (req, res) => {
     req.doctor.populate("hospitalsWorkingFor").then((result) => {
-        res.send(result.hospitalsWorkingFor);
+        res.render("results/hospitalsWorkingFor", {
+            hospitals: result.hospitalsWorkingFor,
+        });
     });
 };
 
