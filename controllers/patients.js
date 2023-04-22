@@ -2,6 +2,7 @@ const Hospitals = require("../models/hospitals");
 const Patient = require("../models/patients");
 const Appointments = require("../models/appointments");
 const ConfirmedAppointments = require("../models/confirmedAppointments");
+const MedicalRecords = require("../models/medicalRecords");
 const bcrypt = require("bcrypt");
 const { default: mongoose } = require("mongoose");
 exports.getLogin = (req, res) => {
@@ -141,12 +142,120 @@ exports.getHospitals = (req, res) => {
 };
 
 exports.getMedicalRecords = (req, res) => {
-    data = {
-        medicalRecords: req.patient.medicalRecords,
-    };
-    res.render("results/medicalRecords", {
-        data: data,
-    });
+    MedicalRecords.find({ patientId: req.patient._id })
+        .populate("hospitalId doctorId")
+        .then((data) => {
+            const doctors = data.map((medicalRecord) => {
+                return medicalRecord.doctorId;
+            });
+            const hospitals = data.map((medicalRecord) => {
+                return medicalRecord.hospitalId;
+            });
+            var set1 = new Set(hospitals);
+            const finalHospitals = [...set1];
+            var set2 = new Set(doctors);
+            const finalDoctors = [...set2];
+            res.render("results/medicalRecords", {
+                data: data,
+                doctors: finalDoctors,
+                hospitals: finalHospitals,
+            });
+        });
+};
+
+exports.postFilteredMedicalRecords = (req, res) => {
+    if (req.body.doctor === "All" && req.body.hospital === "All") {
+        return res.redirect("/patients/medicalrecords");
+    } else {
+        res.redirect(
+            `/patients/medicalrecords/filtered/${req.body.hospital}/${req.body.doctor}`
+        );
+    }
+};
+
+exports.getFilteredMedicalRecords = (req, res) => {
+    const doctorId = req.params.doctorId;
+    const hospitalId = req.params.hospitalId;
+    if (doctorId !== "All" && hospitalId !== "All") {
+        MedicalRecords.find({
+            patientId: req.patient._id,
+            hospitalId: hospitalId,
+            doctorId: doctorId,
+        })
+            .populate("hospitalId doctorId")
+            .then((data) => {
+                const doctors = data.map((medicalRecord) => {
+                    console.log(medicalRecord.doctorId);
+                    return medicalRecord.doctorId;
+                });
+                const hospitals = data.map((medicalRecord) => {
+                    return medicalRecord.hospitalId;
+                });
+                var set1 = new Set(hospitals);
+                const finalHospitals = [...set1];
+                var set2 = new Set(doctors);
+                const finalDoctors = [...set2];
+                return res.render("results/filteredMedicalRecords", {
+                    data: data,
+                    doctors: finalDoctors,
+                    hospitals: finalHospitals,
+                    selectedDoctor: doctorId,
+                    selectedHospital: hospitalId,
+                });
+            });
+    }
+    if (doctorId === "All" && hospitalId !== "All") {
+        MedicalRecords.find({
+            patientId: req.patient._id,
+            hospitalId: hospitalId,
+        })
+            .populate("hospitalId doctorId")
+            .then((data) => {
+                const doctors = data.map((medicalRecord) => {
+                    return medicalRecord.doctorId;
+                });
+                const hospitals = data.map((medicalRecord) => {
+                    return medicalRecord.hospitalId;
+                });
+                var set1 = new Set(hospitals);
+                const finalHospitals = [...set1];
+                var set2 = new Set(doctors);
+                const finalDoctors = [...set2];
+                return res.render("results/filteredMedicalRecords", {
+                    data: data,
+                    doctors: finalDoctors,
+                    hospitals: finalHospitals,
+                    selectedDoctor: "All",
+                    selectedHospital: hospitalId,
+                });
+            });
+    }
+    if (doctorId !== "All" && hospitalId === "All") {
+        MedicalRecords.find({
+            patientId: req.patient._id,
+            doctorId: doctorId,
+        })
+            .populate("hospitalId doctorId")
+            .then((data) => {
+                const doctors = data.map((medicalRecord) => {
+                    return medicalRecord.doctorId;
+                });
+                const hospitals = data.map((medicalRecord) => {
+                    return medicalRecord.hospitalId;
+                });
+                var set1 = new Set(hospitals);
+                const finalHospitals = [...set1];
+                var set2 = new Set(doctors);
+                const finalDoctors = [...set2];
+                return res.render("results/filteredMedicalRecords", {
+                    data: data,
+                    doctors: finalDoctors,
+                    hospitals: finalHospitals,
+                    selectedHospital: "All",
+                    selectedDoctor: doctorId,
+                });
+            });
+    }
 };
 
 exports.getMyAppointments = (req, res) => {
@@ -154,6 +263,7 @@ exports.getMyAppointments = (req, res) => {
         .populate("doctorId hospitalId")
         .then((data) => {
             ConfirmedAppointments.find({ patientId: req.patient._id })
+                .populate("doctorId hospitalId")
                 .then((cdata) => {
                     res.render("results/medicalAppointments", {
                         appointments: data,
@@ -229,7 +339,7 @@ exports.getDoctorsList = (req, res) => {
     const id = req.params.id;
     Hospitals.findById(id)
         .then((hospital) => {
-            hospital.populate("doctorsWorking").then((doctors) => {
+            hospital.populate("doctorsWorking").then((results) => {
                 res.render("results/listDoc", {
                     doctors: hospital.doctorsWorking,
                     type: hospital.specialityDep,
@@ -298,6 +408,15 @@ exports.cancleRequestedAppointment = (req, res) => {
             .catch((err) => {
                 console.log(err);
             });
+    }
+};
+
+exports.postChosen = (req, res) => {
+    if (req.body.chosen === "appointment") {
+        return res.redirect("/patients/myappointments");
+    }
+    if (req.body.chosen === "medicalrecords") {
+        return res.redirect("/patients/medicalrecords");
     }
 };
 

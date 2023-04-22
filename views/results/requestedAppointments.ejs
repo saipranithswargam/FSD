@@ -63,24 +63,26 @@
                         <div
                             class="navbar-nav justify-content-end flex-grow-1 pe-3"
                         >
+                            <form
+                                class="ms-auto me-auto"
+                                action="/hospitals/requestedappointments/searchpatient"
+                                method="post"
+                            >
+                                <div class="search-bar">
+                                    <input
+                                        placeholder="search patient"
+                                        title="input patient email"
+                                        name="email"
+                                        type="email"
+                                    />
+                                    <button type="submit">Search</button>
+                                </div>
+                            </form>
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
                                 href="/hospitals/dashboard"
                                 >Home</a
-                            >
-                            <a
-                                class="nav-item nav-link custom-col"
-                                aria-current="page"
-                                href="/hospitals/patientstreated"
-                                >PatientsTreated</a
-                            >
-
-                            <a
-                                class="nav-item nav-link custom-col"
-                                aria-current="page"
-                                href="/hospitals/bookedappointments"
-                                >BookedAppointments</a
                             >
                             <a
                                 class="nav-item nav-link custom-col"

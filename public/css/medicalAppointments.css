@@ -1,9 +1,17 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400&family=Space+Grotesk&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Changa:wght@700&display=swap");
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
 body {
-    height: 100vh;
     padding: 0.5% 3%;
     background-color: #effaf8;
-
+}
+body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 body::-webkit-scrollbar {
     display: none;
@@ -54,82 +62,44 @@ body::-webkit-scrollbar {
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.05);
     background-color: #effaf8;
 }
-.search-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 3rem;
-    position: relative;
+/*appointment table*/
+.pendingAppointments h1{
+    text-align: center;
+    color: rgba(0, 133, 111, 0.8);
 }
-.search-bar select {
-    height: 100%;
-    border: none;
-    padding: 0 2rem;
+.confimedAppointments h1,.confimedAppointments h3{
+    text-align: center;
+    color: rgba(0, 133, 111, 0.8);
 }
-.search-bar button {
-    height: 100%;
-    border: none;
-    padding: 0 2rem;
-}
-
-.search-bar select:active,
-.search-bar select:focus {
-    outline: none;
-}
-.mainDiv {
-    box-shadow: 1px 0px 16px #b1b6b3;
-    border-radius: 9px;
-    width: 60%;
-    margin: 3rem auto;
-}
-
-.mainDiv form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 2rem;
-    width: 40vw;
+.pAppointment,
+.cAppointment {
+    margin-top: 1.5rem !important;
+    width: 80vw;
     margin: 0 auto;
+    padding: 2% 4%;
+    box-shadow: 0 0 10px rgba(37, 37, 37, 0.5);
+    border-radius: 10px;
+    background-color: white;
 }
-form button {
-    padding: 0.5rem 1rem;
-    border-radius: 100px;
-    background-color: #0b8470;
+td {
+    padding: 10px;
+}
+
+.cancle-form button{
     border: none;
+    background-color: #41b1a0;
+    padding: 0.5rem;
     color: white;
     font-weight: 700;
+    margin-top: 0.5rem;
 }
-
-form button:hover {
-    background-color: transparent;
-    border: 1px solid #0b8470;
+.cancle-form button:hover{
+    border: 1px solid #41b1a0;
     color: #0b8470;
+    background-color: white;
+    cursor: pointer;
 }
 
-form input {
-    padding: 1rem 3rem;
-    border-radius: 9px;
-    border: none;
-}
-
-.regNo:active,
-.regNo:focus {
-    border: 2px solid grey;
-    outline: none !important;
-}
-.name:active,
-.name:focus {
-    border: 2px solid grey;
-    outline: none !important;
-}
-.invalid {
-    color: red;
-    text-align: center;
-}
-
-.mainDiv h1 {
-    text-align: center;
-    margin-bottom: 3rem;
-    font-family: 'Poppins', sans-serif;
+.confimedAppointments{
+    margin-top: 2rem;
 }

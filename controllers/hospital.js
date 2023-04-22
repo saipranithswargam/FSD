@@ -124,9 +124,10 @@ exports.getDashboard = (req, res) => {
 };
 
 exports.getTreated = (req, res) => {
-    MedicalRecords.find({ hospitalId: req.hospital._id })
+    MedicalRecords.find({ hospitalId: req.hospital._id }).populate("doctorId patientId hospitalId")
         .then((result) => {
-            res.send(result);
+            console.log();
+            res.render("results/getHospitalTreatedPatients", { data: result });
         })
         .catch((err) => {
             console.log(err);
@@ -145,7 +146,6 @@ exports.getBookedAppointments = (req, res) => {
 };
 
 exports.getRequestedAppointments = (req, res) => {
-    console.log(req.hospital);
     Appointments.find({ hospitalId: req.hospital._id })
         .populate("doctorId patientId")
         .then((data) => {
@@ -187,7 +187,7 @@ exports.getAcceptAppointment = (req, res) => {
             })
             .then((result) => {
                 console.log(result);
-                res.send("sucessfully confirmed the appointment");
+                res.render("success/appointmentConfirmed");
             });
     });
 };
@@ -216,11 +216,51 @@ exports.postResheduleAppointment = (req, res) => {
                 })
                 .then((result) => {
                     console.log(result);
-                    res.send(
-                        "sucessfully resheduled and confirmed the appointment"
-                    );
+                    res.render("success/appointmentConfirmed");
                 });
         });
+};
+
+exports.postSearchPatientRequestedAppointment = (req, res) => {
+    Appointments.find({ hospitalId: req.hospital._id })
+        .populate("doctorId patientId")
+        .then((data) => {
+            const filteredData = data.filter((record) => {
+                return record.patientId.email === req.body.email;
+            });
+            res.render("results/filteredRequestedAppointments", {
+                data: filteredData,
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+
+exports.postSearchPatientBookedAppointment = (req, res) => {
+    ConfirmedAppointments.find({ hospitalId: req.hospital._id })
+        .populate("doctorId patientId")
+        .then((data) => {
+            const filteredData = data.filter((record) => {
+                return record.patientId.email === req.body.email;
+            });
+            res.render("results/bookedAppointments", { data: filteredData });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+
+exports.postChosen = (req, res) => {
+    if (req.body.chosen === "patientsTreated") {
+        return res.redirect("/hospitals/patientstreated");
+    }
+    if (req.body.chosen === "requestedAppointments") {
+        return res.redirect("/hospitals/requestedappointments");
+    }
+    if (req.body.chosen === "bookedAppointments") {
+        return res.redirect("/hospitals/bookedappointments");
+    }
 };
 
 exports.Logout = (req, res, next) => {

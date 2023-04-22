@@ -63,22 +63,15 @@
                         <div
                             class="navbar-nav justify-content-end flex-grow-1 pe-3"
                         >
-                            <a
-                                class="nav-item nav-link custom-col"
-                                href="/patients/myappointments"
-                                >My Appointments</a
-                            >
-                            <a
-                                class="nav-item nav-link custom-col"
-                                aria-current="page"
-                                href="/patients/medicalrecords"
-                                >My Medical Records</a
-                            >
-                            <a
-                                class="nav-item nav-link custom-col"
-                                href="/patients/hospitals"
-                                >Appointment</a
-                            >
+                            <form class="ms-auto me-auto" action="/patients/chosen" method="post">
+                                <div class="search-bar">
+                                    <select name="chosen">
+                                        <option value="appointment">My Appointments</option>
+                                        <option value="medicalrecords">My MedicalRecords</option>
+                                    </select>
+                                    <button type="submit">Search</button>
+                                </div>
+                            </form>
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
@@ -90,31 +83,21 @@
                 </div>
             </div>
         </nav>
-        <div class="patient-card">
-            <div class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                    <path
-                        d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
-                    />
-                </svg>
+        <div class="hero">
+            <div class="content-div">
+                <h1>Hi, <%=data.name%></h1>
+                <h1>Welcome Back</h1>
+                <div class="form">
+                    <p>Book Your Doctor Appointment Now</p>
+                    <div class="button-div">
+                        <a class="button" href="/patients/hospitals">
+                            Book Now
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="patient-details">
-                <table>
-                    <tr>
-                        <td>Name :</td>
-                        <td><%=data.name%></td>
-                    </tr>
-                    <tr>
-                        <td>Age :</td>
-                        <td><%=data.age%></td>
-                    </tr>
-                    <tr>
-                        <td>Address :</td>
-                        <td>
-                            <%=data.city%>,<%=data.state%>,<%=data.pincode%>.
-                        </td>
-                    </tr>
-                </table>
+            <div class="image-div">
+                <img src="/images/PatientDashboard.svg" />
             </div>
         </div>
     </body>

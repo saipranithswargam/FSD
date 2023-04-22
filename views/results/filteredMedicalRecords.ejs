@@ -90,18 +90,41 @@
                 <div class="input-select">
                     <label class="on-top">Filter by Doctor :</label>
                     <select name="doctor" >
-                        <option value="All">All</option>
-                        <% for (let doctor of doctors) {%>
-                            <option value="<%=doctor._id%>"><%=doctor.name%></option>
+                        <% if (selectedDoctor==='All') { %>
+                            <option value="All" selected>All</option>
                             <%}%>
+                        
+                            <% if (selectedDoctor!=='All') { %>
+                                <option value="All" selected>All</option>
+                                <%}%>
+                        <% for (let doctor of doctors) {%>
+                            <% if (selectedDoctor.toString() === doctor._id.toString() ) { %>
+                            <option value="<%=doctor._id%>" selected><%=doctor.name%></option>
+                            <%}%>
+                            <% if (selectedDoctor.toString() !== doctor._id.toString() ) { %>
+                                <option value="<%=doctor._id%>" ><%=doctor.name%></option>
+                                <%}%>
+                        <%}%>
                     </select>
                 </div>
                 <div class="input-select">
                     <label class="on-top">Filter by Hospital:</label>
                     <select name="hospital">
-                        <option value="All">All</option>
+                        <% if (selectedHospital==='All') { %>
+                            <option value="All" selected>All</option>
+                            <%}%>
+                        
+                            <% if (selectedHospital!=='All') { %>
+                                <option value="All" selected>All</option>
+                            <%}%>
+                            
                         <% for (let hospital of hospitals) {%>
-                            <option value="<%=hospital._id%>"><%=hospital.hName%></option>
+                            <% if (selectedHospital.toString() === hospital._id.toString() ) { %>
+                                <option value="<%=hospital._id%>" selected><%=hospital.hName%></option>
+                                <%}%>
+                            <% if (selectedHospital.toString() !== hospital._id.toString() ) { %>
+                                    <option value="<%=hospital._id%>" ><%=hospital.hName%></option>
+                                <%}%>
                             <%}%>
                     </select>
                 </div>
@@ -125,10 +148,6 @@
                         <tr>
                             <td>Doctor Name :</td>
                             <td><%=medicalRecord.doctorId.name%></td>
-                        </tr>
-                        <tr>
-                            <td>Date:</td>
-                            <td><%=medicalRecord.date%></td>
                         </tr>
                         <tr>
                             <td>Prescription :</td>

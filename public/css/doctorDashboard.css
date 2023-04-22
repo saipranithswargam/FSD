@@ -57,6 +57,28 @@ body::-webkit-scrollbar {
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.05);
     background-color: #effaf8;
 }
+.search-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 3rem;
+    position: relative;
+}
+.search-bar select {
+    height: 100%;
+    border: none;
+    padding: 0 2rem;
+}
+.search-bar button {
+    height: 100%;
+    border: none;
+    padding: 0 2rem;
+}
+
+.search-bar select:active,
+.search-bar select:focus {
+    outline: none;
+}
 /*patient-card*/
 .patient-card {
     margin-top: 1rem !important;
@@ -112,7 +134,8 @@ td {
     padding: 10px;
 }
 
-td button,.button button{
+td button,
+.button button {
     padding: 0.5rem 1rem;
     border-radius: 100px;
     background-color: #0b8470;
@@ -120,8 +143,61 @@ td button,.button button{
     color: white;
     font-weight: 700;
 }
-.button-div{
+.button-div {
     width: 100%;
     text-align: center;
 }
 
+.button-div-appointments {
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.hero {
+    display: flex;
+    height: 80vh;
+    padding: 0 3rem;
+}
+.hero .content-div {
+    width: 50%;
+}
+.hero .image-div {
+    width: 50%;
+}
+.content-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+.content-div:first-child {
+    margin-top: 10%;
+}
+.content-div h1 {
+    font-size: 70px;
+    color: #379e8e;
+    font-weight: 700;
+}
+.button-div {
+    text-align: center;
+}
+.button-div .button-home {
+    border: none;
+    background-color: #41b1a0;
+    padding: 1rem;
+    color: white;
+    font-weight: 700;
+    margin-top: 1rem;
+}
+.button-div .button-home:hover {
+    border: 1px solid #41b1a0;
+    color: #0b8470;
+    background-color: white;
+    cursor: pointer;
+}
+.button-home {
+    text-decoration: none;
+    display: inline-block;
+}

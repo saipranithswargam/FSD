@@ -22,6 +22,10 @@ Router.get("/hospitals", isAuth, PatientController.getHospitals);
 
 Router.get("/medicalrecords",isAuth,PatientController.getMedicalRecords)
 
+Router.post("/medicalrecords/filtered",isAuth,PatientController.postFilteredMedicalRecords);
+
+Router.get("/medicalrecords/filtered/:hospitalId/:doctorId",isAuth,PatientController.getFilteredMedicalRecords)
+
 Router.get("/myappointments",isAuth,PatientController.getMyAppointments)
 
 Router.get("/hospitals/filtered/:location/:speciality",isAuth,PatientController.getFiltered);
@@ -35,5 +39,7 @@ Router.get("/bookdoctor/:hospitalId/:doctorId", isAuth ,PatientController.getBoo
 Router.post("/bookdoctor",isAuth,PatientController.postBookDoctor);
 
 Router.post("/cancleRequestedAppointment",isAuth,PatientController.cancleRequestedAppointment)
+
+Router.post("/chosen",isAuth,PatientController.postChosen)
 
 module.exports = Router;

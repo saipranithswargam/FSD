@@ -217,6 +217,50 @@ exports.postAddHospital = (req, res) => {
         });
 };
 
+exports.getRemoveHospital = (req, res) => {
+    let message = req.flash("error");
+    if (message.length > 0) {
+        message = message[0];
+    } else {
+        message = null;
+    }
+    res.render("auth/removeHospital", {
+        errorMessage: message,
+    });
+};
+
+exports.postRemoveHospital = (req, res) => {
+    var hname = req.body.hospitalName;
+    const regNo = req.body.regNo;
+    req.doctor.populate("hospitalsWorkingFor").then((result) => {
+        res.send(result);
+        const match = result.hospitalsWorkingFor.find((hospital) => {
+            return hospital.regNo === regNo;
+        });
+        if (!match) {
+            req.flash(
+                "error",
+                "Hospital Trying to Add isn't there in your working hospital list "
+            );
+            return res.redirect("/doctors/removehospital");
+        }
+        Doctor.findByIdAndUpdate(
+            result._id,
+            { $pullAll: { hospitalsWorkingFor: [match._id] } },
+            { new: true }
+        ).then((newDoctor) => {
+            console.log(newDoctor);
+            Hospital.findOneAndUpdate(
+                { regNo: regNo },
+                { $pullAll: { doctorsWorking: [req.doctor._id] } },
+                { new: true }
+            ).then((finalObject) => {
+                res.redirect("/doctors/dashboard");
+            });
+        });
+    });
+};
+
 exports.getPrescribe = (req, res) => {
     console.log(req.params);
     res.render("results/prescription", {
@@ -228,6 +272,7 @@ exports.getPrescribe = (req, res) => {
 
 exports.postPrescribe = (req, res) => {
     console.log(req.body);
+    const date = new Date();
     const medicalRecord = new MedicalRecords({
         hospitalId: req.body.hospitalId,
         patientId: req.body.patientId,
@@ -240,7 +285,8 @@ exports.postPrescribe = (req, res) => {
         surgery: req.body.surgery,
         medicalTests: req.body.medicalTests,
         note: req.body.note,
-        medicines:req.body.medicines,
+        medicines: req.body.medicines,
+        date: date.toLocaleDateString(),
     });
     medicalRecord
         .save()
@@ -256,6 +302,12 @@ exports.postPrescribe = (req, res) => {
         });
 };
 
+exports.getHospitalsWorkingFor = (req, res) => {
+    req.doctor.populate("hospitalsWorkingFor").then((result) => {
+        res.send(result.hospitalsWorkingFor);
+    });
+};
+
 exports.getMedicalRecords = (req, res) => {
     MedicalRecords.find({ patientId: req.params.patientId })
         .then((medicalRecords) => {
@@ -264,6 +316,18 @@ exports.getMedicalRecords = (req, res) => {
         .catch((err) => {
             console.log(err);
         });
+};
+
+exports.postChosen = (req, res) => {
+    if (req.body.chosen === "addHospital") {
+        return res.redirect("/doctors/addhospital");
+    }
+    if (req.body.chosen === "removeHospital") {
+        return res.redirect("/doctors/removehospital");
+    }
+    if (req.body.chosen === "hospitalsWorking") {
+        return res.redirect("/doctors/gethospitalsworkingfor");
+    }
 };
 
 exports.Logout = (req, res, next) => {

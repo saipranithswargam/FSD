@@ -5,52 +5,161 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>My Appointments</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://kit.fontawesome.com/0e6c012114.js"
+            crossorigin="anonymous"
+        ></script>
+        <link rel="stylesheet" href="/css/medicalAppointments.css" />
     </head>
     <body>
-        <div class="pendingAppointments">
+        <nav class="navbar navbar-expand-lg custom navbar-fixed-top" id="home" >
+            <div class="container custom">
+                <a class="navbar-brand brand" href="/">
+                    <span class="single">CHS</span></a
+                >
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#navbarOffcanvas"
+                    aria-controls="navbarOffcanvas"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div
+                    class="offcanvas offcanvas-end bg-light"
+                    id="navbarOffcanvas"
+                    tabindex="-1"
+                    aria-labelledby="offcanvasNavbarLabel"
+                >
+                    <div class="offcanvas-header customOffCanvas">
+                        <h4
+                            class="offcanvas-title text-dark"
+                            id="offcanvasNavbarLabel"
+                        >
+                            MENU
+                        </h4>
+                        <button
+                            type="button"
+                            class="btn-close btn-close-dark text-reset"
+                            data-bs-dismiss="offcanvas"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div
+                            class="navbar-nav justify-content-end flex-grow-1 pe-3"
+                        >
+                            <a
+                                class="nav-item nav-link custom-col"
+                                aria-current="page"
+                                href="/patients/dashboard"
+                                >Home</a
+                            >
+                            <a
+                                class="nav-item nav-link custom-col"
+                                aria-current="page"
+                                href="/patients/logout"
+                                >Logout</a
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="pendingAppointments" id="pending">
             <h1>Requested Appointments</h1>
             <% if(appointments.length===0) {%>
             <h3>No Pending Appointments Found</h3>
             <% } %> <% if(appointments.length !==0 ) { %> <% for (let
             appointment of appointments ) {%>
             <div class="pAppointment">
-                <p>HospitalName :<%=appointment.hospitalId.hName%></p>
-                <p>DoctorName :<%=appointment.doctorId.name%></p>
-                <p>AppointmentDate :<%=appointment.appointmentDate%></p>
-                <p>appointmentTime :<%=appointment.appointmentTime%></p>
+                <table class="appointment-table">
+                    <tr>
+                        <td>HospitalName :</td>
+                        <td><%=appointment.hospitalId.hName%></td>
+                    </tr>
+                    <tr>
+                        <td>DoctorName :</td>
+                        <td><%=appointment.doctorId.name%></td>
+                    </tr>
+                    <tr>
+                        <td>AppointmentDate :</td>
+                        <td><%=appointment.appointmentDate%></td>
+                    </tr>
+                    <tr>
+                        <td>AppointmentTime :</td>
+                        <td><%=appointment.appointmentTime%></td>
+                    </tr>
+                </table>
+                <form
+                    action="/patients/cancleRequestedAppointment"
+                    method="post"
+                    class="cancle-form"
+                >
+                    <input
+                        value="<%=appointment._id%>"
+                        name="appointmentId"
+                        type="hidden"
+                    />
+                    <input type="hidden" value="requested" name="type" />
+                    <button type="submit">Cancel appointment</button>
+                </form>
             </div>
-            <form action="/patients/cancleRequestedAppointment" method="post">
-                <input
-                    value="<%=appointment._id%>"
-                    name="appointmentId"
-                    type="hidden"
-                />
-                <input type="hidden" value="requested" name="type" />
-                <button type="submit">Cancel appointment</button>
-            </form>
             <%}%> <%}%>
         </div>
-        <div class="confimedAppointments">
+        <div class="confimedAppointments" id="confirmed">
             <h1>Booked Appointments</h1>
             <% if(cappointments.length===0) {%>
             <h3>No Booked Found</h3>
             <% } %> <% if(cappointments.length !==0 ) { %> <% for (let
             appointment of cappointments ) {%>
             <div class="cAppointment">
-                <p>HospitalName :<%=appointment.hospitalId.hName%></p>
-                <p>DoctorName :<%=appointment.doctorId.name%></p>
-                <p>AppointmentDate :<%=appointment.appointmentDate%></p>
-                <p>appointmentTime :<%=appointment.appointmentTime%></p>
+                <table class="appointment-table">
+                    <tr>
+                        <td>HospitalName :</td>
+                        <td><%=appointment.hospitalId.hName%></td>
+                    </tr>
+                    <tr>
+                        <td>DoctorName :</td>
+                        <td><%=appointment.doctorId.name%></td>
+                    </tr>
+                    <tr>
+                        <td>AppointmentDate :</td>
+                        <td><%=appointment.appointmentDate%></td>
+                    </tr>
+                    <tr>
+                        <td>AppointmentTime :</td>
+                        <td><%=appointment.appointmentTime%></td>
+                    </tr>
+                </table>
+                <form
+                    action="/patients/cancleRequestedAppointment"
+                    method="post"
+                    class="cancle-form"
+                >
+                    <input
+                        value="<%=appointment._id%>"
+                        name="appointmentId"
+                        type="hidden"
+                    />
+                    <input type="hidden" value="confirmed" name="type" />
+                    <button type="submit">Cancle appointment</button>
+                </form>
             </div>
-            <form action="/patients/cancleRequestedAppointment" method="post">
-                <input
-                    value="<%=appointment._id%>"
-                    name="appointmentId"
-                    type="hidden"
-                />
-                <input type="hidden" value="confirmed" name="type" />
-                <button type="submit">Cancle appointment</button>
-            </form>
             <%}%> <%}%>
         </div>
     </body>

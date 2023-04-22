@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Hospital Dashboard</title>
+        <title>PatientDashboard</title>
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -65,22 +65,25 @@
                         >
                             <form
                                 class="ms-auto me-auto"
-                                action="/hospitals/chosen"
+                                action="/hospitals/bookedappointments/searchpatient"
                                 method="post"
                             >
                                 <div class="search-bar">
-                                    <select name="chosen">
-                                        <option value="patientsTreated">
-                                            Patients Treated
-                                        </option>
-                                        <option value="requestedAppointments">
-                                            Requested Appointments
-                                        </option>
-                                        <option value="bookedAppointments">Booked Appointments</option>
-                                    </select>
+                                    <input
+                                        placeholder="search patient"
+                                        title="input patient email"
+                                        name="email"
+                                        type="email"
+                                    />
                                     <button type="submit">Search</button>
                                 </div>
                             </form>
+                            <a
+                                class="nav-item nav-link custom-col"
+                                aria-current="page"
+                                href="/hospitals/dashboard"
+                                >Home</a
+                            >
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
@@ -92,5 +95,53 @@
                 </div>
             </div>
         </nav>
+        <div class="appointment-requests">
+            <h1>Booked Appointments</h1>
+            <% if(data.length===0) { %>
+            <h4>No Requested Appointments Found For Given Email !</h4>
+            <%}%> <% if(data.length!==0) { %> <% for (let appointment of data) {
+            %>
+            <div class="appointment-request">
+                <table class="request">
+                    <tr>
+                        <td>PatientName:</td>
+                        <td><%=appointment.patientId.name%></td>
+                    </tr>
+                    <tr>
+                        <td>Patient Number:</td>
+                        <td><%=appointment.patientId.mobileNum%></td>
+                    </tr>
+                    <tr>
+                        <td>Patient Email:</td>
+                        <td><%=appointment.patientId.email%></td>
+                    </tr>
+                    <tr>
+                        <td>DoctorName:</td>
+                        <td><%=appointment.doctorId.name%></td>
+                    </tr>
+                    <tr>
+                        <td>DoctorSpeciality:</td>
+                        <td><%=appointment.doctorId.Speciality%></td>
+                    </tr>
+                    <tr>
+                        <td>Description:</td>
+                        <td><%=appointment.diseaseDescription%></td>
+                    </tr>
+                    <tr>
+                        <td>RequestedDate:</td>
+                        <td><%=appointment.appointmentDate%></td>
+                    </tr>
+                    <tr>
+                        <td>RequestedTime:</td>
+                        <td><%=appointment.appointmentTime%></td>
+                    </tr>
+                    <tr>
+                        <td>CaseType:</td>
+                        <td><%=appointment.type%></td>
+                    </tr>
+                </table>
+            </div>
+            <%}%> <%}%>
+        </div>
     </body>
 </html>

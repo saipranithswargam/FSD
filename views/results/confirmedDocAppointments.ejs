@@ -97,28 +97,31 @@
             <div class="appointment-request">
                 <table class="request">
                     <tr>
-                        <td>Name</td>
+                        <td>Name:</td>
                         <td><%=appointment.patientId.name%></td>
                     </tr>
                     <tr>
-                        <td>Age</td>
+                        <td>Age:</td>
                         <td><%=appointment.patientId.age%></td>
                     </tr>
                     <tr>
-                        <td>Description</td>
+                        <td>Description:</td>
                         <td><%=appointment.diseaseDescription%></td>
                     </tr>
                     <tr>
-                        <td>Date</td>
+                        <td>Date:</td>
                         <td><%=appointment.appointmentDate%></td>
                     </tr>
                     <tr>
-                        <td>time</td>
+                        <td>time:</td>
                         <td><%=appointment.appointmentTime%></td>
                     </tr>
                 </table>
-                <div class="button-div">
-                    <a class="button" href="/doctors/prescribe/<%=appointment.patientId._id%>/<%=appointment.hospitalId._id%>/<%=appointment._id%>">
+                <div class="button-div-appointments">
+                    <a
+                        class="button"
+                        href="/doctors/prescribe/<%=appointment.patientId._id%>/<%=appointment.hospitalId._id%>/<%=appointment._id%>"
+                    >
                         <button>Prescribe Medicine</button>
                     </a>
                     <a

@@ -81,20 +81,23 @@
                 </div>
             </div>
         </nav>
-        <%if (type === 'MultiSpeciality' && doctors.length === 0 ) {%>
+        <%if (type === 'MultiSpeciality' && doctors.length !== 0 ) {%>
         <div class="filter-div">
-            <form class="filter-form">
-                <label class="on-top">Filter by Speciality:</label>
-                <select name="speciality">
-                    <option>All</option>
-                    <option>Dermatologist</option>
-                    <option>Gastroenterologist</option>
-                    <option>Oncologist</option>
-                    <option>orthopedic</option>
-                    <option>ENT</option>
-                    <option>ophthalmologist</option>
-                    <option>other</option>
-                </select>
+            <form class="filter-form" method="post" >
+                <div class="input-select">
+                    <label class="on-top">Filter by Speciality:</label>
+                    <select name="speciality">
+                        <option>All</option>
+                        <option>Dermatologist</option>
+                        <option>Gastroenterologist</option>
+                        <option>Oncologist</option>
+                        <option>orthopedic</option>
+                        <option>ENT</option>
+                        <option>ophthalmologist</option>
+                        <option>other</option>
+                    </select>
+                </div>
+                <button>Filter</button>
             </form>
         </div>
         <%}%> <% if (doctors.length === 0 ) { %>

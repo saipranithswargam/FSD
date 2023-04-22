@@ -50,4 +50,10 @@ Router.get(
     hospitalController.getResheduleAppointment
 );
 
+Router.post("/requestedappointments/searchpatient",isAuth,hospitalController.postSearchPatientRequestedAppointment)
+
+Router.post("/bookedappointments/searchpatient",isAuth,hospitalController.postSearchPatientBookedAppointment)
+
+Router.post("/chosen",isAuth,hospitalController.postChosen)
+
 module.exports = Router;

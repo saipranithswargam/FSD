@@ -67,6 +67,7 @@ body::-webkit-scrollbar {
     grid-template-columns: 1fr 1fr 1fr;
     margin-top: 2rem;
     gap: 1rem;
+    padding: 2rem 1rem;
 }
 .image-div{
     text-align: center;
@@ -81,9 +82,9 @@ body::-webkit-scrollbar {
 
 }
 .hospital-card{
-    margin-top: 3rem;
+    margin-top: 2rem;
     padding: 8% 7%;
-    box-shadow: 1px 1px 12px 0px rgba(0, 0, 0, 0.39);
+    box-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.39);
     border-radius: 10px;
 }
 
@@ -99,6 +100,8 @@ body::-webkit-scrollbar {
 }
 .filter-div{
     text-align: center;
+    height: 100%;    
+    display: flex;
     margin-top: 2rem;
 }
 .filter-div form{
@@ -107,8 +110,49 @@ body::-webkit-scrollbar {
 }
 .filter-form button{
     background-color: #00856f;
-    padding: 0px 10px;
+    padding: 5px 10px;
     color: white;
-    font-weight: 700;
+    font-weight: 600;
     border: none;
+    outline: none;
+}
+.filter-form button:hover{
+    background-color: white;
+    border: 1px solid #00856f;
+    color: #0b8470;
+}
+.input-select select{
+    padding: 5px 10px;
+    outline: none;
+    border: none;
+}
+.input-select label{
+    color: #3c4a48bd;
+    font-weight:700 ;
+}
+.input-select select:hover,.input-select select:active{
+    outline: none;
+}
+
+@media(max-width:1000px){
+    .outer-container{
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media(max-width:720px){
+    .outer-container{
+        grid-template-columns: 1fr; 
+    }
+    .filter-form{
+        flex-direction: column;
+    }
+    .input-select select{
+        width: 50%;
+    }
+    .input-select{
+        display: flex;
+        flex-direction: column;
+        width: 60%;
+    }
 }
