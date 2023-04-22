@@ -15,6 +15,8 @@ const hospitalSchema = new mongoose.Schema(
 
         specialityDep: { type: String },
 
+        email: { type: String },
+        
         doctorsWorking: [
             { type: mongoose.Schema.Types.ObjectId, ref: "Doctors" },
         ],

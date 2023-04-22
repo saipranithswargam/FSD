@@ -12,4 +12,32 @@ Router.post("/login", AdminController.postLogin);
 
 Router.get("/dashboard", isAuth, AdminController.getDashboard);
 
+Router.get("/verifyhospital", isAuth, AdminController.getVerifyHospital);
+
+Router.post("/verifyhospital", isAuth, AdminController.postVerifyHospital);
+
+Router.post(
+    "/verifyhospital/searchhospital",
+    isAuth,
+    AdminController.getVerifySearchHospitals
+);
+
+Router.post(
+    "/verifydoctor/searchdoctor",
+    isAuth,
+    AdminController.getVerifySearchDoctors
+);
+
+Router.get("/verifieddoctors", isAuth, AdminController.getVerifiedDoctors);
+
+Router.get("/verifiedhospitals", isAuth, AdminController.getVerifiedHospitals);
+
+Router.get("/verifydoctor", isAuth, AdminController.getVerifyDoctor);
+
+Router.post("/verifydoctor", isAuth, AdminController.postVerifyDoctor);
+
+Router.post("/chosen", isAuth, AdminController.postChosen);
+
+Router.get("/logout", isAuth, AdminController.Logout);
+
 module.exports = Router;

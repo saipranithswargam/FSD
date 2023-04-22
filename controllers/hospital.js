@@ -86,6 +86,7 @@ exports.postRegister = (req, res) => {
     const state = req.body.state;
     const city = req.body.city;
     const pincode = req.body.pincode;
+    const email = req.body.email;
     Hospital.findOne({ regNo: regNo })
         .then((hospital) => {
             if (hospital) {
@@ -108,6 +109,7 @@ exports.postRegister = (req, res) => {
                         government: isGovernment,
                         specialityDep: speciality,
                         verified: "false",
+                        email: email,
                     });
                     return newHospital.save();
                 })
@@ -195,11 +197,6 @@ exports.getResheduleAppointment = (req, res) => {
 exports.getAcceptAppointment = (req, res) => {
     Appointments.findById(req.params.appointmentId)
         .then((newAppointment) => {
-            email = newAppointment.patientId.email;
-            doctorName = newAppointment.doctorId.name;
-            hospitalName = req.hospital.hName;
-            appointmentDate = newAppointment.appointmentDate;
-            appointmentTime = newAppointment.appointmentTime;
             const confirmAppointment = new ConfirmedAppointments({
                 hospitalId: newAppointment.hospitalId,
                 doctorId: newAppointment.doctorId,
@@ -215,7 +212,7 @@ exports.getAcceptAppointment = (req, res) => {
                     let message = {
                         from: "testingnode061229@gmail.com",
                         // to: Confirmed.patientId.email,
-                        to:'saipranithswargam@gmail.com',
+                        to: "saipranithswargam@gmail.com",
                         subject: "Appointment Confirmed",
                         html: `
                             <p>You Appointment for the doctor ${Confirmed.doctorId.name} has been confirmed by hospital ${req.hospital.hName}</p>

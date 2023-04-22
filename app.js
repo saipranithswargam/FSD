@@ -56,6 +56,16 @@ app.use((req, res, next) => {
             })
             .catch((err) => console.log(err));
     }
+    if (req.session.type === "admin") {
+        Admin.findById(req.session.admin._id)
+            .then((admin) => {
+                req.admin = admin;
+                next();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
 });
 
 const homeRoutes = require("./routes/index");
@@ -63,6 +73,7 @@ const patientRoutes = require("./routes/patients");
 const hospitalRoutes = require("./routes/hospitals");
 const doctorRoutes = require("./routes/doctors");
 const adminRoutes = require("./routes/admin");
+const Admin = require("./models/admin");
 app.use(homeRoutes);
 app.use("/patients", patientRoutes);
 app.use("/hospitals", hospitalRoutes);
