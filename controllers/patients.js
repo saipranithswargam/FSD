@@ -133,7 +133,7 @@ exports.getDashboard = (req, res) => {
 };
 
 exports.getHospitals = (req, res) => {
-    Hospitals.find({}).then((hospitals) => {
+    Hospitals.find({ verified: "true" }).then((hospitals) => {
         console.log(hospitals);
         res.render("results/hospitalsList", {
             hospitals: hospitals,
@@ -283,7 +283,11 @@ exports.getFiltered = (req, res) => {
     const location = req.params.location;
     const speciality = req.params.speciality;
     if (location !== "All" && speciality !== "All") {
-        Hospitals.find({ city: location, specialityDep: speciality })
+        Hospitals.find({
+            city: location,
+            specialityDep: speciality,
+            verified: "true",
+        })
             .then((hospitals) => {
                 console.log(hospitals);
                 res.render("results/filteredHospitals", {
@@ -297,7 +301,7 @@ exports.getFiltered = (req, res) => {
             });
     }
     if (location === "All" && speciality !== "All") {
-        Hospitals.find({ specialityDep: speciality })
+        Hospitals.find({ specialityDep: speciality, verified: "true" })
             .then((hospitals) => {
                 console.log(hospitals);
                 res.render("results/filteredHospitals", {
@@ -311,7 +315,7 @@ exports.getFiltered = (req, res) => {
             });
     }
     if (location !== "All" && speciality === "All") {
-        Hospitals.find({ city: location })
+        Hospitals.find({ city: location, verified: "true" })
             .then((hospitals) => {
                 console.log(hospitals);
                 res.render("results/filteredHospitals", {
@@ -340,8 +344,13 @@ exports.getDoctorsList = (req, res) => {
     Hospitals.findById(id)
         .then((hospital) => {
             hospital.populate("doctorsWorking").then((results) => {
+                const finalDoctorsList = results.doctorsWorking.filter(
+                    (doctor) => {
+                        return doctor.verified === "true";
+                    }
+                );
                 res.render("results/listDoc", {
-                    doctors: hospital.doctorsWorking,
+                    doctors: finalDoctorsList,
                     type: hospital.specialityDep,
                     hospitalId: id,
                 });

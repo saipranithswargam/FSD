@@ -62,10 +62,12 @@ const homeRoutes = require("./routes/index");
 const patientRoutes = require("./routes/patients");
 const hospitalRoutes = require("./routes/hospitals");
 const doctorRoutes = require("./routes/doctors");
+const adminRoutes = require("./routes/admin");
 app.use(homeRoutes);
 app.use("/patients", patientRoutes);
-app.use("/hospitals",hospitalRoutes);
-app.use("/doctors",doctorRoutes)
+app.use("/hospitals", hospitalRoutes);
+app.use("/doctors", doctorRoutes);
+app.use("/admin", adminRoutes);
 mongoose
     .connect(process.env.DB_URI)
     .then((result) => {

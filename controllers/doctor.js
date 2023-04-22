@@ -60,7 +60,6 @@ exports.getRegister = (req, res) => {
 };
 
 exports.postRegister = (req, res) => {
-    console.log(req.body);
     const name = req.body.name;
     const age = req.body.age;
     const gender = req.body.gender;
@@ -83,50 +82,53 @@ exports.postRegister = (req, res) => {
             );
             return res.redirect("/doctors/register");
         }
-        Hospital.findOne({ regNo: hregNo }).then((hospital) => {
-            if (!hospital) {
-                req.flash(
-                    "error",
-                    "Cannot Find any Hospital With Given Registration Number "
-                );
-                return res.redirect("/doctors/register");
-            }
-            Doctor.findOne({ liscenceNo: liscenceNo }).then((doc) => {
-                if (doc) {
+        Hospital.findOne({ regNo: hregNo, verified: "true" }).then(
+            (hospital) => {
+                if (!hospital) {
                     req.flash(
                         "error",
-                        "doctor already exists with Given Liscence Number"
+                        "Cannot find Hospital or hasn't been verified yet "
                     );
                     return res.redirect("/doctors/register");
                 }
-                return bcrypt
-                    .hash(password, 12)
-                    .then((hashedPassword) => {
-                        const newDoc = new Doctor({
-                            name: name,
-                            email: email,
-                            mobileNum: mobileNum,
-                            liscenceNo: liscenceNo,
-                            city: city,
-                            state: state,
-                            pincode: pincode,
-                            age: age,
-                            experience: experience,
-                            Speciality: speciality,
-                            password: hashedPassword,
+                Doctor.findOne({ liscenceNo: liscenceNo }).then((doc) => {
+                    if (doc) {
+                        req.flash(
+                            "error",
+                            "doctor already exists with Given Liscence Number"
+                        );
+                        return res.redirect("/doctors/register");
+                    }
+                    return bcrypt
+                        .hash(password, 12)
+                        .then((hashedPassword) => {
+                            const newDoc = new Doctor({
+                                name: name,
+                                email: email,
+                                mobileNum: mobileNum,
+                                liscenceNo: liscenceNo,
+                                city: city,
+                                state: state,
+                                pincode: pincode,
+                                age: age,
+                                experience: experience,
+                                Speciality: speciality,
+                                password: hashedPassword,
+                                verified: "false",
+                            });
+                            newDoc.hospitalsWorkingFor.push(hospital._id);
+                            return newDoc.save();
+                        })
+                        .then((finalResult) => {
+                            hospital.doctorsWorking.push(finalResult._id);
+                            return hospital.save();
+                        })
+                        .then((result) => {
+                            res.render("success/docRegistrationSuccess");
                         });
-                        newDoc.hospitalsWorkingFor.push(hospital._id);
-                        return newDoc.save();
-                    })
-                    .then((finalResult) => {
-                        hospital.doctorsWorking.push(finalResult._id);
-                        return hospital.save();
-                    })
-                    .then((result) => {
-                        res.redirect("/doctors/login");
-                    });
-            });
-        });
+                });
+            }
+        );
     });
 };
 
@@ -143,12 +145,12 @@ exports.getDashboard = async (req, res) => {
         return hospitalName != null;
     });
     const data = {
-        name: req.session.doctor.name,
-        age: req.session.doctor.age,
-        city: req.session.doctor.city,
-        state: req.session.doctor.state,
-        pincode: req.session.doctor.pincode,
-        speciality: req.session.doctor.Speciality,
+        name: req.doctor.name,
+        age: req.doctor.age,
+        city: req.doctor.city,
+        state: req.doctor.state,
+        pincode: req.doctor.pincode,
+        speciality: req.doctor.Speciality,
         hospitalsWorkingFor: namesOfHospitals,
     };
     res.render("dashboard/doctorDashboard", {
@@ -182,16 +184,16 @@ exports.addHospital = (req, res) => {
 exports.postAddHospital = (req, res) => {
     const hname = req.body.hospitalName;
     const regNo = req.body.regNo;
-    Hospital.findOne({ regNo: regNo })
+    Hospital.findOne({ regNo: regNo, verified: "true" })
         .then((hospital) => {
             if (!hospital) {
                 req.flash(
                     "error",
-                    "Cannot Find any Hospital With Given Registration Number "
+                    "Cannot find Hospital or Hospital hasn't been verified"
                 );
                 return res.redirect("/doctors/addhospital");
             }
-            const hospitalsAdded = req.session.doctor.hospitalsWorkingFor;
+            const hospitalsAdded = req.doctor.hospitalsWorkingFor;
             const isThere = hospitalsAdded.find((id) => {
                 return id.toString() === hospital._id.toString();
             });
@@ -202,13 +204,14 @@ exports.postAddHospital = (req, res) => {
                 );
                 return res.redirect("/doctors/addhospital");
             }
-            hospital.doctorsWorking.push(req.session.doctor._id);
+            hospital.doctorsWorking.push(req.doctor._id);
             hospital.save().then((result) => {
                 console.log(result);
                 Doctor.findById(req.doctor._id).then((doctor) => {
                     doctor.hospitalsWorkingFor.push(hospital._id);
-                    doctor.save();
-                    res.redirect("/doctors/dashboard");
+                    doctor.save().then((result) => {
+                        res.render("success/hospitalAddedSuccess");
+                    });
                 });
             });
         })
@@ -233,7 +236,6 @@ exports.postRemoveHospital = (req, res) => {
     var hname = req.body.hospitalName;
     const regNo = req.body.regNo;
     req.doctor.populate("hospitalsWorkingFor").then((result) => {
-        res.send(result);
         const match = result.hospitalsWorkingFor.find((hospital) => {
             return hospital.regNo === regNo;
         });
@@ -255,7 +257,7 @@ exports.postRemoveHospital = (req, res) => {
                 { $pullAll: { doctorsWorking: [req.doctor._id] } },
                 { new: true }
             ).then((finalObject) => {
-                res.redirect("/doctors/dashboard");
+                res.render("success/hospitalRemovedSucess");
             });
         });
     });

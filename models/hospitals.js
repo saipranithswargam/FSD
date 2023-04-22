@@ -18,6 +18,7 @@ const hospitalSchema = new mongoose.Schema(
         doctorsWorking: [
             { type: mongoose.Schema.Types.ObjectId, ref: "Doctors" },
         ],
+        verified: { type: String },
     },
     { timestamps: true }
 );

@@ -98,6 +98,7 @@ exports.postRegister = (req, res) => {
                         password: hashedPassword,
                         government: isGovernment,
                         specialityDep: speciality,
+                        verified: "false",
                     });
                     return newHospital.save();
                 })
@@ -124,7 +125,8 @@ exports.getDashboard = (req, res) => {
 };
 
 exports.getTreated = (req, res) => {
-    MedicalRecords.find({ hospitalId: req.hospital._id }).populate("doctorId patientId hospitalId")
+    MedicalRecords.find({ hospitalId: req.hospital._id })
+        .populate("doctorId patientId hospitalId")
         .then((result) => {
             console.log();
             res.render("results/getHospitalTreatedPatients", { data: result });
