@@ -265,6 +265,7 @@ exports.getMyAppointments = (req, res) => {
             ConfirmedAppointments.find({ patientId: req.patient._id })
                 .populate("doctorId hospitalId")
                 .then((cdata) => {
+                    console.log(cdata);
                     res.render("results/medicalAppointments", {
                         appointments: data,
                         cappointments: cdata,

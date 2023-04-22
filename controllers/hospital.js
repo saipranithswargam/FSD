@@ -29,10 +29,13 @@ exports.getLogin = (req, res) => {
 exports.postLogin = (req, res) => {
     const regNo = req.body.regNo;
     const password = req.body.password;
-    Hospital.findOne({ regNo: regNo })
+    Hospital.findOne({ regNo: regNo, verified: "true" })
         .then((hospital) => {
             if (!hospital) {
-                req.flash("error", "Invalid Registration Number or password.");
+                req.flash(
+                    "error",
+                    "Invalid Registration Number or password or you are not yet verified"
+                );
                 return res.redirect("/hospitals/login");
             }
             bcrypt

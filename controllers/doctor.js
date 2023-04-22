@@ -19,10 +19,13 @@ exports.getLogin = (req, res) => {
 exports.postLogin = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-    Doctor.findOne({ email: email })
+    Doctor.findOne({ email: email, verified: "true" })
         .then((doctor) => {
             if (!doctor) {
-                req.flash("error", "Invalid email or password.");
+                req.flash(
+                    "error",
+                    "Invalid email or password or you are not yet verified."
+                );
                 return res.redirect("/doctors/login");
             }
             bcrypt
@@ -99,33 +102,35 @@ exports.postRegister = (req, res) => {
                         );
                         return res.redirect("/doctors/register");
                     }
-                    return bcrypt
-                        .hash(password, 12)
-                        .then((hashedPassword) => {
-                            const newDoc = new Doctor({
-                                name: name,
-                                email: email,
-                                mobileNum: mobileNum,
-                                liscenceNo: liscenceNo,
-                                city: city,
-                                state: state,
-                                pincode: pincode,
-                                age: age,
-                                experience: experience,
-                                Speciality: speciality,
-                                password: hashedPassword,
-                                verified: "false",
-                            });
-                            newDoc.hospitalsWorkingFor.push(hospital._id);
-                            return newDoc.save();
-                        })
-                        .then((finalResult) => {
-                            hospital.doctorsWorking.push(finalResult._id);
-                            return hospital.save();
-                        })
-                        .then((result) => {
-                            res.render("success/docRegistrationSuccess");
-                        });
+                    return (
+                        bcrypt
+                            .hash(password, 12)
+                            .then((hashedPassword) => {
+                                const newDoc = new Doctor({
+                                    name: name,
+                                    email: email,
+                                    mobileNum: mobileNum,
+                                    liscenceNo: liscenceNo,
+                                    city: city,
+                                    state: state,
+                                    pincode: pincode,
+                                    age: age,
+                                    experience: experience,
+                                    Speciality: speciality,
+                                    password: hashedPassword,
+                                    verified: "false",
+                                });
+                                newDoc.hospitalsWorkingFor.push(hospital._id);
+                                return newDoc.save();
+                            })
+                            // .then((finalResult) => {
+                            //     hospital.doctorsWorking.push(finalResult._id);
+                            //     return hospital.save();
+                            // })
+                            .then((result) => {
+                                res.render("success/docRegistrationSuccess");
+                            })
+                    );
                 });
             }
         );
@@ -300,7 +305,7 @@ exports.postPrescribe = (req, res) => {
         })
         .then((result) => {
             console.log(result);
-            res.render("success/prescriptionSuccess")
+            res.render("success/prescriptionSuccess");
         });
 };
 

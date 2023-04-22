@@ -81,17 +81,26 @@ exports.postVerifyDoctor = (req, res) => {
     if (req.body.status === "accept") {
         Doctors.findByIdAndUpdate(req.body.doctorId, { verified: "true" }).then(
             (updated) => {
-                res.render("success/verifiedDoctor");
-                let message = {
-                    from: "testingnode061229@gmail.com",
-                    to: "saipranithswargam@gmail.com", //need to be changed
-                    subject: "Doctor Verification Completed",
-                    html: `
-                    We are glad to inform you that You have been sucessfully Verified and Accepted.
-                    Thanks For Joining Us !
-                    `,
-                };
-                transporter.sendMail(message);
+                const hospitalId = updated.hospitalsWorkingFor[0];
+                Hospitals.findById(hospitalId)
+                    .then((hospital) => {
+                        console.log(hospital);
+                        hospital.doctorsWorking.push(updated._id);
+                        return hospital.save();
+                    })
+                    .then((result) => {
+                        res.render("success/verifiedDoctor");
+                        let message = {
+                            from: "testingnode061229@gmail.com",
+                            to: "saipranithswargam@gmail.com", //need to be changed
+                            subject: "Doctor Verification Completed",
+                            html: `
+                        We are glad to inform you that You have been sucessfully Verified and Accepted.
+                        Thanks For Joining Us !
+                        `,
+                        };
+                        transporter.sendMail(message);
+                    });
             }
         );
     }
@@ -196,8 +205,8 @@ exports.postChosen = (req, res) => {
     if (req.body.chosen === "verifiedDoctors") {
         return res.redirect("/admin/verifieddoctors");
     }
-    if(req.body.chosen === 'verifiedHospitals'){
-        return res.redirect("/admin/verifiedhospitals")
+    if (req.body.chosen === "verifiedHospitals") {
+        return res.redirect("/admin/verifiedhospitals");
     }
 };
 
