@@ -319,8 +319,11 @@ exports.getHospitalsWorkingFor = (req, res) => {
 
 exports.getMedicalRecords = (req, res) => {
     MedicalRecords.find({ patientId: req.params.patientId })
+        .populate("hospitalId patientId doctorId")
         .then((medicalRecords) => {
-            res.send(medicalRecords);
+            res.render("results/getPatientMedicalRecords", {
+                data: medicalRecords,
+            });
         })
         .catch((err) => {
             console.log(err);

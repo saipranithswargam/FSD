@@ -66,13 +66,13 @@
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
-                                href="/patients/dashboard"
+                                href="/admin/dashboard"
                                 >Home</a
                             >
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
-                                href="/patients/logout"
+                                href="/admin/logout"
                                 >Logout</a
                             >
                         </div>
@@ -80,21 +80,26 @@
                 </div>
             </div>
         </nav>
+        <% if (hospitals.length === 0 ) { %>
+        <h1 class="empty" style="text-align: center; color: #0b8470">
+            Hospitals are yet to be Registered !
+        </h1>
+        <%} %> <% if (hospitals.length !== 0 ) { %>
+        <h1 class="empty" style="text-align: center; color: #0b8470">
+            Verified Hospitals List
+        </h1>
+        <%} %>
         <div class="outer-container">
             <% for (let hospital of hospitals) { %>
-            <a href="/patients/doctorlist/<%=hospital._id%>">
-                <div class="hospital-card">
-                    <div class="image-div">
-                        <img src="/images/HospitalIcon.svg" />
-                    </div>
-                    <div class="hospital-details">
-                        <h5><%=hospital.hName%></h5>
-                        <h5>
-                            Location:<%=hospital.city%>,<%=hospital.pincode%>
-                        </h5>
-                    </div>
+            <div class="hospital-card">
+                <div class="image-div">
+                    <img src="/images/HospitalIcon.svg" />
                 </div>
-            </a>
+                <div class="hospital-details">
+                    <h5><%=hospital.hName%></h5>
+                    <h5>Location:<%=hospital.city%>,<%=hospital.pincode%></h5>
+                </div>
+            </div>
             <% }%>
         </div>
     </body>

@@ -1,6 +1,7 @@
 const Admin = require("../models/admin");
 const Hospitals = require("../models/hospitals");
 const Doctors = require("../models/doctors");
+const Patients = require("../models/patients");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 let config = {
@@ -57,7 +58,17 @@ exports.postLogin = (req, res) => {
 };
 
 exports.getDashboard = (req, res) => {
-    res.render("dashboard/adminDashboard");
+    Doctors.countDocuments().then((doctorsCount) => {
+        Patients.countDocuments().then((patientsCount) => {
+            Hospitals.countDocuments().then((hospitalsCount) => {
+                res.render("dashboard/adminDashboard", {
+                    doctorsCount: doctorsCount,
+                    patientsCount: patientsCount,
+                    hospitalsCount: hospitalsCount,
+                });
+            });
+        });
+    });
 };
 
 exports.getVerifyDoctor = (req, res) => {
@@ -154,7 +165,7 @@ exports.postVerifyHospital = (req, res) => {
             });
             let message = {
                 from: "testingnode061229@gmail.com",
-                to: "saipranithswargam@gmail.com", //need to be changed
+                to: "saipranithswargam@gmail.com", 
                 subject: "Hospital Verification Denied",
                 html: `
                     We are sorry to inform you that Your hospital has failed Verification Process.
@@ -185,14 +196,30 @@ exports.getVerifySearchDoctors = (req, res) => {
 
 exports.getVerifiedDoctors = (req, res) => {
     Doctors.find({ verified: "true" }).then((doctors) => {
-        res.send(doctors);
+        res.render("adminResults/verifiedListDoc", {
+            doctors: doctors,
+        });
     });
 };
 
 exports.getVerifiedHospitals = (req, res) => {
     Hospitals.find({ verified: "true" }).then((hospitals) => {
-        res.send(hospitals);
+        res.render("adminResults/verifiedHospitalList", {
+            hospitals: hospitals,
+        });
     });
+};
+
+exports.getPatients = (req, res) => {
+    Patients.find({})
+        .then((patients) => {
+            res.render("adminResults/patientsList", {
+                patients: patients,
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 };
 
 exports.postChosen = (req, res) => {
@@ -201,12 +228,6 @@ exports.postChosen = (req, res) => {
     }
     if (req.body.chosen === "verifyHospital") {
         return res.redirect("/admin/verifyhospital");
-    }
-    if (req.body.chosen === "verifiedDoctors") {
-        return res.redirect("/admin/verifieddoctors");
-    }
-    if (req.body.chosen === "verifiedHospitals") {
-        return res.redirect("/admin/verifiedhospitals");
     }
 };
 

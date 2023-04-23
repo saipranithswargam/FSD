@@ -3,6 +3,7 @@ const Patient = require("../models/patients");
 const Appointments = require("../models/appointments");
 const ConfirmedAppointments = require("../models/confirmedAppointments");
 const MedicalRecords = require("../models/medicalRecords");
+const PDFDocument = require("pdfkit");
 const bcrypt = require("bcrypt");
 const { default: mongoose } = require("mongoose");
 exports.getLogin = (req, res) => {
@@ -265,7 +266,6 @@ exports.getMyAppointments = (req, res) => {
             ConfirmedAppointments.find({ patientId: req.patient._id })
                 .populate("doctorId hospitalId")
                 .then((cdata) => {
-                    console.log(cdata);
                     res.render("results/medicalAppointments", {
                         appointments: data,
                         cappointments: cdata,
@@ -428,6 +428,43 @@ exports.postChosen = (req, res) => {
     if (req.body.chosen === "medicalrecords") {
         return res.redirect("/patients/medicalrecords");
     }
+};
+
+exports.getMedicalRecord = (req, res) => {
+    const medicalRecordId = req.params.medicalrecordId;
+    MedicalRecords.findById(medicalRecordId)
+        .populate("hospitalId doctorId")
+        .then((record) => {
+            if (!record) {
+                return res.send("no medical record found");
+            }
+            const RecordName = "MedicalRecord-" + medicalRecordId + ".pdf";
+            const pdfDoc = new PDFDocument();
+            res.setHeader("Content-Type", "application/pdf");
+            res.setHeader(
+                "Content-Disposition",
+                'inline; filename="' + RecordName + '"'
+            );
+            pdfDoc.pipe(res);
+            pdfDoc.fontSize(26).text("MedicalRecord", {
+                underline: true,
+                align: "center",
+            });
+            pdfDoc.moveDown(0.5);
+            pdfDoc
+                .fontSize(10)
+                .text("HospitalName:" + record.hospitalId.hName, {
+                    align: "left",
+                });
+            pdfDoc.moveUp(1);
+            pdfDoc.fontSize(10).text("DoctorName:" + record.doctorId.name, {
+                align: "center",
+            });
+            pdfDoc.end();
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 };
 
 exports.Logout = (req, res, next) => {

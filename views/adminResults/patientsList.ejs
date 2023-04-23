@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Admin Dashboard</title>
+        <title>PatientDashboard</title>
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -20,7 +20,7 @@
             src="https://kit.fontawesome.com/0e6c012114.js"
             crossorigin="anonymous"
         ></script>
-        <link rel="stylesheet" href="/css/adminDashboard.css" />
+        <link rel="stylesheet" href="/css/verifiedHospitalList.css" />
     </head>
     <body>
         <nav class="navbar navbar-expand-lg custom" id="home">
@@ -63,23 +63,12 @@
                         <div
                             class="navbar-nav justify-content-end flex-grow-1 pe-3"
                         >
-                            <form
-                                class="ms-auto me-auto"
-                                action="/admin/chosen"
-                                method="post"
+                            <a
+                                class="nav-item nav-link custom-col"
+                                aria-current="page"
+                                href="/admin/dashboard"
+                                >Home</a
                             >
-                                <div class="search-bar">
-                                    <select name="chosen">
-                                        <option value="verifyDoctor">
-                                            Verify Doctors
-                                        </option>
-                                        <option value="verifyHospital">
-                                            Verify Hospitals
-                                        </option>
-                                    </select>
-                                    <button type="submit">Search</button>
-                                </div>
-                            </form>
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
@@ -91,32 +80,27 @@
                 </div>
             </div>
         </nav>
-        <div class="outer-div">
-            <div class="counter-container">
-                <a href="/admin/verifiedhospitals">
-                    <i class="fa-solid fa-stethoscope fa-3x"></i>
-                    <div class="counter" data-target="<%=doctorsCount%>"></div>
-                    <span>Total verified Doctors</span>
-                </a>
-            </div>
-            <div class="counter-container">
-                <a href="/admin/verifiedDoctors">
-                    <i class="fa-sharp fa-solid fa-hospital fa-3x"></i>
-                    <div
-                        class="counter"
-                        data-target="<%=hospitalsCount%>"
-                    ></div>
-                    <span>Total verified Hospitals</span>
-                </a>
-            </div>
-            <div class="counter-container">
-                <a href="/admin/patients">
+        <% if (patients.length === 0 ) { %>
+        <h1 class="empty" style="text-align: center; color: #0b8470">
+            patients are yet to be Registered !
+        </h1>
+        <%} %> <% if (patients.length !== 0 ) { %>
+        <h1 class="empty" style="text-align: center; color: #0b8470">
+            Users(patients) List
+        </h1>
+        <%} %>
+        <div class="outer-container">
+            <% for (let patient of patients) { %>
+            <div class="hospital-card">
+                <div class="image-div">
                     <i class="fa-solid fa-hospital-user fa-3x"></i>
-                    <div class="counter" data-target="<%=patientsCount%>"></div>
-                    <span>Total Users(Patients)</span>
-                </a>
+                </div>
+                <div class="hospital-details">
+                    <h5><%=patient.name%></h5>
+                    <h5>Location:<%=patient.city%>,<%=patient.pincode%></h5>
+                </div>
             </div>
+            <% }%>
         </div>
-        <script type="text/javascript" src="/js/adminDashboard.js"></script>
     </body>
 </html>

@@ -67,6 +67,8 @@ body::-webkit-scrollbar {
     grid-template-columns: 1fr 1fr 1fr;
     margin-top: 2rem;
     gap: 1rem;
+    padding: 1rem 1rem;
+    padding-bottom: 2rem;
 }
 .image-div {
     text-align: center;

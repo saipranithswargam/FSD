@@ -23,7 +23,7 @@
         <link rel="stylesheet" href="/css/medicalAppointments.css" />
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg custom navbar-fixed-top" id="home" >
+        <nav class="navbar navbar-expand-lg custom navbar-fixed-top" id="home">
             <div class="container custom">
                 <a class="navbar-brand brand" href="/">
                     <span class="single">CHS</span></a
@@ -83,7 +83,15 @@
         <div class="pendingAppointments" id="pending">
             <h1>Requested Appointments</h1>
             <% if(appointments.length===0) {%>
-            <h3>No Pending Appointments Found</h3>
+            <h3
+                style="
+                    text-align: center;
+                    margin-top: 2rem;
+                    color: rgba(0, 133, 111, 0.8);
+                "
+            >
+                No Pending Appointments Found
+            </h3>
             <% } %> <% if(appointments.length !==0 ) { %> <% for (let
             appointment of appointments ) {%>
             <div class="pAppointment">

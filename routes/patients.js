@@ -20,26 +20,52 @@ Router.get("/logout", isAuth, PatientController.Logout);
 
 Router.get("/hospitals", isAuth, PatientController.getHospitals);
 
-Router.get("/medicalrecords",isAuth,PatientController.getMedicalRecords)
+Router.get("/medicalrecords", isAuth, PatientController.getMedicalRecords);
 
-Router.post("/medicalrecords/filtered",isAuth,PatientController.postFilteredMedicalRecords);
+Router.post(
+    "/medicalrecords/filtered",
+    isAuth,
+    PatientController.postFilteredMedicalRecords
+);
 
-Router.get("/medicalrecords/filtered/:hospitalId/:doctorId",isAuth,PatientController.getFilteredMedicalRecords)
+Router.get(
+    "/medicalrecords/filtered/:hospitalId/:doctorId",
+    isAuth,
+    PatientController.getFilteredMedicalRecords
+);
 
-Router.get("/myappointments",isAuth,PatientController.getMyAppointments)
+Router.get("/myappointments", isAuth, PatientController.getMyAppointments);
 
-Router.get("/hospitals/filtered/:location/:speciality",isAuth,PatientController.getFiltered);
+Router.get(
+    "/hospitals/filtered/:location/:speciality",
+    isAuth,
+    PatientController.getFiltered
+);
 
 Router.post("/hospitals/filtered", isAuth, PatientController.postFiltered);
 
 Router.get("/doctorlist/:id", isAuth, PatientController.getDoctorsList);
 
-Router.get("/bookdoctor/:hospitalId/:doctorId", isAuth ,PatientController.getBookDoctor);
+Router.get(
+    "/bookdoctor/:hospitalId/:doctorId",
+    isAuth,
+    PatientController.getBookDoctor
+);
 
-Router.post("/bookdoctor",isAuth,PatientController.postBookDoctor);
+Router.post("/bookdoctor", isAuth, PatientController.postBookDoctor);
 
-Router.post("/cancleRequestedAppointment",isAuth,PatientController.cancleRequestedAppointment)
+Router.post(
+    "/cancleRequestedAppointment",
+    isAuth,
+    PatientController.cancleRequestedAppointment
+);
 
-Router.post("/chosen",isAuth,PatientController.postChosen)
+Router.get(
+    "/medicalrecord/:medicalrecordId",
+    isAuth,
+    PatientController.getMedicalRecord
+);
+
+Router.post("/chosen", isAuth, PatientController.postChosen);
 
 module.exports = Router;

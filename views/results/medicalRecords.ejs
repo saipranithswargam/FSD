@@ -147,6 +147,9 @@
                             <td><%=data.note%></td>
                         </tr>
                     </table>
+                    <form action="/patients/medicalrecord/<%=medicalRecord._id%>">
+                        <button>Download Medical Record</button>
+                    </form>
                 </div>
                 <% } %>
         </div>

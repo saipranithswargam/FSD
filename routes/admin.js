@@ -40,4 +40,6 @@ Router.post("/chosen", isAuth, AdminController.postChosen);
 
 Router.get("/logout", isAuth, AdminController.Logout);
 
+Router.get("/patients", isAuth, AdminController.getPatients);
+
 module.exports = Router;
