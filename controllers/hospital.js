@@ -4,6 +4,8 @@ const ConfirmedAppointments = require("../models/confirmedAppointments");
 const MedicalRecords = require("../models/medicalRecords");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
+const Doctors = require("../models/doctors");
+const Hospitals = require("../models/hospitals");
 let config = {
     service: "gmail",
     auth: {
@@ -129,13 +131,20 @@ exports.postRegister = (req, res) => {
 };
 
 exports.getDashboard = (req, res) => {
-    const data = {
-        hname: req.session.hospital.hName,
-        city: req.session.hospital.city,
-        state: req.session.hospital.state,
-        pincode: req.session.hospital.pincode,
-    };
-    res.render("dashboard/hospitalDashboard", { data: data });
+    const doctorsCount = req.hospital.doctorsWorking.length;
+    MedicalRecords.countDocuments({ hospitalId: req.hospital._id }).then(
+        (patientTreatedCount) => {
+            ConfirmedAppointments.countDocuments({
+                hospitalId: req.hospital._id,
+            }).then((bookedAppointmentsCount) => {
+                res.render("dashboard/hospitalDashboard", {
+                    patientTreatedCount: patientTreatedCount,
+                    bookedAppointmentsCount: bookedAppointmentsCount,
+                    doctorsCount: doctorsCount,
+                });
+            });
+        }
+    );
 };
 
 exports.getTreated = (req, res) => {
@@ -255,10 +264,10 @@ exports.postResheduleAppointment = (req, res) => {
                     res.render("success/appointmentConfirmed");
                     let message = {
                         from: "testingnode061229@gmail.com",
-                        to: Confirmed.patientId.email,
+                        to: "saipranithswargam@gmail.com", //need to change
                         subject: "Appointment Confirmed",
                         html: `
-                                <p>You Appointment for the doctor ${Confirmed.doctorId.name} has been Resheduled by hospital ${req.hospital.hName}</p>
+                                <p>Your Appointment for the doctor ${Confirmed.doctorId.name} has been Resheduled by hospital ${req.hospital.hName}</p>
                                 <p>Resheduled Appointment Date : ${Confirmed.appointmentDate}</p>
                                 <p>Resheduled Appointment Time : ${Confirmed.appointmentTime} </p>
                                 `,
@@ -313,6 +322,20 @@ exports.postChosen = (req, res) => {
     if (req.body.chosen === "bookedAppointments") {
         return res.redirect("/hospitals/bookedappointments");
     }
+};
+
+exports.getDoctors = (req, res) => {
+    Hospital.findById(req.hospital._id)
+        .populate("doctorsWorking")
+        .then((hospitalData) => {
+            console.log(hospitalData);
+            res.render("results/doctorsWorking", {
+                doctors: hospitalData.doctorsWorking,
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 };
 
 exports.Logout = (req, res, next) => {

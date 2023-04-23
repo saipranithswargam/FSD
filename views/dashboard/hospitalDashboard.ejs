@@ -76,7 +76,9 @@
                                         <option value="requestedAppointments">
                                             Requested Appointments
                                         </option>
-                                        <option value="bookedAppointments">Booked Appointments</option>
+                                        <option value="bookedAppointments">
+                                            Booked Appointments
+                                        </option>
                                     </select>
                                     <button type="submit">Search</button>
                                 </div>
@@ -92,5 +94,35 @@
                 </div>
             </div>
         </nav>
+        <div class="outer-div">
+            <div class="counter-container">
+                <a href="/hospitals/doctors">
+                    <i class="fa-solid fa-stethoscope fa-3x"></i>
+                    <div class="counter" data-target="<%=doctorsCount%>"></div>
+                    <span>Total Doctors</span>
+                </a>
+            </div>
+            <div class="counter-container">
+                <a href="/hospitals/bookedappointments">
+                    <i class="fa-solid fa-calendar-check fa-3x"></i>
+                    <div
+                        class="counter"
+                        data-target="<%=bookedAppointmentsCount%>"
+                    ></div>
+                    <span>Total Booked Appointments</span>
+                </a>
+            </div>
+            <div class="counter-container">
+                <a href="/hospitals/patientstreated">
+                    <i class="fa-solid fa-hospital-user fa-3x"></i>
+                    <div
+                        class="counter"
+                        data-target="<%=patientTreatedCount%>"
+                    ></div>
+                    <span>Total Patients Treated</span>
+                </a>
+            </div>
+        </div>
+        <script type="text/javascript" src="/js/adminDashboard.js"></script>
     </body>
 </html>

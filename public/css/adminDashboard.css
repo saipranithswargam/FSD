@@ -111,17 +111,40 @@ body::-webkit-scrollbar {
     align-items: center;
     justify-content: space-evenly;
 }
-.counter-container i{
+.counter-container i {
     color: #0b8470;
 }
-.counter-container .counter{
-    color: #7C7F7E;
+.counter-container .counter {
+    color: #7c7f7e;
 }
-.counter-container span{
+.counter-container span {
     font-weight: 500;
     font-size: larger;
 }
-.counter-container a{
+.counter-container a {
     text-decoration: none;
     color: black;
+}
+
+@media (max-width: 826px) {
+    .outer-div {
+        flex-direction: column;
+        height: fit-content;
+        width: 100vw;
+        padding: 3rem;
+        gap: 3rem;
+        margin: 0 auto;
+    }
+    .counter-container {
+        width: 60%;
+    }
+}
+
+@media (max-width: 488px) {
+    .counter-container {
+        width: 90%;
+    }
+    .outer-div {
+        padding: 3rem 1rem;
+    }
 }

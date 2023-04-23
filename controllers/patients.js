@@ -446,19 +446,73 @@ exports.getMedicalRecord = (req, res) => {
                 'inline; filename="' + RecordName + '"'
             );
             pdfDoc.pipe(res);
-            pdfDoc.fontSize(26).text("MedicalRecord", {
+            pdfDoc.fontSize(26).text(record.hospitalId.hName, {
                 underline: true,
                 align: "center",
             });
             pdfDoc.moveDown(0.5);
-            pdfDoc
-                .fontSize(10)
-                .text("HospitalName:" + record.hospitalId.hName, {
-                    align: "left",
-                });
-            pdfDoc.moveUp(1);
             pdfDoc.fontSize(10).text("DoctorName:" + record.doctorId.name, {
+                align: "left",
+            });
+            pdfDoc.moveUp(1);
+            pdfDoc.fontSize(10).text("PatientName:" + req.patient.name, {
                 align: "center",
+            });
+            pdfDoc.moveUp(1);
+            pdfDoc.fontSize(10).text("Date:" + record.date, {
+                align: "right",
+            });
+            pdfDoc.moveDown(1);
+            pdfDoc.fontSize(10).text("B.P:" + record.bloodPressure, {
+                align: "left",
+            });
+            pdfDoc.moveUp(1);
+            pdfDoc.fontSize(10).text("Temperature:" + record.temperature, {
+                align: "center",
+            });
+            pdfDoc.moveUp(1);
+            pdfDoc.fontSize(10).text("oxygen:" + record.oxygen, {
+                align: "right",
+            });
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(15).text("Medications:", {
+                align: "left",
+            });
+            let count = 1;
+            const splitMedicines = record.medicines[0].split(",");
+            splitMedicines.forEach((medicine) => {
+                pdfDoc.moveDown(0.3);
+                pdfDoc.fontSize(10).text(count + ". " + medicine);
+                count += 1;
+            });
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(15).text("Medical Tests:", {
+                align: "left",
+            });
+            count = 1;
+            const splitTests = record.medicalTests[0].split(",");
+            if (splitTests.length !== 0) {
+                splitTests.forEach((test) => {
+                    pdfDoc.moveDown(0.3);
+                    pdfDoc.fontSize(10).text(count + ". " + test);
+                    count += 1;
+                });
+            }
+            if (splitTests.length === 0) {
+                pdfDoc.moveDown(0.3);
+                pdfDoc.fontSize(10).text("No Tests Required");
+            }
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(12).text("Surgery Required : " + record.surgery, {
+                align: "left",
+            });
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(15).text("Doctors Note : ", {
+                align: "left",
+            });
+            pdfDoc.moveDown(0.5);
+            pdfDoc.fontSize(11).text(record.note, {
+                align: "left",
             });
             pdfDoc.end();
         })

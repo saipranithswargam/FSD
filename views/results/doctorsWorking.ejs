@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PatientDashboard</title>
+        <title>DoctorsList</title>
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -20,7 +20,7 @@
             src="https://kit.fontawesome.com/0e6c012114.js"
             crossorigin="anonymous"
         ></script>
-        <link rel="stylesheet" href="/css/verifiedHospitalList.css" />
+        <link rel="stylesheet" href="/css/verifiedDoctorsList.css" />
     </head>
     <body>
         <nav class="navbar navbar-expand-lg custom" id="home">
@@ -69,6 +69,7 @@
                                 href="/admin/dashboard"
                                 >Home</a
                             >
+
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
@@ -80,27 +81,29 @@
                 </div>
             </div>
         </nav>
-        <% if (patients.length === 0 ) { %>
+        <% if (doctors.length === 0 ) { %>
         <h1 class="empty" style="text-align: center; color: #0b8470">
-            patients are yet to be Registered !
+            Doctors are yet to be Registered !
         </h1>
-        <%} %> <% if (patients.length !== 0 ) { %>
+        <%} %> <% if (doctors.length !== 0 ) { %>
         <h1 class="empty" style="text-align: center; color: #0b8470">
-            Users(patients) List
+            Doctors List
         </h1>
         <%} %>
+
         <div class="outer-container">
-            <% for (let patient of patients) { %>
+            <% if (doctors.length !==0 ) { %> <% for (let doctor of doctors) {
+            %>
             <div class="hospital-card">
                 <div class="image-div">
-                    <i class="fa-solid fa-hospital-user fa-3x" style="color: #0b8470;"></i>
+                    <img src="/images/DoctorIcon.svg"/>
+
                 </div>
                 <div class="hospital-details">
-                    <h5><%=patient.name%></h5>
-                    <h5>Location:<%=patient.city%>,<%=patient.pincode%></h5>
+                    <h5><%=doctor.name %></h5>
                 </div>
             </div>
-            <% }%>
+            <% } %> <%} %>
         </div>
     </body>
 </html>

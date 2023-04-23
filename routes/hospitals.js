@@ -64,6 +64,8 @@ Router.post(
 
 Router.post("/chosen", isAuth, hospitalController.postChosen);
 
+Router.get("/doctors", isAuth, hospitalController.getDoctors);
+
 Router.post(
     "/patientstreated/searchpatient",
     isAuth,

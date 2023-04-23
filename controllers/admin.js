@@ -165,7 +165,7 @@ exports.postVerifyHospital = (req, res) => {
             });
             let message = {
                 from: "testingnode061229@gmail.com",
-                to: "saipranithswargam@gmail.com", 
+                to: "saipranithswargam@gmail.com",
                 subject: "Hospital Verification Denied",
                 html: `
                     We are sorry to inform you that Your hospital has failed Verification Process.
@@ -177,19 +177,23 @@ exports.postVerifyHospital = (req, res) => {
 };
 
 exports.getVerifySearchHospitals = (req, res) => {
-    Hospitals.findOne({ verified: "false", regNo: req.body.regNo }).then(
-        (hospital) => {
-            //error handling
-            res.send(hospital);
-        }
-    );
+    Hospitals.find({ verified: "false", regNo: req.body.regNo })
+        .then((hospitals) => {
+            res.render("verify/hospitalVerify", {
+                hospitals: hospitals,
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 };
 
 exports.getVerifySearchDoctors = (req, res) => {
     Doctors.find({ verified: "false", email: req.body.email }).then(
-        (doctor) => {
-            res.send(doctor);
-            //error handling
+        (doctors) => {
+            res.render("verify/doctorVerify", {
+                doctors: doctors,
+            });
         }
     );
 };
@@ -229,6 +233,17 @@ exports.postChosen = (req, res) => {
     if (req.body.chosen === "verifyHospital") {
         return res.redirect("/admin/verifyhospital");
     }
+};
+
+exports.postRating = (req, res) => {
+    const body = req.body;
+
+    const rating = new Ratings({
+        patientId: body.patientId,
+        doctorId: body.doctorId,
+        rating: body.rating,
+    });
+    rating.save();
 };
 
 exports.Logout = (req, res) => {
