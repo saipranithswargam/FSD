@@ -2,7 +2,16 @@ const Doctor = require("../models/doctors");
 const bcrypt = require("bcrypt");
 const Hospital = require("../models/hospitals");
 const ConfirmedAppointments = require("../models/confirmedAppointments");
+const nodemailer = require("nodemailer");
 const MedicalRecords = require("../models/medicalRecords");
+let config = {
+    service: "gmail",
+    auth: {
+        user: "testingnode061229@gmail.com",
+        pass: "xzentliyxvefqpwl",
+    },
+};
+let transporter = nodemailer.createTransport(config);
 exports.getLogin = (req, res) => {
     let message = req.flash("error");
     if (message.length > 0) {
@@ -340,6 +349,29 @@ exports.postChosen = (req, res) => {
     if (req.body.chosen === "hospitalsWorking") {
         return res.redirect("/doctors/gethospitalsworkingfor");
     }
+};
+
+exports.removeAppointment = (req, res) => {
+    const appointmentId = req.params.appointmentId;
+    ConfirmedAppointments.findByIdAndDelete(appointmentId)
+        .then((result) => {
+            result.populate("doctorId").then((details) => {
+                res.render("success/skipAppointment");
+                let message = {
+                    from: "testingnode061229@gmail.com",
+                    to: "saipranithswargam@gmail.com", //this email id has to be changed
+                    subject: "Appointment Confirmed",
+                    html: `
+                    <p>Your Appointment for the doctor ${details.doctorId.name} has been removed by the doctor due to your unavailability at the appointment time</p>
+                    <p>You may request another appointment via CHS</p>
+                    `,
+                };
+                transporter.sendMail(message);
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 };
 
 exports.Logout = (req, res, next) => {

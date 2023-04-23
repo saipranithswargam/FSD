@@ -32,7 +32,11 @@ Router.get(
     doctorController.getPrescribe
 );
 
-Router.get("/gethospitalsworkingfor",isAuth,doctorController.getHospitalsWorkingFor)
+Router.get(
+    "/gethospitalsworkingfor",
+    isAuth,
+    doctorController.getHospitalsWorkingFor
+);
 
 Router.post("/prescribe", isAuth, doctorController.postPrescribe);
 
@@ -46,6 +50,12 @@ Router.get(
     "/medicalrecords/:patientId",
     isAuth,
     doctorController.getMedicalRecords
+);
+
+Router.get(
+    "/skipappointment/:appointmentId",
+    isAuth,
+    doctorController.removeAppointment
 );
 
 Router.post("/chosen", isAuth, doctorController.postChosen);

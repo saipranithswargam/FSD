@@ -112,6 +112,7 @@ body::-webkit-scrollbar {
     height: fit-content;
     margin-top: 2rem;
     border-radius: 10px;
+    padding-bottom: 2rem;
 }
 .appointment-requests h1 {
     text-align: center;
@@ -200,4 +201,15 @@ td button,
 .button-home {
     text-decoration: none;
     display: inline-block;
+}
+.skip-appointment {
+    margin-top: 1rem;
+}
+.skip-appointment .button {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+.skip-appointment .button:hover {
+    cursor: pointer;
 }
