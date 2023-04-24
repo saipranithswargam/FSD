@@ -136,7 +136,6 @@ exports.getDashboard = (req, res) => {
 
 exports.getHospitals = (req, res) => {
     Hospitals.find({ verified: "true" }).then((hospitals) => {
-        console.log(hospitals);
         res.render("results/hospitalsList", {
             hospitals: hospitals,
         });
@@ -345,16 +344,30 @@ exports.getDoctorsList = (req, res) => {
     const id = req.params.id;
     Hospitals.findById(id)
         .then((hospital) => {
-            hospital.populate("doctorsWorking").then((results) => {
-                const finalDoctorsList = results.doctorsWorking.filter(
-                    (doctor) => {
-                        return doctor.verified === "true";
-                    }
-                );
-                res.render("results/listDoc", {
-                    doctors: finalDoctorsList,
-                    type: hospital.specialityDep,
-                    hospitalId: id,
+            Rating.find({ hospitalId: id }).then((documents) => {
+                let count = documents.length;
+                let sum = 0;
+                for (let doc of documents) {
+                    sum += doc.rating;
+                }
+                let rating = 0;
+                if (sum !== 0 && count !== 0) {
+                    rating = Math.round(sum / count);
+                } else {
+                    rating = -1;
+                }
+                hospital.populate("doctorsWorking").then((results) => {
+                    const finalDoctorsList = results.doctorsWorking.filter(
+                        (doctor) => {
+                            return doctor.verified === "true";
+                        }
+                    );
+                    res.render("results/listDoc", {
+                        doctors: finalDoctorsList,
+                        type: hospital.specialityDep,
+                        hospitalId: id,
+                        rating: rating - 1,
+                    });
                 });
             });
         })
@@ -559,19 +572,6 @@ exports.getRating = (req, res) => {
     );
 };
 
-// exports.getRating = (req, res) => {
-//     Rating.findAll({ hospitalId: req.params }).then((hospital) => {
-//         var sum = 0;
-//         var i = 0;
-
-//         hospital.forEach((x) => {
-//             sum = sum + x.rating;
-//             i++;
-//         });
-//         const avg = (sum / i).toFixed(1);
-//     });
-// };
-
 exports.postRating = (req, res) => {
     if (req.body.type === "add") {
         const rating = new Rating({
@@ -580,13 +580,13 @@ exports.postRating = (req, res) => {
             rating: req.body.rating,
         });
         rating.save().then((result) => {
-            res.send("sucessfully rated !");
+            res.render("success/sucessRated");
         });
     }
     if (req.body.type === "modify") {
         Rating.findByIdAndUpdate(req.body.id, { rating: req.body.rating }).then(
             (result) => {
-                res.send("sucessfully rated !");
+                res.render("success/sucessRated");
             }
         );
     }

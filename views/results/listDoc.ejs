@@ -81,9 +81,40 @@
                 </div>
             </div>
         </nav>
-        <%if (type === 'MultiSpeciality' && doctors.length !== 0 ) {%>
+        <% if(rating===-1){ %>
+        <h4 style="text-align: center">Not Yet Rated</h4>
+        <%}%> <% if(rating!==-1){%>
+        <div class="rating">
+            <h4>Rated :</h4>
+            <% for(let i=1;i<=5;i++ ) { %> <%if(i===rating){%>
+            <input
+                type="radio"
+                name="rating"
+                id="rating-<%=i%>"
+                value="<%=i%>"
+                checked
+                disabled
+            />
+            <%}%> <%if(i!==rating){%>
+            <input
+                type="radio"
+                name="rating"
+                id="rating-<%=i%>"
+                value="<%=i%>"
+                disabled
+            />
+            <%}%> <% }%>
+            <div class="rating__box">
+                <label for="rating-1" class="rating__star">&starf;</label>
+                <label for="rating-2" class="rating__star">&starf;</label>
+                <label for="rating-3" class="rating__star">&starf;</label>
+                <label for="rating-4" class="rating__star">&starf;</label>
+                <label for="rating-5" class="rating__star">&starf;</label>
+            </div>
+        </div>
+        <%}%> <%if (type === 'MultiSpeciality' && doctors.length !== 0 ) {%>
         <div class="filter-div">
-            <form class="filter-form" method="post" action="" >
+            <form class="filter-form" method="post" action="">
                 <div class="input-select">
                     <label class="on-top">Filter by Speciality:</label>
                     <select name="speciality">
