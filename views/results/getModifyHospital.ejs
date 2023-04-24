@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Modify details</title>
+    </head>
+    <link rel="stylesheet" href="/css/modify.css" />
+    <body>
+        <div class="main">
+            <div class="form-div">
+                <h3>Modify Profile</h3>
+                <form
+                    action="/hospitals/modify"
+                    method="post"
+                    onsubmit="return patientValidation()"
+                >
+                    <div class="input-group float-left">
+                        <label class="on-top">Name</label>
+                        <input
+                            class="full-width"
+                            placeholder="Name"
+                            name="hname"
+                            value="<%=data.hName%>"
+                            required
+                        />
+                    </div>
+                    <div class="input-group float-left">
+                        <label class="on-top">registration Number</label>
+                        <input
+                            placeholder="regNo"
+                            name="age"
+                            value="<%=data.regNo%>"
+                            disabled
+                            class="full-width"
+                        />
+                    </div>
+
+                    <div class="input-group float-left">
+                        <label class="on-top">State</label>
+                        <input
+                            placeholder="State"
+                            name="state"
+                            required
+                            value="<%=data.state%>"
+                        />
+                        <label class="on-top">City</label>
+                        <input
+                            placeholder="City"
+                            name="city"
+                            required
+                            value="<%=data.city%>"
+                        />
+                    </div>
+                    <div class="input-group float-left">
+                        <label class="on-top">Pincode</label>
+                        <input
+                            placeholder="Pincode"
+                            name="pincode"
+                            value="<%=data.pincode%>"
+                            required
+                        />
+                    </div>
+                    <div class="last-details float-left">
+                        <label class="on-top">Email</label>
+                        <input
+                            placeholder="Email"
+                            name="email"
+                            required
+                            id="input--email"
+                            value="<%=data.email%>"
+                        />
+                    </div>
+                    <div class="errorParas">
+                        <p id="emailErrorPara" class="invalid"></p>
+                        <p id="passwordErrorPara" class="invalid"></p>
+                        <p id="confirmPassError" class="invalid"></p>
+                        <p class="invalid"><%=errorMessage%></p>
+                    </div>
+                    <div>
+                        <button type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script type="text/javascript" src="/js/frontendValidation.js"></script>
+    </body>
+</html>

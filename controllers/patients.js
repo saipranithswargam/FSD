@@ -122,12 +122,13 @@ exports.postRegister = (req, res) => {
 };
 
 exports.getDashboard = (req, res) => {
+    console.log(req.patient);
     const data = {
-        name: req.session.patient.name,
-        age: req.session.patient.age,
-        city: req.session.patient.city,
-        state: req.session.patient.state,
-        pincode: req.session.patient.pincode,
+        name: req.patient.name,
+        age: req.patient.age,
+        city: req.patient.city,
+        state: req.patient.state,
+        pincode: req.patient.pincode,
     };
     res.render("dashboard/patientDashboard", {
         data: data,
@@ -471,8 +472,8 @@ exports.postChosen = (req, res) => {
     if (req.body.chosen === "rate") {
         return res.redirect("/patients/getratehospital");
     }
-    if(req.body.chosen === 'medicalrecords'){
-        return res.redirect("/patients/medicalrecords")
+    if (req.body.chosen === "medicalrecords") {
+        return res.redirect("/patients/medicalrecords");
     }
 };
 
@@ -618,6 +619,93 @@ exports.postRating = (req, res) => {
                 res.render("success/sucessRated");
             }
         );
+    }
+};
+
+exports.getModify = (req, res) => {
+    let message = req.flash("error");
+    if (message.length > 0) {
+        message = message[0];
+    } else {
+        message = null;
+    }
+    res.render("results/getModifyPatient", {
+        data: req.patient,
+        errorMessage: message,
+    });
+};
+
+exports.postModify = (req, res) => {
+    let email = req.body.email;
+    if (email === req.patient.email) {
+        const name = req.body.name;
+        const gender = req.body.gender;
+        const age = req.body.age;
+        const height = req.body.height;
+        const weight = req.body.weight;
+        const allergies = req.body.allergies;
+        const bloodGroup = req.body.bloodGroup;
+        const state = req.body.state;
+        const city = req.body.city;
+        const pincode = req.body.pincode;
+        const mobileNumber = req.body.mobileNumber;
+        const maritalStatus = req.body.maritalStatus;
+        Patient.findByIdAndUpdate(req.patient, {
+            name: name,
+            mobileNum: mobileNumber,
+            height: height,
+            weight: weight,
+            state: state,
+            city: city,
+            pincode: pincode,
+            age: age,
+            gender: gender,
+            married: maritalStatus,
+            allergies: allergies,
+        }).then((result) => {
+           return res.redirect("/patients/dashboard");
+        });
+    }
+    if (email !== req.patient.email) {
+        Patient.findOne({ email: email }).then((patient) => {
+            if (!patient) {
+                const email = req.body.email;
+                const name = req.body.name;
+                const gender = req.body.gender;
+                const age = req.body.age;
+                const height = req.body.height;
+                const weight = req.body.weight;
+                const allergies = req.body.allergies;
+                const state = req.body.state;
+                const city = req.body.city;
+                const pincode = req.body.pincode;
+                const mobileNumber = req.body.mobileNumber;
+                const maritalStatus = req.body.maritalStatus;
+                Patient.findByIdAndUpdate(req.patient, {
+                    email: email,
+                    name: name,
+                    mobileNum: mobileNumber,
+                    height: height,
+                    weight: weight,
+                    state: state,
+                    city: city,
+                    pincode: pincode,
+                    age: age,
+                    gender: gender,
+                    married: maritalStatus,
+                    allergies: allergies,
+                }).then((result) => {
+                   return res.redirect("/patients/dashboard");
+                });
+            }
+            if (patient) {
+                req.flash(
+                    "error",
+                    "Given Email to modify Already Registerd please give another."
+                );
+                res.redirect("/patients/modify");
+            }
+        });
     }
 };
 

@@ -74,4 +74,8 @@ Router.post(
 
 Router.get("/removedoctor/:doctorId", isAuth, hospitalController.removeDoctor);
 
+Router.get("/modify", isAuth, hospitalController.getmodify);
+
+Router.post("/modify", isAuth, hospitalController.postModify);  
+
 module.exports = Router;

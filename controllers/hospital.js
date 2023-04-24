@@ -82,7 +82,6 @@ exports.getRegister = (req, res) => {
 };
 
 exports.postRegister = (req, res) => {
-    console.log(req.body);
     const hname = req.body.hname;
     const regNo = req.body.regNo;
     const speciality = req.body.speciality;
@@ -131,6 +130,7 @@ exports.postRegister = (req, res) => {
 };
 
 exports.getDashboard = (req, res) => {
+    console.log(req.hospital);
     const doctorsCount = req.hospital.doctorsWorking.length;
     MedicalRecords.countDocuments({ hospitalId: req.hospital._id }).then(
         (patientTreatedCount) => {
@@ -351,6 +351,63 @@ exports.removeDoctor = (req, res) => {
         .catch((err) => {
             console.log(err);
         });
+};
+
+exports.getmodify = (req, res) => {
+    let message = req.flash("error");
+    if (message.length > 0) {
+        message = message[0];
+    } else {
+        message = null;
+    }
+    res.render("results/getModifyHospital", {
+        data: req.hospital,
+        errorMessage: message,
+    });
+};
+
+exports.postModify = (req, res) => {
+    let email = req.body.email;
+    if (email === req.hospital.email) {
+        const hname = req.body.hname;
+        const state = req.body.state;
+        const city = req.body.city;
+        const pincode = req.body.pincode;
+        Hospital.findByIdAndUpdate(req.hospital._id, {
+            hName: hname,
+            city: city,
+            state: state,
+            pincode: pincode,
+        }).then((result) => {
+            return res.redirect("/hospitals/dashboard");
+        });
+    }
+    if (email !== req.hospital.email) {
+        Hospital.findOne({ email: email }).then((hospital) => {
+            const hname = req.body.hname;
+            const state = req.body.state;
+            const city = req.body.city;
+            const pincode = req.body.pincode;
+            if (!hospital) {
+                Hospital.findByIdAndUpdate(req.hospital._id, {
+                    hName: hname,
+                    city: city,
+                    state: state,
+                    pincode: pincode,
+                    email: email,
+                }).then((result) => {
+                    return res.redirect("/hospitals/dashboard");
+                });
+            }
+            if (hospital) {
+                req.flash(
+                    "error",
+                    "Given Email to modify Already Registerd please give another."
+                );
+                return res.redirect("/hospitals/modify");
+            }
+        });
+    }
 };
 
 exports.Logout = (req, res, next) => {

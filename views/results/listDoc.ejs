@@ -112,25 +112,6 @@
                 <label for="rating-5" class="rating__star">&starf;</label>
             </div>
         </div>
-        <%}%> <%if (type === 'MultiSpeciality' && doctors.length !== 0 ) {%>
-        <div class="filter-div">
-            <form class="filter-form" method="post" action="">
-                <div class="input-select">
-                    <label class="on-top">Filter by Speciality:</label>
-                    <select name="speciality">
-                        <option>All</option>
-                        <option>Dermatologist</option>
-                        <option>Gastroenterologist</option>
-                        <option>Oncologist</option>
-                        <option>orthopedic</option>
-                        <option>ENT</option>
-                        <option>ophthalmologist</option>
-                        <option>other</option>
-                    </select>
-                </div>
-                <button>Filter</button>
-            </form>
-        </div>
         <%}%> <% if (doctors.length === 0 ) { %>
         <h1 class="empty">Doctors are yet to be Registered !</h1>
         <%} %>
@@ -150,6 +131,7 @@
                 </div>
                 <div class="hospital-details">
                     <h5><%=doctor.name %></h5>
+                    <h5><%=doctor.Speciality%></h5>
                     <div class="button-div">
                         <a
                             href="/patients/bookdoctor/<%=hospitalId%>/<%=doctor._id%>"

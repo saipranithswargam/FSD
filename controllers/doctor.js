@@ -147,6 +147,7 @@ exports.postRegister = (req, res) => {
 };
 
 exports.getDashboard = async (req, res) => {
+    console.log(req.doctor);
     const hospitalsWorkingFor = await req.doctor.populate(
         "hospitalsWorkingFor"
     );
@@ -372,6 +373,83 @@ exports.removeAppointment = (req, res) => {
         .catch((err) => {
             console.log(err);
         });
+};
+
+exports.getModify = (req, res) => {
+    let message = req.flash("error");
+    if (message.length > 0) {
+        message = message[0];
+    } else {
+        message = null;
+    }
+    res.render("results/getModifyDoctor", {
+        data: req.doctor,
+        errorMessage: message,
+    });
+};
+
+exports.postModify = (req, res) => {
+    console.log(req.body);
+    let email = req.body.email;
+    if (email === req.doctor.email) {
+        const name = req.body.name;
+        const age = req.body.age;
+        const liscenceNo = req.body.liscenceNo;
+        const experience = req.body.experience;
+        const state = req.body.state;
+        const city = req.body.city;
+        const pincode = req.body.pincode;
+        const mobileNum = req.body.mobileNum;
+        Doctor.findByIdAndUpdate(req.doctor._id, {
+            name: name,
+            mobileNum: mobileNum,
+            liscenceNo: liscenceNo,
+            city: city,
+            state: state,
+            pincode: pincode,
+            age: age,
+            experience: experience,
+        }).then((result) => {
+            console.log(result);
+            return res.redirect("/doctors/dashboard");
+        });
+    }
+    if (email !== req.doctor.email) {
+        Doctor.findOne({ email: email }).then((doctor) => {
+            if (!doctor) {
+                const email = req.body.email;
+                const name = req.body.name;
+                const age = req.body.age;
+                const liscenceNo = req.body.liscenceNo;
+                const experience = req.body.experience;
+                const state = req.body.state;
+                const city = req.body.city;
+                const pincode = req.body.pincode;
+                const mobileNum = req.body.mobileNum;
+                Doctor.findByIdAndUpdate(req.doctor._id, {
+                    email: email,
+                    name: name,
+                    mobileNum: mobileNum,
+                    liscenceNo: liscenceNo,
+                    city: city,
+                    state: state,
+                    pincode: pincode,
+                    age: age,
+                    experience: experience,
+                }).then((result) => {
+                    console.log(result);
+                    return res.redirect("/doctors/dashboard");
+                });
+            }
+            if (doctor) {
+                req.flash(
+                    "error",
+                    "Given Email to modify Already Registerd please give another."
+                );
+                res.redirect("/doctors/modify");
+            }
+        });
+    }
 };
 
 exports.Logout = (req, res, next) => {

@@ -133,7 +133,7 @@ form {
     width: 80%;
 }
 form input {
-    padding: 1rem 1.5rem;
+    padding: 0.5rem 0.55rem;
     border-radius: 9px;
 }
 .email {

@@ -60,4 +60,8 @@ Router.get(
 
 Router.post("/chosen", isAuth, doctorController.postChosen);
 
+Router.get("/modify", isAuth, doctorController.getModify);
+
+Router.post("/modify", isAuth, doctorController.postModify);
+
 module.exports = Router;

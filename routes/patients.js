@@ -83,4 +83,8 @@ Router.get(
 );
 Router.post("/chosen", isAuth, PatientController.postChosen);
 
+Router.get("/modify",isAuth,PatientController.getModify)
+
+Router.post("/modify",isAuth,PatientController.postModify)
+
 module.exports = Router;
