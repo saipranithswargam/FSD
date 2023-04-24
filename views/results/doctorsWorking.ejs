@@ -66,14 +66,14 @@
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
-                                href="/admin/dashboard"
+                                href="/hospitals/dashboard"
                                 >Home</a
                             >
 
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
-                                href="/admin/logout"
+                                href="/hospitals/logout"
                                 >Logout</a
                             >
                         </div>
@@ -82,11 +82,14 @@
             </div>
         </nav>
         <% if (doctors.length === 0 ) { %>
-        <h1 class="empty" style="text-align: center; color: #0b8470">
+        <h1 class="empty" style="text-align: center; color: #7c7f7e">
             Doctors are yet to be Registered !
+            <div class="imageDiv">
+                <img src="/images/Nodata-2.svg" />
+            </div>
         </h1>
         <%} %> <% if (doctors.length !== 0 ) { %>
-        <h1 class="empty" style="text-align: center; color: #0b8470">
+        <h1 class="empty" style="text-align: center; color: #7c7f7e">
             Doctors List
         </h1>
         <%} %>
@@ -96,11 +99,19 @@
             %>
             <div class="hospital-card">
                 <div class="image-div">
-                    <img src="/images/DoctorIcon.svg"/>
-
+                    <img src="/images/DoctorIcon.svg" />
                 </div>
                 <div class="hospital-details">
                     <h5><%=doctor.name %></h5>
+                    <h5><%=doctor.Speciality%></h5>
+                </div>
+                <div style="text-align: center">
+                    <a
+                        class="remove-doctor"
+                        href="/hospitals/removedoctor/<%=doctor._id%>"
+                    >
+                        <button>Remove Doctor</button>
+                    </a>
                 </div>
             </div>
             <% } %> <%} %>

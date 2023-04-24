@@ -72,4 +72,6 @@ Router.post(
     hospitalController.getSearchPatientTreated
 );
 
+Router.get("/removedoctor/:doctorId", isAuth, hospitalController.removeDoctor);
+
 module.exports = Router;

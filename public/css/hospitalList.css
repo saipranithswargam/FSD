@@ -85,6 +85,7 @@ body::-webkit-scrollbar {
     padding: 8% 7%;
     box-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.39);
     border-radius: 10px;
+    background-color: white;
 }
 
 .outer-container a {
@@ -168,6 +169,7 @@ body::-webkit-scrollbar {
         flex-direction: column;
     }
     .input-select select {
+        align-self: center;
         width: 50%;
     }
     .input-select {
@@ -175,4 +177,13 @@ body::-webkit-scrollbar {
         flex-direction: column;
         width: 60%;
     }
+}
+
+.imageDiv {
+    width: 100%;
+    height: fit-content;
+    text-align: center;
+}
+.imageDiv img {
+    width: 50%;
 }

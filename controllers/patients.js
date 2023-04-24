@@ -259,21 +259,47 @@ exports.getFilteredMedicalRecords = (req, res) => {
     }
 };
 
-exports.getMyAppointments = (req, res) => {
+// exports.getMyAppointments = (req, res) => {
+//     Appointments.find({ patientId: req.patient._id })
+//         .populate("doctorId hospitalId")
+//         .then((data) => {
+//             ConfirmedAppointments.find({ patientId: req.patient._id })
+//                 .populate("doctorId hospitalId")
+//                 .then((cdata) => {
+//                     res.render("results/medicalAppointments", {
+//                         appointments: data,
+//                         cappointments: cdata,
+//                     });
+//                 })
+//                 .catch((err) => {
+//                     console.log(err);
+//                 });
+//         })
+//         .catch((err) => {
+//             console.log(err);
+//         });
+// };
+
+exports.getConfirmAppointments = (req, res) => {
+    ConfirmedAppointments.find({ patientId: req.patient._id })
+        .populate("doctorId hospitalId")
+        .then((cdata) => {
+            res.render("results/confirmedPatientAppointments", {
+                appointments: cdata,
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+
+exports.getRequestedAppointments = (req, res) => {
     Appointments.find({ patientId: req.patient._id })
         .populate("doctorId hospitalId")
         .then((data) => {
-            ConfirmedAppointments.find({ patientId: req.patient._id })
-                .populate("doctorId hospitalId")
-                .then((cdata) => {
-                    res.render("results/medicalAppointments", {
-                        appointments: data,
-                        cappointments: cdata,
-                    });
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            res.render("results/requestedPatientAppointments", {
+                appointments: data,
+            });
         })
         .catch((err) => {
             console.log(err);
@@ -418,7 +444,7 @@ exports.cancleRequestedAppointment = (req, res) => {
     if (req.body.type === "requested") {
         Appointments.deleteOne({ _id: req.body.appointmentId })
             .then(() => {
-                res.redirect("/patients/myappointments");
+                res.redirect("/patients/requestedappointments");
             })
             .catch((err) => {
                 console.log(err);
@@ -427,7 +453,7 @@ exports.cancleRequestedAppointment = (req, res) => {
     if (req.body.type === "confirmed") {
         ConfirmedAppointments.deleteOne({ _id: req.body.appointmentId })
             .then(() => {
-                res.redirect("/patients/myappointments");
+                res.redirect("/patients/confirmendappointments");
             })
             .catch((err) => {
                 console.log(err);
@@ -436,14 +462,17 @@ exports.cancleRequestedAppointment = (req, res) => {
 };
 
 exports.postChosen = (req, res) => {
-    if (req.body.chosen === "appointment") {
-        return res.redirect("/patients/myappointments");
+    if (req.body.chosen === "reqAppointments") {
+        return res.redirect("/patients/requestedappointments");
     }
-    if (req.body.chosen === "medicalrecords") {
-        return res.redirect("/patients/medicalrecords");
+    if (req.body.chosen === "cnfAppointments") {
+        return res.redirect("/patients/confirmendappointments");
     }
     if (req.body.chosen === "rate") {
         return res.redirect("/patients/getratehospital");
+    }
+    if(req.body.chosen === 'medicalrecords'){
+        return res.redirect("/patients/medicalrecords")
     }
 };
 

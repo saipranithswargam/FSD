@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+const errorController = require("./controllers/error");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
@@ -79,6 +80,10 @@ app.use("/patients", patientRoutes);
 app.use("/hospitals", hospitalRoutes);
 app.use("/doctors", doctorRoutes);
 app.use("/admin", adminRoutes);
+
+app.get("/500", errorController.get500);
+app.use(errorController.get404);
+
 mongoose
     .connect(process.env.DB_URI)
     .then((result) => {

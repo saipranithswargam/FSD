@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PatientDashboard</title>
+        <title>My Appointments</title>
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -20,10 +20,10 @@
             src="https://kit.fontawesome.com/0e6c012114.js"
             crossorigin="anonymous"
         ></script>
-        <link rel="stylesheet" href="/css/hospitalList.css" />
+        <link rel="stylesheet" href="/css/medicalAppointments.css" />
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg custom" id="home">
+        <nav class="navbar navbar-expand-lg custom navbar-fixed-top" id="home">
             <div class="container custom">
                 <a class="navbar-brand brand" href="/">
                     <span class="single">CHS</span></a
@@ -66,13 +66,13 @@
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
-                                href="/doctors/dashboard"
+                                href="/patients/dashboard"
                                 >Home</a
                             >
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
-                                href="/doctors/logout"
+                                href="/patients/logout"
                                 >Logout</a
                             >
                         </div>
@@ -80,22 +80,54 @@
                 </div>
             </div>
         </nav>
-        <% if (hospitals.length === 0 ) {%>
-        <h1 style="text-align: center; color: #0b8470;margin-top: 2rem;">No hospitals Found !</h1>
-        <%}%>
-        <div class="outer-container">
-            <% if (hospitals.length !== 0 ) { %> <% for (let hospital of
-            hospitals) { %>
-            <div class="hospital-card">
-                <div class="image-div">
-                    <img src="/images/HospitalIcon.svg" />
-                </div>
-                <div class="hospital-details">
-                    <h5><%=hospital.hName%></h5>
-                    <h5>Location:<%=hospital.city%>,<%=hospital.pincode%></h5>
-                </div>
+        <% if(appointments.length===0) {%>
+        <h1 style="text-align: center; color: #7c7f7e">
+            No Appointments found
+        </h1>
+        <div class="imageDiv">
+            <img src="/images/NoData.svg" />
+        </div>
+        <% } %>
+        <div class="pendingAppointments" id="pending">
+            <% if(appointments.length !==0 ) { %>
+            <h1 style="text-align: center; color: #7c7f7e">
+                Requested Appointments
+            </h1>
+            <% for (let appointment of appointments ) {%>
+            <div class="pAppointment">
+                <table class="appointment-table">
+                    <tr>
+                        <td>HospitalName :</td>
+                        <td><%=appointment.hospitalId.hName%></td>
+                    </tr>
+                    <tr>
+                        <td>DoctorName :</td>
+                        <td><%=appointment.doctorId.name%></td>
+                    </tr>
+                    <tr>
+                        <td>AppointmentDate :</td>
+                        <td><%=appointment.appointmentDate%></td>
+                    </tr>
+                    <tr>
+                        <td>AppointmentTime :</td>
+                        <td><%=appointment.appointmentTime%></td>
+                    </tr>
+                </table>
+                <form
+                    action="/patients/cancleRequestedAppointment"
+                    method="post"
+                    class="cancle-form"
+                >
+                    <input
+                        value="<%=appointment._id%>"
+                        name="appointmentId"
+                        type="hidden"
+                    />
+                    <input type="hidden" value="requested" name="type" />
+                    <button type="submit">Cancel appointment</button>
+                </form>
             </div>
-            <% }%> <%}%>
+            <%}%> <%}%>
         </div>
     </body>
 </html>

@@ -8,6 +8,7 @@
 body {
     padding: 0.5% 3%;
     background-color: #effaf8;
+    overflow-x: hidden;
 }
 body {
     -ms-overflow-style: none;
@@ -63,11 +64,12 @@ body::-webkit-scrollbar {
     background-color: #effaf8;
 }
 /*appointment table*/
-.pendingAppointments h1{
+.pendingAppointments h1 {
     text-align: center;
     color: rgba(0, 133, 111, 0.8);
 }
-.confimedAppointments h1,.confimedAppointments h3{
+.confimedAppointments h1,
+.confimedAppointments h3 {
     text-align: center;
     color: rgba(0, 133, 111, 0.8);
 }
@@ -85,7 +87,7 @@ td {
     padding: 10px;
 }
 
-.cancle-form button{
+.cancle-form button {
     border: none;
     background-color: #41b1a0;
     padding: 0.5rem;
@@ -93,13 +95,21 @@ td {
     font-weight: 700;
     margin-top: 0.5rem;
 }
-.cancle-form button:hover{
+.cancle-form button:hover {
     border: 1px solid #41b1a0;
     color: #0b8470;
     background-color: white;
     cursor: pointer;
 }
 
-.confimedAppointments{
+.confimedAppointments {
     margin-top: 2rem;
+}
+.imageDiv{
+    width: 100%;
+    height: fit-content;
+    text-align: center;
+}
+.imageDiv img{
+    width: 50%;
 }

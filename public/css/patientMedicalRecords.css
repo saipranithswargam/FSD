@@ -183,3 +183,12 @@ td {
     border: 1px solid #00856f;
     color: #0b8470;
 }
+
+.imageDiv {
+    width: 100%;
+    height: fit-content;
+    text-align: center;
+}
+.imageDiv img {
+    width: 50%;
+}

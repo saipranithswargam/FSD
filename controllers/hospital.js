@@ -338,6 +338,21 @@ exports.getDoctors = (req, res) => {
         });
 };
 
+exports.removeDoctor = (req, res) => {
+    const id = req.params.doctorId;
+    Hospital.findByIdAndUpdate(
+        req.hospital._id,
+        { $pullAll: { doctorsWorking: [id] } },
+        { new: true }
+    )
+        .then((result) => {
+            res.redirect("/hospitals/doctors");
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+
 exports.Logout = (req, res, next) => {
     req.session.destroy((err) => {
         res.redirect("/");

@@ -80,6 +80,15 @@
                 </div>
             </div>
         </nav>
+        <% if(hospitals.length===0){%>
+        <h1 style="text-align: center; color: #379e8e">
+            <h1 style="text-align: center; color: #7c7f7e">
+                No Consulted Hospitals found
+            </h1>
+            <div class="imageDiv">
+                <img src="/images/NoData.svg" />
+            </div>
+        <%}%> <% if(hospitals.length !==0 ){ %>
         <h1 style="text-align: center; color: #379e8e">
             Hospitals Consulted By You
         </h1>
@@ -103,5 +112,6 @@
             </div>
             <% }%>
         </div>
+        <%}%>
     </body>
 </html>

@@ -34,8 +34,6 @@ Router.get(
     PatientController.getFilteredMedicalRecords
 );
 
-Router.get("/myappointments", isAuth, PatientController.getMyAppointments);
-
 Router.get(
     "/hospitals/filtered/:location/:speciality",
     isAuth,
@@ -72,6 +70,17 @@ Router.get("/rate/:hospitalId", isAuth, PatientController.getRating);
 
 Router.post("/rate/hospital", isAuth, PatientController.postRating);
 
+Router.get(
+    "/requestedappointments",
+    isAuth,
+    PatientController.getRequestedAppointments
+);
+
+Router.get(
+    "/confirmendappointments",
+    isAuth,
+    PatientController.getConfirmAppointments
+);
 Router.post("/chosen", isAuth, PatientController.postChosen);
 
 module.exports = Router;

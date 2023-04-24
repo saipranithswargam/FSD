@@ -63,12 +63,12 @@
                         <div
                             class="navbar-nav justify-content-end flex-grow-1 pe-3"
                         >
-                        <a
-                        class="nav-item nav-link custom-col"
-                        aria-current="page"
-                        href="/patients/dashboard"
-                        >Home</a
-                    >
+                            <a
+                                class="nav-item nav-link custom-col"
+                                aria-current="page"
+                                href="/patients/dashboard"
+                                >Home</a
+                            >
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
@@ -89,11 +89,13 @@
             >
                 <div class="input-select">
                     <label class="on-top">Filter by Doctor :</label>
-                    <select name="doctor" >
+                    <select name="doctor">
                         <option value="All">All</option>
                         <% for (let doctor of doctors) {%>
-                            <option value="<%=doctor._id%>"><%=doctor.name%></option>
-                            <%}%>
+                        <option value="<%=doctor._id%>">
+                            <%=doctor.name%>
+                        </option>
+                        <%}%>
                     </select>
                 </div>
                 <div class="input-select">
@@ -101,8 +103,10 @@
                     <select name="hospital">
                         <option value="All">All</option>
                         <% for (let hospital of hospitals) {%>
-                            <option value="<%=hospital._id%>"><%=hospital.hName%></option>
-                            <%}%>
+                        <option value="<%=hospital._id%>">
+                            <%=hospital.hName%>
+                        </option>
+                        <%}%>
                     </select>
                 </div>
                 <button>Filter</button>
@@ -111,47 +115,54 @@
         <% } %>
         <div class="medical-history">
             <% if(data.length===0) { %>
-            <h1>No Previous Medical Records Found !</h5>
-            <% } %>
-            <% if(data.length!==0) { %>
-                <h1>Recent Medical Records</h1>
+            <h1 style="text-align: center; color: #7c7f7e">
+                No MedicalRecords found
+            </h1>
+            <div class="imageDiv">
+                <img src="/images/NoData.svg" />
+            </div>
+            <% } %> <% if(data.length!==0) { %>
+            <h1>Recent Medical Records</h1>
             <% for (let medicalRecord of data) {%>
-                <div class="medical-record">
-                    <table class="medical-record-table">
-                        <tr>
-                            <td>hospitalName</td>
-                            <td><%=medicalRecord.hospitalId.hName%></td>
-                        </tr>
-                        <tr>
-                            <td>Doctor Name :</td>
-                            <td><%=medicalRecord.doctorId.name%></td>
-                        </tr>
-                        <tr>
-                            <td>Date:</td>
-                            <td><%=medicalRecord.date%></td>
-                        </tr>
-                        <tr>
-                            <td>Prescription :</td>
-                            <td><%=medicalRecord.medicines%></td>
-                        </tr>
-                        <tr>
-                            <td>Tests :</td>
-                            <td><%=medicalRecord.medicalTests%></td>
-                        </tr>
-                        <tr>
-                            <td>Surgery Required :</td>
-                            <td><%=medicalRecord.surgery%></td>
-                        </tr>
-                        <tr>
-                            <td>Doctors Note :</td>
-                            <td><%=medicalRecord.note%></td>
-                        </tr>
-                    </table>
-                    <form action="/patients/medicalrecord/<%=medicalRecord._id%>" class="download-form">
-                        <button>Download Medical Record</button>
-                    </form>
-                </div>
-                <% } %>
+            <div class="medical-record">
+                <table class="medical-record-table">
+                    <tr>
+                        <td>hospitalName</td>
+                        <td><%=medicalRecord.hospitalId.hName%></td>
+                    </tr>
+                    <tr>
+                        <td>Doctor Name :</td>
+                        <td><%=medicalRecord.doctorId.name%></td>
+                    </tr>
+                    <tr>
+                        <td>Date:</td>
+                        <td><%=medicalRecord.date%></td>
+                    </tr>
+                    <tr>
+                        <td>Prescription :</td>
+                        <td><%=medicalRecord.medicines%></td>
+                    </tr>
+                    <tr>
+                        <td>Tests :</td>
+                        <td><%=medicalRecord.medicalTests%></td>
+                    </tr>
+                    <tr>
+                        <td>Surgery Required :</td>
+                        <td><%=medicalRecord.surgery%></td>
+                    </tr>
+                    <tr>
+                        <td>Doctors Note :</td>
+                        <td><%=medicalRecord.note%></td>
+                    </tr>
+                </table>
+                <form
+                    action="/patients/medicalrecord/<%=medicalRecord._id%>"
+                    class="download-form"
+                >
+                    <button>Download Medical Record</button>
+                </form>
+            </div>
+            <% } %>
         </div>
         <% } %>
     </body>

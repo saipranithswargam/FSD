@@ -236,6 +236,14 @@ td button:hover,
     text-decoration: none;
     color: black;
 }
+.imageDiv {
+    width: 100%;
+    height: fit-content;
+    text-align: center;
+}
+.imageDiv img {
+    width: 50%;
+}
 @media (max-width: 826px) {
     .outer-div {
         flex-direction: column;
@@ -245,16 +253,16 @@ td button:hover,
         gap: 3rem;
         margin: 0 auto;
     }
-    .counter-container{
+    .counter-container {
         width: 60%;
     }
 }
 
-@media(max-width:488px){
-    .counter-container{
+@media (max-width: 488px) {
+    .counter-container {
         width: 90%;
     }
-    .outer-div{
+    .outer-div {
         padding: 3rem 1rem;
     }
 }

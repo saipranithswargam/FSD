@@ -96,11 +96,18 @@
             </div>
         </nav>
         <div class="appointment-requests">
-            <h1>Requested Appointments</h1>
             <% if(data.length===0) { %>
-            <h4>No Requested Appointments Found !</h4>
-            <%}%> <% if(data.length!==0) { %> <% for (let appointment of data) {
-            %>
+            <h1 class="empty" style="text-align: center; color: #7c7f7e">
+                No requested Appointments Found
+            </h1>
+            <div class="imageDiv">
+                <img src="/images/Nodata-2.svg" />
+            </div>
+            <%}%> <% if(data.length!==0) { %>
+            <h1 class="empty" style="text-align: center; color: #7c7f7e">
+                Requested Appointments
+            </h1>
+            <% for (let appointment of data) { %>
             <div class="appointment-request">
                 <table class="request">
                     <tr>

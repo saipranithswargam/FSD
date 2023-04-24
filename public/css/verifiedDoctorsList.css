@@ -82,10 +82,11 @@ body::-webkit-scrollbar {
     text-decoration: none;
 }
 .hospital-card {
-    margin-top: 3rem;
+    margin-top: 1rem;
     padding: 8% 7%;
     box-shadow: 1px 1px 12px 0px rgba(0, 0, 0, 0.39);
     border-radius: 10px;
+    background-color: white;
 }
 
 .outer-container a {
@@ -154,4 +155,30 @@ body::-webkit-scrollbar {
 .input-select select:hover,
 .input-select select:active {
     outline: none;
+}
+.remove-doctor {
+    text-align: center;
+    margin-top: 1rem;
+    display: inline-block;
+}
+.remove-doctor button {
+    padding: 0.5rem 1rem;
+    border-radius: 100px;
+    background-color: #0b8470;
+    border: none;
+    color: white;
+    font-weight: 700;
+}
+.remove-doctor button:hover {
+    background-color: transparent;
+    color: #379e8e;
+    border: 1px solid #0b8470;
+}
+.imageDiv {
+    width: 100%;
+    height: fit-content;
+    text-align: center;
+}
+.imageDiv img {
+    width: 50%;
 }
