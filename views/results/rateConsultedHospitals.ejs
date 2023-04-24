@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Patient Medicalrecords</title>
+        <title>PatientDashboard</title>
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -20,7 +20,7 @@
             src="https://kit.fontawesome.com/0e6c012114.js"
             crossorigin="anonymous"
         ></script>
-        <link rel="stylesheet" href="/css/patientMedicalRecords.css" />
+        <link rel="stylesheet" href="/css/hospitalList.css" />
     </head>
     <body>
         <nav class="navbar navbar-expand-lg custom" id="home">
@@ -63,16 +63,16 @@
                         <div
                             class="navbar-nav justify-content-end flex-grow-1 pe-3"
                         >
-                        <a
-                        class="nav-item nav-link custom-col"
-                        aria-current="page"
-                        href="/doctors/dashboard"
-                        >Home</a
-                    >
                             <a
                                 class="nav-item nav-link custom-col"
                                 aria-current="page"
-                                href="/doctors/logout"
+                                href="/patients/dashboard"
+                                >Home</a
+                            >
+                            <a
+                                class="nav-item nav-link custom-col"
+                                aria-current="page"
+                                href="/patients/logout"
                                 >Logout</a
                             >
                         </div>
@@ -80,48 +80,28 @@
                 </div>
             </div>
         </nav>
-
-        <div class="medical-history">
-            <% if(data.length===0) { %>
-            <h1>No Previous Medical Records Found !</h5>
-            <% } %>
-            <% if(data.length!==0) { %>
-                <h1>Recent Medical Records</h1>
-            <% for (let medicalRecord of data) {%>
-                <div class="medical-record">
-                    <table class="medical-record-table">
-                        <tr>
-                            <td>hospitalName</td>
-                            <td><%=medicalRecord.hospitalId.hName%></td>
-                        </tr>
-                        <tr>
-                            <td>Doctor Name :</td>
-                            <td><%=medicalRecord.doctorId.name%></td>
-                        </tr>
-                        <tr>
-                            <td>Date:</td>
-                            <td><%=medicalRecord.date%></td>
-                        </tr>
-                        <tr>
-                            <td>Prescription :</td>
-                            <td><%=medicalRecord.medicines%></td>
-                        </tr>
-                        <tr>
-                            <td>Tests :</td>
-                            <td><%=medicalRecord.medicalTests%></td>
-                        </tr>
-                        <tr>
-                            <td>Surgery Required :</td>
-                            <td><%=medicalRecord.surgery%></td>
-                        </tr>
-                        <tr>
-                            <td>Doctors Note :</td>
-                            <td><%=medicalRecord.note%></td>
-                        </tr>
-                    </table>
+        <h1 style="text-align: center; color: #379e8e">
+            Hospitals Consulted By You
+        </h1>
+        <div class="outer-container">
+            <% for (let hospital of hospitals) { %>
+            <div class="hospital-card">
+                <div class="image-div">
+                    <img src="/images/HospitalIcon.svg" />
                 </div>
-                <% } %>
+                <div class="hospital-details">
+                    <h5><%=hospital.hospitalId.hName%></h5>
+                    <h5>
+                        Location:<%=hospital.hospitalId.city%>,<%=hospital.hospitalId.pincode%>
+                    </h5>
+                </div>
+                <div class="rating-div">
+                    <a href="/patients/rate/<%=hospital.hospitalId._id%>"
+                        >Rate Hospital</a
+                    >
+                </div>
+            </div>
+            <% }%>
         </div>
-        <% } %>
     </body>
 </html>

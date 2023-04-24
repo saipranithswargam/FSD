@@ -58,15 +58,17 @@ exports.postLogin = (req, res) => {
 };
 
 exports.getDashboard = (req, res) => {
-    Doctors.countDocuments().then((doctorsCount) => {
+    Doctors.countDocuments({ verified: "true" }).then((doctorsCount) => {
         Patients.countDocuments().then((patientsCount) => {
-            Hospitals.countDocuments().then((hospitalsCount) => {
-                res.render("dashboard/adminDashboard", {
-                    doctorsCount: doctorsCount,
-                    patientsCount: patientsCount,
-                    hospitalsCount: hospitalsCount,
-                });
-            });
+            Hospitals.countDocuments({ verified: "true" }).then(
+                (hospitalsCount) => {
+                    res.render("dashboard/adminDashboard", {
+                        doctorsCount: doctorsCount,
+                        patientsCount: patientsCount,
+                        hospitalsCount: hospitalsCount,
+                    });
+                }
+            );
         });
     });
 };
@@ -233,17 +235,6 @@ exports.postChosen = (req, res) => {
     if (req.body.chosen === "verifyHospital") {
         return res.redirect("/admin/verifyhospital");
     }
-};
-
-exports.postRating = (req, res) => {
-    const body = req.body;
-
-    const rating = new Ratings({
-        patientId: body.patientId,
-        doctorId: body.doctorId,
-        rating: body.rating,
-    });
-    rating.save();
 };
 
 exports.Logout = (req, res) => {

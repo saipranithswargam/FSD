@@ -63,11 +63,22 @@
                         <div
                             class="navbar-nav justify-content-end flex-grow-1 pe-3"
                         >
-                            <form class="ms-auto me-auto" action="/patients/chosen" method="post">
+                            <form
+                                class="ms-auto me-auto"
+                                action="/patients/chosen"
+                                method="post"
+                            >
                                 <div class="search-bar">
                                     <select name="chosen">
-                                        <option value="appointment">My Appointments</option>
-                                        <option value="medicalrecords">My MedicalRecords</option>
+                                        <option value="appointment">
+                                            My Appointments
+                                        </option>
+                                        <option value="medicalrecords">
+                                            My MedicalRecords
+                                        </option>
+                                        <option value="rate">
+                                            Consulted Hospitals
+                                        </option>
                                     </select>
                                     <button type="submit">Search</button>
                                 </div>

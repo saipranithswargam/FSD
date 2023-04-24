@@ -59,56 +59,55 @@ body::-webkit-scrollbar {
 }
 
 /*others*/
-.image-div svg{
+.image-div svg {
     width: 80px;
 }
-.outer-container{
+.outer-container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     margin-top: 2rem;
     gap: 1rem;
     padding: 2rem 1rem;
 }
-.image-div{
+.image-div {
     text-align: center;
 }
-.hospital-details h5{
+.hospital-details h5 {
     text-align: center;
     color: black;
 }
-.hospital-details{
+.hospital-details {
     margin-top: 1rem;
     text-decoration: none;
-
 }
-.hospital-card{
+.hospital-card {
     margin-top: 2rem;
     padding: 8% 7%;
     box-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.39);
     border-radius: 10px;
 }
 
-.outer-container a{
+.outer-container a {
     text-decoration: none;
 }
-.filter-div form{
+.filter-div form {
     display: flex;
     gap: 1rem;
     width: 100%;
     align-items: center;
     justify-content: center;
 }
-.filter-div{
+.filter-div {
     text-align: center;
-    height: 100%;    
+    height: 100%;
     display: flex;
     margin-top: 2rem;
 }
-.filter-div form{
+.filter-div form {
     margin: 0 auto;
     text-align: center;
 }
-.filter-form button{
+.filter-form button {
     background-color: #00856f;
     padding: 5px 10px;
     color: white;
@@ -116,41 +115,62 @@ body::-webkit-scrollbar {
     border: none;
     outline: none;
 }
-.filter-form button:hover{
+.filter-form button:hover {
     background-color: white;
     border: 1px solid #00856f;
     color: #0b8470;
 }
-.input-select select{
+.input-select select {
     padding: 5px 10px;
     outline: none;
     border: none;
 }
-.input-select label{
+.input-select label {
     color: #3c4a48bd;
-    font-weight:700 ;
+    font-weight: 700;
 }
-.input-select select:hover,.input-select select:active{
+.input-select select:hover,
+.input-select select:active {
     outline: none;
 }
 
-@media(max-width:1000px){
-    .outer-container{
+.rating-div a {
+    display: inline-block;
+    text-align: none;
+    color: white;
+    font-size: larger;
+    font-weight: 500;
+    background-color: #00856f;
+    padding: 1rem 2rem;
+    margin-top: 1rem;
+}
+.rating-div a:hover {
+    color: white;
+    background-color: transparent;
+    border: 1px solid #00856f;
+    color: #00856f;
+}
+.rating-div {
+    text-align: center;
+}
+
+@media (max-width: 1000px) {
+    .outer-container {
         grid-template-columns: 1fr 1fr;
     }
 }
 
-@media(max-width:720px){
-    .outer-container{
-        grid-template-columns: 1fr; 
+@media (max-width: 720px) {
+    .outer-container {
+        grid-template-columns: 1fr;
     }
-    .filter-form{
+    .filter-form {
         flex-direction: column;
     }
-    .input-select select{
+    .input-select select {
         width: 50%;
     }
-    .input-select{
+    .input-select {
         display: flex;
         flex-direction: column;
         width: 60%;

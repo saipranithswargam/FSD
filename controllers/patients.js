@@ -3,6 +3,7 @@ const Patient = require("../models/patients");
 const Appointments = require("../models/appointments");
 const ConfirmedAppointments = require("../models/confirmedAppointments");
 const MedicalRecords = require("../models/medicalRecords");
+const Rating = require("../models/rating");
 const PDFDocument = require("pdfkit");
 const bcrypt = require("bcrypt");
 const { default: mongoose } = require("mongoose");
@@ -428,6 +429,9 @@ exports.postChosen = (req, res) => {
     if (req.body.chosen === "medicalrecords") {
         return res.redirect("/patients/medicalrecords");
     }
+    if (req.body.chosen === "rate") {
+        return res.redirect("/patients/getratehospital");
+    }
 };
 
 exports.getMedicalRecord = (req, res) => {
@@ -519,6 +523,73 @@ exports.getMedicalRecord = (req, res) => {
         .catch((err) => {
             console.log(err);
         });
+};
+
+exports.getConsultedHospitals = (req, res) => {
+    MedicalRecords.find({ patientId: req.patient._id })
+        .populate("hospitalId")
+        .then((data) => {
+            res.render("results/rateConsultedHospitals", {
+                hospitals: data,
+            });
+        });
+};
+
+exports.getRating = (req, res) => {
+    const hospitalId = req.params.hospitalId;
+    Rating.findOne({ hospitalId: hospitalId, patientId: req.patient._id }).then(
+        (document) => {
+            if (!document) {
+                res.render("results/rating", {
+                    hospitalId: hospitalId,
+                    previoulyRated: "false",
+                    rating: 1,
+                });
+            }
+            if (document) {
+                console.log(document);
+                res.render("results/rating", {
+                    hospitalId: hospitalId,
+                    previoulyRated: "true",
+                    rating: document.rating,
+                    id: document._id,
+                });
+            }
+        }
+    );
+};
+
+// exports.getRating = (req, res) => {
+//     Rating.findAll({ hospitalId: req.params }).then((hospital) => {
+//         var sum = 0;
+//         var i = 0;
+
+//         hospital.forEach((x) => {
+//             sum = sum + x.rating;
+//             i++;
+//         });
+//         const avg = (sum / i).toFixed(1);
+//     });
+// };
+
+exports.postRating = (req, res) => {
+    if (req.body.type === "add") {
+        const rating = new Rating({
+            patientId: req.patient._id,
+            hospitalId: req.body.hospitalId,
+            rating: req.body.rating,
+        });
+        rating.save().then((result) => {
+            res.send("sucessfully rated !");
+        });
+    }
+    if (req.body.type === "modify") {
+        Rating.findByIdAndUpdate(req.body.id, { rating: req.body.rating }).then(
+            (result) => {
+                res.send("sucessfully rated !");
+            }
+        );
+    }
 };
 
 exports.Logout = (req, res, next) => {

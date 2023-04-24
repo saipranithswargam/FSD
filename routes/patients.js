@@ -66,6 +66,12 @@ Router.get(
     PatientController.getMedicalRecord
 );
 
+Router.get("/getratehospital", isAuth, PatientController.getConsultedHospitals);
+
+Router.get("/rate/:hospitalId", isAuth, PatientController.getRating);
+
+Router.post("/rate/hospital", isAuth, PatientController.postRating);
+
 Router.post("/chosen", isAuth, PatientController.postChosen);
 
 module.exports = Router;

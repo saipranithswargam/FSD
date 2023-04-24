@@ -119,7 +119,7 @@ exports.postRegister = (req, res) => {
                     return newHospital.save();
                 })
                 .then((result) => {
-                    res.redirect("/hospitals/login");
+                    res.render("success/hospitalRegistrationSucess");
                 })
                 .catch((err) => {
                     console.log(err);
