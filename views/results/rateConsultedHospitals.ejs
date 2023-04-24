@@ -99,13 +99,13 @@
                     <img src="/images/HospitalIcon.svg" />
                 </div>
                 <div class="hospital-details">
-                    <h5><%=hospital.hospitalId.hName%></h5>
+                    <h5><%=hospital.hName%></h5>
                     <h5>
-                        Location:<%=hospital.hospitalId.city%>,<%=hospital.hospitalId.pincode%>
+                        Location:<%=hospital.city%>,<%=hospital.pincode%>
                     </h5>
                 </div>
                 <div class="rating-div">
-                    <a href="/patients/rate/<%=hospital.hospitalId._id%>"
+                    <a href="/patients/rate/<%=hospital._id%>"
                         >Rate Hospital</a
                     >
                 </div>

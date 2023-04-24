@@ -4,6 +4,7 @@ const Hospital = require("../models/hospitals");
 const ConfirmedAppointments = require("../models/confirmedAppointments");
 const nodemailer = require("nodemailer");
 const MedicalRecords = require("../models/medicalRecords");
+const Appointments = require("../models/appointments");
 let config = {
     service: "gmail",
     auth: {
@@ -111,35 +112,29 @@ exports.postRegister = (req, res) => {
                         );
                         return res.redirect("/doctors/register");
                     }
-                    return (
-                        bcrypt
-                            .hash(password, 12)
-                            .then((hashedPassword) => {
-                                const newDoc = new Doctor({
-                                    name: name,
-                                    email: email,
-                                    mobileNum: mobileNum,
-                                    liscenceNo: liscenceNo,
-                                    city: city,
-                                    state: state,
-                                    pincode: pincode,
-                                    age: age,
-                                    experience: experience,
-                                    Speciality: speciality,
-                                    password: hashedPassword,
-                                    verified: "false",
-                                });
-                                newDoc.hospitalsWorkingFor.push(hospital._id);
-                                return newDoc.save();
-                            })
-                            // .then((finalResult) => {
-                            //     hospital.doctorsWorking.push(finalResult._id);
-                            //     return hospital.save();
-                            // })
-                            .then((result) => {
-                                res.render("success/docRegistrationSuccess");
-                            })
-                    );
+                    return bcrypt
+                        .hash(password, 12)
+                        .then((hashedPassword) => {
+                            const newDoc = new Doctor({
+                                name: name,
+                                email: email,
+                                mobileNum: mobileNum,
+                                liscenceNo: liscenceNo,
+                                city: city,
+                                state: state,
+                                pincode: pincode,
+                                age: age,
+                                experience: experience,
+                                Speciality: speciality,
+                                password: hashedPassword,
+                                verified: "false",
+                            });
+                            newDoc.hospitalsWorkingFor.push(hospital._id);
+                            return newDoc.save();
+                        })
+                        .then((result) => {
+                            res.render("success/docRegistrationSuccess");
+                        });
                 });
             }
         );
@@ -265,16 +260,31 @@ exports.postRemoveHospital = (req, res) => {
             result._id,
             { $pullAll: { hospitalsWorkingFor: [match._id] } },
             { new: true }
-        ).then((newDoctor) => {
-            console.log(newDoctor);
-            Hospital.findOneAndUpdate(
-                { regNo: regNo },
-                { $pullAll: { doctorsWorking: [req.doctor._id] } },
-                { new: true }
-            ).then((finalObject) => {
-                res.render("success/hospitalRemovedSucess");
+        )
+            .then((newDoctor) => {
+                Hospital.findOneAndUpdate(
+                    { regNo: regNo },
+                    { $pullAll: { doctorsWorking: [req.doctor._id] } },
+                    { new: true }
+                ).then((finalObject) => {
+                    Appointments.deleteMany({
+                        hospitalId: match._id,
+                        doctorId: req.doctor._id,
+                    })
+                        .then((result) => {
+                            return ConfirmedAppointments.deleteMany({
+                                hospitalId: match.id,
+                                doctorId: req.doctor._id,
+                            });
+                        })
+                        .then((result) => {
+                            res.render("success/hospitalRemovedSucess");
+                        });
+                });
+            })
+            .catch((err) => {
+                console.log(err);
             });
-        });
     });
 };
 

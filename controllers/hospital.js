@@ -88,7 +88,7 @@ exports.postRegister = (req, res) => {
     const isGovernment = req.body.government;
     const password = req.body.password;
     const state = req.body.state;
-    const city = req.body.city;
+    const city = req.body.city.toString().toLowerCase();
     const pincode = req.body.pincode;
     const email = req.body.email;
     Hospital.findOne({ regNo: regNo })
@@ -130,8 +130,12 @@ exports.postRegister = (req, res) => {
 };
 
 exports.getDashboard = (req, res) => {
-    console.log(req.hospital);
-    const doctorsCount = req.hospital.doctorsWorking.length;
+    let count;
+    if (!req.hospital.doctorsWorking) {
+        count = 0;
+    } else {
+        count = req.hospital.doctorsWorking.length;
+    }
     MedicalRecords.countDocuments({ hospitalId: req.hospital._id }).then(
         (patientTreatedCount) => {
             ConfirmedAppointments.countDocuments({
@@ -140,7 +144,7 @@ exports.getDashboard = (req, res) => {
                 res.render("dashboard/hospitalDashboard", {
                     patientTreatedCount: patientTreatedCount,
                     bookedAppointmentsCount: bookedAppointmentsCount,
-                    doctorsCount: doctorsCount,
+                    doctorsCount: count,
                 });
             });
         }
@@ -346,7 +350,27 @@ exports.removeDoctor = (req, res) => {
         { new: true }
     )
         .then((result) => {
+            return Doctors.findByIdAndUpdate(
+                id,
+                { $pullAll: { hospitalsWorkingFor: [result._id] } },
+                { new: true }
+            );
+        })
+        .then((finalresult) => {
+            return Appointments.deleteMany({
+                hospitalId: req.hospital._id,
+                doctorId: id,
+            });
+        })
+        .then((deleted) => {
+            return ConfirmedAppointments.deleteMany({
+                hospitalId: req.hospital._id,
+                doctorId: id,
+            });
+        })
+        .then((deletedConfirm) => {
             res.redirect("/hospitals/doctors");
+            console.log(deletedConfirm);
         })
         .catch((err) => {
             console.log(err);
@@ -371,7 +395,7 @@ exports.postModify = (req, res) => {
     if (email === req.hospital.email) {
         const hname = req.body.hname;
         const state = req.body.state;
-        const city = req.body.city;
+        const city = req.body.city.toString().toLowerCase();
         const pincode = req.body.pincode;
         Hospital.findByIdAndUpdate(req.hospital._id, {
             hName: hname,
@@ -386,7 +410,7 @@ exports.postModify = (req, res) => {
         Hospital.findOne({ email: email }).then((hospital) => {
             const hname = req.body.hname;
             const state = req.body.state;
-            const city = req.body.city;
+            const city = req.body.city.toString().toLowerCase();
             const pincode = req.body.pincode;
             if (!hospital) {
                 Hospital.findByIdAndUpdate(req.hospital._id, {

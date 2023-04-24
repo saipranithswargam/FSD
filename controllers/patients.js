@@ -260,27 +260,6 @@ exports.getFilteredMedicalRecords = (req, res) => {
     }
 };
 
-// exports.getMyAppointments = (req, res) => {
-//     Appointments.find({ patientId: req.patient._id })
-//         .populate("doctorId hospitalId")
-//         .then((data) => {
-//             ConfirmedAppointments.find({ patientId: req.patient._id })
-//                 .populate("doctorId hospitalId")
-//                 .then((cdata) => {
-//                     res.render("results/medicalAppointments", {
-//                         appointments: data,
-//                         cappointments: cdata,
-//                     });
-//                 })
-//                 .catch((err) => {
-//                     console.log(err);
-//                 });
-//         })
-//         .catch((err) => {
-//             console.log(err);
-//         });
-// };
-
 exports.getConfirmAppointments = (req, res) => {
     ConfirmedAppointments.find({ patientId: req.patient._id })
         .populate("doctorId hospitalId")
@@ -310,9 +289,10 @@ exports.getRequestedAppointments = (req, res) => {
 exports.getFiltered = (req, res) => {
     const location = req.params.location;
     const speciality = req.params.speciality;
+    let loc = req.params.location.toString().toLowerCase();
     if (location !== "All" && speciality !== "All") {
         Hospitals.find({
-            city: location,
+            city: loc,
             specialityDep: speciality,
             verified: "true",
         })
@@ -343,7 +323,7 @@ exports.getFiltered = (req, res) => {
             });
     }
     if (location !== "All" && speciality === "All") {
-        Hospitals.find({ city: location, verified: "true" })
+        Hospitals.find({ city: loc, verified: "true" })
             .then((hospitals) => {
                 console.log(hospitals);
                 res.render("results/filteredHospitals", {
@@ -572,8 +552,13 @@ exports.getConsultedHospitals = (req, res) => {
     MedicalRecords.find({ patientId: req.patient._id })
         .populate("hospitalId")
         .then((data) => {
+            const newData = data.map((doc) => {
+                return doc.hospitalId;
+            });
+            var set1 = new Set(newData);
+            const finalHospitals = [...set1];
             res.render("results/rateConsultedHospitals", {
-                hospitals: data,
+                hospitals: finalHospitals,
             });
         });
 };
@@ -663,7 +648,7 @@ exports.postModify = (req, res) => {
             married: maritalStatus,
             allergies: allergies,
         }).then((result) => {
-           return res.redirect("/patients/dashboard");
+            return res.redirect("/patients/dashboard");
         });
     }
     if (email !== req.patient.email) {
@@ -695,7 +680,7 @@ exports.postModify = (req, res) => {
                     married: maritalStatus,
                     allergies: allergies,
                 }).then((result) => {
-                   return res.redirect("/patients/dashboard");
+                    return res.redirect("/patients/dashboard");
                 });
             }
             if (patient) {

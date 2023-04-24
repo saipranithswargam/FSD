@@ -163,9 +163,15 @@
                         </tr>
                         <tr>
                             <td>Doctors Note :</td>
-                            <td><%=data.note%></td>
+                            <td><%=medicalRecord.note%></td>
                         </tr>
                     </table>
+                    <form
+                    action="/patients/medicalrecord/<%=medicalRecord._id%>"
+                    class="download-form"
+                >
+                    <button>Download Medical Record</button>
+                </form>
                 </div>
                 <% } %>
         </div>

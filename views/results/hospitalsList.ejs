@@ -88,7 +88,7 @@
             >
                 <div class="input-select">
                     <label class="on-top">Filter by Speciality :</label>
-                    <select name="speciality" >
+                    <select name="speciality">
                         <option>All</option>
                         <option>MultiSpeciality</option>
                         <option>Dermatology</option>
@@ -115,8 +115,19 @@
                 <button>Filter</button>
             </form>
         </div>
+        <div style="margin-top: 1rem;">
+            <% if (hospitals.length === 0 ) { %>
+            <h1 class="empty" style="text-align: center; color: #7c7f7e">
+                No Hospitals Found
+            </h1>
+            <div class="imageDiv">
+                <img src="/images/Nodata-2.svg" />
+            </div>
+            <% } %>
+        </div>
         <div class="outer-container">
-            <% for (let hospital of hospitals) { %>
+            <% if ( hospitals.length !== 0 ) { %> <% for (let hospital of
+            hospitals) { %>
             <a href="/patients/doctorlist/<%=hospital._id%>">
                 <div class="hospital-card">
                     <div class="image-div">
@@ -127,10 +138,11 @@
                         <h5>
                             Location:<%=hospital.city%>,<%=hospital.pincode%>
                         </h5>
+                        <h5><%=hospital.specialityDep%></h5>
                     </div>
                 </div>
             </a>
-            <% }%>
+            <% } %> <% } %>
         </div>
     </body>
 </html>
