@@ -2,10 +2,7 @@
 .hero {
     min-height: 75vh;
     width: 100%;
-    margin-top: 1rem;
-    padding: 4rem 5rem;
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
+    padding: 7.5rem 5rem;
     background-color: #279686;
     font-family: "Montserrat", sans-serif;
     background-image: url("https://uploads-ssl.webflow.com/62626faafbc4ea0917b81c10/626cf4d08b703c936513a17e_DNA3%201.png");

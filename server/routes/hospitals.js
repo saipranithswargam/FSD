@@ -2,7 +2,7 @@ const hospitalController = require("../controllers/hospital");
 
 const express = require("express");
 
-const isAuth = require("../middleware/is-auth");
+const isAuth = require("../middleware/verify");
 
 const Router = express.Router();
 

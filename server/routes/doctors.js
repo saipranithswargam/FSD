@@ -4,7 +4,7 @@ const Router = express.Router();
 
 const doctorController = require("../controllers/doctor");
 
-const isAuth = require("../middleware/is-auth");
+const isAuth = require("../middleware/verify");
 
 Router.get("/login", doctorController.getLogin);
 

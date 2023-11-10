@@ -4,7 +4,7 @@ const Router = express.Router();
 
 const AdminController = require("../controllers/admin");
 
-const isAuth = require("../middleware/is-auth");
+const isAuth = require("../middleware/verify");
 
 Router.get("/login", AdminController.getLogin);
 

@@ -6,24 +6,12 @@ const MedicalRecords = require("../models/medicalRecords");
 const Rating = require("../models/rating");
 const PDFDocument = require("pdfkit");
 const bcrypt = require("bcrypt");
-const { default: mongoose } = require("mongoose");
 const jwt = require("jsonwebtoken");
-exports.getLogin = (req, res) => {
-    let message = req.flash("error");
-    if (message.length > 0) {
-        message = message[0];
-    } else {
-        message = null;
-    }
-    res.render("auth/login", {
-        path: "/patients/register",
-        path2: "/patients/login",
-        errorMessage: message,
-    });
-};
+
 exports.postLogin = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
+    console.log(req.body);
     Patient.findOne({ email: email })
         .then((patient) => {
             if (!patient) {
@@ -37,13 +25,13 @@ exports.postLogin = (req, res) => {
                     if (doMatch) {
                         console.log(doMatch);
                         const token = jwt.sign(
-                            { id: patient._id },
+                            { id: patient._id, type: 'patient' },
                             String(process.env.SECRET),
                             {
                                 expiresIn: "3h",
                             }
                         );
-                        res.cookie("CHS", token, {
+                        res.cookie("chs", token, {
                             httpOnly: true,
                             sameSite: "none",
                             secure: true,
@@ -66,18 +54,6 @@ exports.postLogin = (req, res) => {
             console.error(err);
             return res.status(500).json({ message: "Server error." });
         });
-};
-
-exports.getRegister = (req, res) => {
-    let message = req.flash("error");
-    if (message.length > 0) {
-        message = message[0];
-    } else {
-        message = null;
-    }
-    res.render("auth/patientSignup", {
-        errorMessage: message,
-    });
 };
 
 exports.postRegister = (req, res) => {
@@ -131,20 +107,6 @@ exports.postRegister = (req, res) => {
         .catch((err) => {
             console.log(err);
         });
-};
-
-exports.getDashboard = (req, res) => {
-    console.log(req.patient);
-    const data = {
-        name: req.patient.name,
-        age: req.patient.age,
-        city: req.patient.city,
-        state: req.patient.state,
-        pincode: req.patient.pincode,
-    };
-    res.render("dashboard/patientDashboard", {
-        data: data,
-    });
 };
 
 exports.getHospitals = (req, res) => {

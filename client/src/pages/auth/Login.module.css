@@ -1,0 +1,39 @@
+.main {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginCard {
+    border-radius: 50px;
+    width: 70vw;
+    height: 60vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.leftCardBg {
+    background-color: aqua;
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+}
+.rightCardBg {
+    background-color: rebeccapurple;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+}
+.leftCard {
+    border-radius: 50px;
+    border-top-right-radius: 0;
+    background-color: blueviolet;
+    height: 100%;
+    width: 100%;
+}
+.rightCard {
+    border-radius: 50px;
+    border-bottom-left-radius: 0px;
+    background-color: aqua;
+    height: 100%;
+    width: 100%;
+}

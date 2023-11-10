@@ -7,12 +7,26 @@
     justify-content: center;
     align-items: center;
 }
+.Login {
+    color: #000000a6 !important;
+    height: 100%;
+    font-family: "Roboto", sans-serif !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    margin-top: 0.1rem !important;
+    text-decoration: none !important;
+}
 .navHeading {
     display: inline-block;
     margin-left: 1rem;
     font-size: 1.3rem;
     font-weight: 500;
     font-family: "Montserrat", sans-serif;
+}
+.test:hover {
+    background-color: d1000a;
+    background-color: #279686;
+    color: white;
 }
 .header__navlink {
     font-size: 16px !important;
@@ -38,4 +52,18 @@
 }
 .header__dropdown::after {
     content: none !important;
+}
+.header {
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.395); /* Box shadow for the lift effect */
+    position: fixed; /* Fixed position to keep it at the top of the viewport */
+    top: 0;
+    width: 100%;
+    z-index: 100; /* Ensure it's above other content */
+    transition: box-shadow 0.3s ease;
+    background: rgba(255, 255, 255, 0.77);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
 }

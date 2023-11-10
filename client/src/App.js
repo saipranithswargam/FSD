@@ -1,27 +1,93 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "./api/axiosInstance";
-const App = () => {
+import { useAppDispatch } from "./app/hooks";
+import { userActions } from "./features/userSlice";
+import Navigation from "./components/Navigation/Navigation";
+import 'atropos/css'
+function App() {
+    const [screenLoad, setScreenLoad] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+
+    const getUserData = async () => {
+        setScreenLoad(true);
+        try {
+            const response = await axiosInstance.get("/check");
+            console.log(response.data);
+            dispatch(userActions.setState(response.data));
+            setScreenLoad(false);
+        } catch (err) {
+            console.log(err);
+            setScreenLoad(false);
+        }
+    };
+    const storeLocation = (GeolocationPosition) => {
+        console.log(GeolocationPosition);
+        let coords = GeolocationPosition.coords;
+        dispatch(
+            userActions.setLocation({
+                latitude: coords.latitude,
+                longitude: coords.longitude,
+            })
+        );
+    };
+
+    const getUserLocation = () => {
+        if (navigator.geolocation) {
+            navigator.permissions
+                .query({ name: "geolocation" })
+                .then((result) => {
+                    if (result.state === "granted") {
+                        console.log("granted", result.state);
+                        navigator.geolocation.getCurrentPosition(
+                            storeLocation,
+                            () => {},
+                            { timeout: 5000, maximumAge: 0 }
+                        );
+                    } else if (result.state === "prompt") {
+                        navigator.geolocation.getCurrentPosition(
+                            storeLocation,
+                            () => {},
+                            { timeout: 5000, maximumAge: 0 }
+                        );
+                        console.log(result.state);
+                    } else if (result.state === "denied") {
+                        //If denied then you have to show instructions to enable location
+                    }
+
+                    result.onchange = function () {
+                        if (result.state === "granted") {
+                            console.log("granted", result.state);
+                            navigator.geolocation.getCurrentPosition(
+                                storeLocation,
+                                () => {},
+                                { timeout: 5000, maximumAge: 0 }
+                            );
+                            //If granted then you can directly call your function here
+                        } else if (result.state === "prompt") {
+                            navigator.geolocation.getCurrentPosition(
+                                storeLocation,
+                                () => {},
+                                { timeout: 5000, maximumAge: 0 }
+                            );
+                            console.log(result.state);
+                        } else if (result.state === "denied") {
+                            //If denied then you have to show instructions to enable location
+                        }
+                    };
+                });
+        } else {
+            console.log("Location not available");
+        }
+    };
+
     useEffect(() => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", "http://localhost:5050/index", true);
-
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                // Request was successful
-                console.log(JSON.parse(xhr.responseText));
-            } else {
-                // Request failed
-                console.log("error");
-            }
-        };
-
-        xhr.onerror = () => {
-            // Network error
-            console.log("Network error");
-        };
-        xhr.send();
+        getUserData();
+        getUserLocation();
     }, []);
-    return <h1>Hello</h1>;
-};
+
+    return screenLoad ? <p>Loading...</p> : <Navigation />;
+}
 
 export default App;

@@ -1,6 +1,13 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Hero.module.css";
+
 const Hero = () => {
+    const navigate = useNavigate(); // Initialize navigate function
+
+    const handleGetStartedClick = () => {
+        navigate("/auth/patientlogin"); // Navigate to the specified route
+    };
     return (
         <>
             <div className={styles.hero}>
@@ -11,7 +18,9 @@ const Hero = () => {
                             Experience the Advantages of Centralized Healthcare.
                         </p>
                         <div className={styles.buttonDiv}>
-                            <button>Get Started</button>
+                            <button onClick={handleGetStartedClick}>
+                                Get Started
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -20,4 +29,5 @@ const Hero = () => {
         </>
     );
 };
+
 export default Hero;

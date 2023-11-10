@@ -1,6 +1,6 @@
 import styles from "./Features.module.css";
 import React from "react";
-
+import Atropos from "atropos/react";
 const Features = () => {
     const bolt = (
         <svg
@@ -31,7 +31,7 @@ const Features = () => {
     );
     return (
         <>
-            <div className={styles.main}>
+            <div className={styles.main} id="features">
                 <div className={styles.content}>
                     <div className={styles.heading}>
                         <h1>Our Features</h1>
