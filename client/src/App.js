@@ -4,7 +4,7 @@ import axiosInstance from "./api/axiosInstance";
 import { useAppDispatch } from "./app/hooks";
 import { userActions } from "./features/userSlice";
 import Navigation from "./components/Navigation/Navigation";
-import 'atropos/css'
+import PageLoader from "./components/Loaders/PageLoader";
 function App() {
     const [screenLoad, setScreenLoad] = useState(false);
     const navigate = useNavigate();
@@ -87,7 +87,7 @@ function App() {
         getUserLocation();
     }, []);
 
-    return screenLoad ? <p>Loading...</p> : <Navigation />;
+    return screenLoad ? <PageLoader /> : <Navigation />;
 }
 
 export default App;

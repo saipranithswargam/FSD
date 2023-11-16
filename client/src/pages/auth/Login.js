@@ -1,58 +1,83 @@
 import React, { useState } from 'react';
 import axiosInstance from "../../api/axiosInstance";
+import styles from './Login.module.css';
+import Wave from "./wave.png";
+import Background from "./bg.svg";
+import Avatar from "./avatar.svg";
 import Header from '../../components/Header/Header';
+import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
-function Login() {
-    const [formData, setFormData] = useState({ email: '', password: '' });
+const Login = () => {
+    // State variables for email and password
+    const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setFormData({ ...formData, [name]: value });
+    // Event handlers for input fields
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+    };
 
-        const { email, password } = formData;
+    // Form submission
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
 
-        axiosInstance.post("/patients/login", { email, password })
-            .then((response) => {
-                console.log('Login successful');
+        // Axios request to the API
+        axiosInstance.post('/patients/login', {
+            email: email,
+            password: password
+        })
+            .then(response => {
+                console.log(response.data);
+                navigate("/", { replace: true });
+                toast.success("Logged in successfully!", {
+                    position: "top-right",
+                });
             })
-            .catch((error) => {
-                console.error('Login failed', error);
+            .catch(error => {
+                console.error('Error submitting form:', error);
             });
     };
 
     return (
-        <div>
-            {/* <Header /> */}
-            <h1>User Login</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="text"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                    />
+        <>
+            <Header />
+            <img className={styles.wave} src={Wave} alt="wave" />
+            <div className={styles.container}>
+                <div className={styles.img}>
+                    <img src={Background} alt="background" />
                 </div>
-                <div>
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                    />
+                <div className={styles['login-content']}>
+                    <form onSubmit={handleFormSubmit}>
+                        <img src={Avatar} alt="avatar" />
+                        <h2 className={styles.title}>Welcome</h2>
+                        <div className={`${styles['input-div']} ${styles.one}`}>
+                            <div className={styles.i}>
+                                <i className="fas fa-user"></i>
+                            </div>
+                            <div className={styles.div}>
+                                <input type="text" placeholder='Email' className={styles.input} value={email} onChange={handleEmailChange} />
+                            </div>
+                        </div>
+                        <div className={`${styles['input-div']} ${styles.pass}`}>
+                            <div className={styles.i}>
+                                <i className="fas fa-lock"></i>
+                            </div>
+                            <div className={styles.div}>
+                                <input type="password" placeholder="Password" className={styles.input} value={password} onChange={handlePasswordChange} />
+                            </div>
+                        </div>
+                        <input type="submit" className={styles.btn} value="Login" />
+                    </form>
                 </div>
-                <button type="submit">Login</button>
-            </form>
-        </div>
+            </div>
+        </>
     );
-}
+};
 
 export default Login;

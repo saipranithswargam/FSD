@@ -13,7 +13,10 @@ function AuthProtected() {
     useEffect(() => {
         setLoading(true);
         if (user.isLoggedIn) {
-            toast.warning("Already logged In!", { position: "top-right" });
+            toast.warning("Already logged In!", {
+                position: toast.POSITION.TOP_RIGHT,
+                toastId: 1
+            });
             navigate("/", { replace: true });
         }
         setLoading(false);

@@ -25,7 +25,6 @@ const userSlice = createSlice({
             state.type = action.payload.type;
             state.mobileNumber = action.payload.mobileNum;
             state.city = action.payload.city;
-            state.petParent = action.payload.petParent;
         },
         setImage: (state, action) => {
             state.image = action.payload;

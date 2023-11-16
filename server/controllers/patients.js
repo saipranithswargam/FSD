@@ -25,7 +25,7 @@ exports.postLogin = (req, res) => {
                     if (doMatch) {
                         console.log(doMatch);
                         const token = jwt.sign(
-                            { id: patient._id, type: 'patient' },
+                            { id: patient._id, type: 'patients' },
                             String(process.env.SECRET),
                             {
                                 expiresIn: "3h",

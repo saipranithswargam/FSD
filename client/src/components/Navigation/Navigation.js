@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "../../pages/Home";
+import { ToastContainer } from "react-toastify";
 import AuthProtected from "../Authprotected";
 import PageLoader from "../Loaders/PageLoader";
 import Login from "../../pages/auth/Login";
@@ -8,8 +9,8 @@ import Register from "../../pages/auth/Register";
 const Navigation = () => {
     return (
         <>
+            <ToastContainer />
             <Routes>
-                <Route path="/loader" element={<PageLoader />} />
                 <Route path="/auth" element={<AuthProtected />}>
                     <Route
                         path="patientlogin"

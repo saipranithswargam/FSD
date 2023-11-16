@@ -1,4 +1,7 @@
-* {
+/* *
+messing with all other styles dunno why ..?
+ {
+
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -181,4 +184,4 @@ button:hover {
     .input-group select {
         width: 100%;
     }
-}
+} */

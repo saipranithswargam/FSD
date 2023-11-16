@@ -29,7 +29,7 @@ app.use(
 );
 app.use(cookieParser());
 app.get("/check", verify, async (req, res) => {
-    if (req._type === "patient") {
+    if (req._type === "patients") {
         let patients = null;
         try {
             patients = await Patients.findOne({ _id: req._id });
@@ -47,7 +47,7 @@ app.get("/check", verify, async (req, res) => {
             return res.status(400).send('error finding patients!');
         }
     }
-    if (req._type === "doctor") {
+    if (req._type === "doctors") {
         let user = null;
         try {
             user = await Doctors.findById(req._id).exec();
@@ -56,14 +56,14 @@ app.get("/check", verify, async (req, res) => {
                     message: "User Not Found",
                 });
             }
-            var modified_user = { ...user._doc, type: "user" };
+            var modified_user = { ...user._doc, type: "doctors" };
             console.log(modified_user);
             return res.status(200).json(modified_user);
         } catch {
             return res.status(400).send('error finding user!')
         }
     }
-    if (req._type === "hospital") {
+    if (req._type === "hospitals") {
         let hospital = null;
         try {
             hospital = await Hospitals.findById(req._id).exec();
@@ -72,7 +72,7 @@ app.get("/check", verify, async (req, res) => {
                     message: "hospital Not Found",
                 });
             }
-            var modified_hospital = { ...hospital._doc, type: "hospital" };
+            var modified_hospital = { ...hospital._doc, type: "hospitals" };
             console.log(modified_hospital);
             return res.status(200).json(modified_hospital);
         } catch {

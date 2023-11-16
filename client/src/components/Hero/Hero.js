@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Hero.module.css";
-
+import heroImage from "./hero.webp";
 const Hero = () => {
     const navigate = useNavigate(); // Initialize navigate function
 
@@ -24,7 +24,9 @@ const Hero = () => {
                         </div>
                     </div>
                 </div>
-                <div className={styles.hero__left}></div>
+                <div className={styles.hero__left}>
+                    <img alt="_hero_" src={heroImage} />
+                </div>
             </div>
         </>
     );

@@ -1,6 +1,5 @@
 import styles from "./Features.module.css";
 import React from "react";
-import Atropos from "atropos/react";
 const Features = () => {
     const bolt = (
         <svg
