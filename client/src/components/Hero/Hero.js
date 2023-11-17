@@ -2,12 +2,21 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Hero.module.css";
 import heroImage from "./hero.webp";
+import { useAppSelector } from "../../app/hooks";
+import Tilt from 'react-parallax-tilt';
 const Hero = () => {
-    const navigate = useNavigate(); // Initialize navigate function
+    const user = useAppSelector((state) => state.user);
+
+    const navigate = useNavigate();
 
     const handleGetStartedClick = () => {
-        navigate("/auth/patientlogin"); // Navigate to the specified route
+        navigate("/auth/patientslogin");
     };
+
+    const handleBookAppointment = () => {
+        navigate("/hospitals")
+    }
+
     return (
         <>
             <div className={styles.hero}>
@@ -18,14 +27,27 @@ const Hero = () => {
                             Experience the Advantages of Centralized Healthcare.
                         </p>
                         <div className={styles.buttonDiv}>
-                            <button onClick={handleGetStartedClick}>
+                            {!user.isLoggedIn && <button onClick={handleGetStartedClick}>
                                 Get Started
-                            </button>
+                            </button>}
+                            {user.isLoggedIn && <button onClick={handleBookAppointment}>
+                                Book An Appointment
+                            </button>}
                         </div>
                     </div>
                 </div>
                 <div className={styles.hero__left}>
-                    <img alt="_hero_" src={heroImage} />
+                    <Tilt
+                        tiltMaxAngleX={20}
+                        tiltMaxAngleY={20}
+                        glareEnable={false}
+                        glareMaxOpacity={0}
+                        gyroscope={true}
+                        scale={1.02}
+                        transitionSpeed={2000}
+                    >
+                        <img alt="_hero_" src={heroImage} />
+                    </Tilt>
                 </div>
             </div>
         </>

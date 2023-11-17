@@ -2,7 +2,7 @@
 .hero {
     width: 100%;
     padding: 6rem 5rem;
-    background-color: #29C08C;
+    background-color: #29c08c;
     font-family: "Montserrat", sans-serif;
     background-repeat: no-repeat;
     color: white;
@@ -35,6 +35,6 @@
     font-weight: 500;
     border: none;
 }
-.hero__left img{
+.hero__left img {
     width: 650px;
 }

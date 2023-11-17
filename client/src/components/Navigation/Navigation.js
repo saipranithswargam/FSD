@@ -6,6 +6,8 @@ import AuthProtected from "../Authprotected";
 import PageLoader from "../Loaders/PageLoader";
 import Login from "../../pages/auth/Login";
 import Register from "../../pages/auth/Register";
+import MyMap from "../Map/my-map";
+import Protected from "../Protected";
 const Navigation = () => {
     return (
         <>
@@ -13,7 +15,7 @@ const Navigation = () => {
             <Routes>
                 <Route path="/auth" element={<AuthProtected />}>
                     <Route
-                        path="patientlogin"
+                        path="patientslogin"
                         element={
                             <React.Suspense fallback={<PageLoader />}>
                                 <Login />
@@ -21,7 +23,7 @@ const Navigation = () => {
                         }
                     />
                     <Route
-                        path="patientsignup"
+                        path="patientsRegister"
                         element={
                             <React.Suspense fallback={<PageLoader />}>
                                 <Register />
@@ -31,6 +33,9 @@ const Navigation = () => {
                 </Route>
                 <Route path="/">
                     <Route path="" element={<Home />} />
+                </Route>
+                <Route path="/" element={<Protected />} >
+                    <Route path="hospitals" element={<MyMap />} />
                 </Route>
             </Routes>
         </>

@@ -10,3 +10,6 @@ html {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+html, body { 
+    height: 100%; 
+}

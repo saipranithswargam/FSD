@@ -1,18 +1,3 @@
-/* *
-messing with all other styles dunno why ..?
- {
-
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-body {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-body::-webkit-scrollbar {
-    display: none;
-}
 .main {
     min-height: 100vh;
     display: flex;
@@ -24,6 +9,11 @@ body::-webkit-scrollbar {
     background-color: #dce9e2;
     padding: 3vw 5vw;
     position: fixed;
+}
+.image-div img{
+    width: 100%;
+    margin-top: 3rem;
+    border-radius: 10px;
 }
 .brand {
     color: #00856f;
@@ -57,7 +47,7 @@ body::-webkit-scrollbar {
     color: #7d7e78;
     margin: 15px 0;
 }
-form h5 {
+.form h5 {
     color: #26393a;
     font-size: 25px;
     font-weight: 400;
@@ -122,21 +112,28 @@ label {
 .float-left select {
     width: 100%;
 }
-button {
-    padding: 14px 30px;
-    margin-top: 20px;
-    background-color: #00856f;
-    color: white;
-    font-weight: 700;
+.btn {
+    display: block;
+    width: 100%;
+    height: 50px;
+    border-radius: 25px;
+    outline: none;
     border: none;
-    border-radius: 10px;
-    min-width: 140px;
+    background-image: linear-gradient(to right, #32be8f, #38d39f, #32be8f);
+    background-size: 200%;
+    font-size: 1.2rem;
+    color: #fff;
+    font-family: "Poppins", sans-serif;
+    text-transform: uppercase;
+    margin: 3rem 0;
+    cursor: pointer;
+    transition: 0.5s;
 }
-button:hover {
-    background-color: white;
-    border: 1px solid #00856f;
-    color: #00856f;
+
+.btn:hover {
+    background-position: right;
 }
+
 .invalid {
     color: red !important;
 }
@@ -184,4 +181,4 @@ button:hover {
     .input-group select {
         width: 100%;
     }
-} */
+}

@@ -1,16 +1,14 @@
 import React from "react";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import Dropdown from "react-bootstrap/Dropdown";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
-import { useNavigate, Link } from "react-router-dom";
-import { DropdownButton } from "react-bootstrap";
-import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks";
 import styles from "./Header.module.css";
 const Header = () => {
-    const user = false;
+    const user = useAppSelector((state) => state.user);
     const headerLogo = (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -69,36 +67,19 @@ const Header = () => {
                                         <Nav.Link
                                             as={Link}
                                             to="/auth/login"
-                                            className="header__navLink"
+                                            className={navLinkStyles}
                                         >
                                             Login
                                         </Nav.Link>
                                     )}
                                     {user.isLoggedIn && (
-                                        <DropdownButton
-                                            drop="down-centered"
-                                            align="end"
-                                            variant="secondary"
-                                            title={userIcon}
-                                            className="pe-3"
-                                            bsPrefix={styles.header__dropdown}
+                                        <Nav.Link
+                                            as={Link}
+                                            to="/patients/dashboard"
+                                            className={navLinkStyles}
                                         >
-                                            <Dropdown.Item eventKey="1">
-                                                <Nav.Link
-                                                    to="/dashboard"
-                                                    as={Link}
-                                                >
-                                                    Dashboard
-                                                </Nav.Link>
-                                            </Dropdown.Item>
-                                            <Dropdown.Divider />
-                                            <Dropdown.Item
-                                                eventKey="4"
-                                                onClick={logout}
-                                            >
-                                                Logout
-                                            </Dropdown.Item>
-                                        </DropdownButton>
+                                            Dashboard
+                                        </Nav.Link>
                                     )}
                                 </Nav>
                             </Offcanvas.Body>

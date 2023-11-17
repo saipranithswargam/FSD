@@ -39,7 +39,7 @@ exports.postLogin = (req, res) => {
                         });
                         return res
                             .status(200)
-                            .json({ message: "Login successful." });
+                            .json({...patient._doc,type:"patients"});
                     }
                     return res
                         .status(401)
