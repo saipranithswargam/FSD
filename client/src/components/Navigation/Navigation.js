@@ -1,42 +1,66 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Home from "../../pages/Home";
 import { ToastContainer } from "react-toastify";
 import AuthProtected from "../Authprotected";
 import PageLoader from "../Loaders/PageLoader";
 import Login from "../../pages/auth/Login";
-import Register from "../../pages/auth/Register";
-import MyMap from "../Map/my-map";
+import Register from "../../pages/auth/PatientSignup";
 import Protected from "../Protected";
+import Hospitals from "../../pages/Hospitals/Hospitals";
+import PageNotFound from "../../pages/PageNotFound/PageNotFound";
+import DoctorSignup from "../../pages/auth/DoctorSignup";
+import HospitalSignup from "../../pages/auth/HospitalSignup";
 const Navigation = () => {
     return (
         <>
             <ToastContainer />
             <Routes>
+                <Route path="/">
+                    <Route path="" element={<Home />} />
+                </Route>
+
+                <Route path="/" element={<Protected />} >
+                    <Route path="hospitals" element={<Hospitals />} />
+                    <Route path="patientsdashboard" element>
+                    </Route>
+                </Route>
+
                 <Route path="/auth" element={<AuthProtected />}>
                     <Route
-                        path="patientslogin"
+                        path=":type"
                         element={
                             <React.Suspense fallback={<PageLoader />}>
                                 <Login />
                             </React.Suspense>
                         }
                     />
-                    <Route
-                        path="patientsRegister"
-                        element={
-                            <React.Suspense fallback={<PageLoader />}>
-                                <Register />
-                            </React.Suspense>
-                        }
+                </Route>
+
+                <Route path="/auth">
+                    <Route path="patientsregister" element={
+                        <React.Suspense fallback={<PageLoader />}>
+                            <Register />
+                        </React.Suspense>
+                    }
                     />
+                    <Route path="doctorsregister" element={
+                        <React.Suspense fallback={<PageLoader />}>
+                            <DoctorSignup />
+                        </React.Suspense>
+                    }
+                    />
+                    <Route path="hospitalsregister" element={
+                        <React.Suspense fallback={<PageLoader />}>
+                            <HospitalSignup />
+                        </React.Suspense>
+                    }
+                    />
+                    <Route path="adminregister" element={<PageNotFound />} />
                 </Route>
-                <Route path="/">
-                    <Route path="" element={<Home />} />
-                </Route>
-                <Route path="/" element={<Protected />} >
-                    <Route path="hospitals" element={<MyMap />} />
-                </Route>
+
+                <Route path="/page-not-found" element={<PageNotFound />} />
+
             </Routes>
         </>
     );

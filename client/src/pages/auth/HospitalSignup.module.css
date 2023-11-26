@@ -3,14 +3,14 @@
     display: flex;
     position: relative;
 }
-.image-div {
+.imageDiv {
     width: 50%;
     min-height: 100vh;
     background-color: #dce9e2;
     padding: 3vw 5vw;
     position: fixed;
 }
-.image-div img{
+.imageDiv img{
     width: 100%;
     margin-top: 3rem;
     border-radius: 10px;
@@ -22,29 +22,29 @@
     text-transform: uppercase;
     text-align: left;
 }
-.tag-line {
+.tagLine {
     color: #00856f;
     font-size: 50px;
     line-height: 60px;
     font-weight: 500;
     text-transform: capitalize;
 }
-.form-div {
+.formDiv {
     position: absolute;
     right: 10vw;
     padding: 5vw 0;
 }
-.last-details {
+.lastDetails {
     display: flex;
     flex-direction: column;
 }
-.form-div h3 {
+.formDiv h3 {
     color: #26393a;
     font-size: 25px;
     line-height: 35px;
     font-weight: 400;
 }
-.form-div p {
+.formDiv p {
     color: #7d7e78;
     margin: 15px 0;
 }
@@ -54,16 +54,15 @@
     font-weight: 400;
     margin-bottom: 0.7rem;
 }
-.input-group input,
-.input-group select {
+.inputGroup input,
+.inputGroup select {
     background-color: #f0f4f5;
     height: 50px;
     padding-left: 16px;
     border: none;
     border-radius: 9px;
 }
-.input-group select {
-    width: 6rem;
+.inputGroup select {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -72,45 +71,45 @@
 label {
     color: #7d7e78;
 }
-.input-group,
-.last-details {
+.inputGroup,
+.lastDetails {
     display: flex;
     gap: 1rem;
     margin-bottom: 1rem;
 }
-.last-details input {
+.lastDetails input {
     background-color: #f0f4f5;
     height: 50px;
     padding-left: 16px;
     border: none;
     border-radius: 9px;
 }
-.last-details input:active,
-.last-details input:focus {
+.lastDetails input:active,
+.lastDetails input:focus {
     border: none;
     outline: none;
 }
-.input-group input:active,
-.input-group input:focus,
-.input-group select:active,
-.input-group select:focus {
+.inputGroup input:active,
+.inputGroup input:focus,
+.inputGroup select:active,
+.inputGroup select:focus {
     border: none;
     outline: none;
 }
-.full-width {
+.fullWidth {
     width: 100%;
 }
-.on-top {
+.onTop {
     vertical-align: text-top;
     height: fit-content;
 }
-.float-left {
+.floatLeft{
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 5px;
 }
-.float-left select {
+.floatLeftselect {
     width: 100%;
 }
 .btn {
@@ -163,13 +162,13 @@ label {
 }
 
 @media (max-width: 1200px) {
-    .form-div {
+    .formDiv {
         right: 5vw;
     }
 }
 
 @media (max-width: 900px) {
-    .form-div {
+    .formDiv {
         right: 3vw;
     }
 }
@@ -177,30 +176,30 @@ label {
     .main {
         flex-direction: column !important;
     }
-    .image-div {
+    .imageDiv {
         position: relative !important;
         width: 100%;
     }
-    .form-div {
+    .formDiv {
         position: relative;
-        width: 100%;
+        width: 100%;    
         right: 0;
         padding: 10% 20%;
     }
 }
 @media (max-width: 540px) {
-    .form-div {
+    .formDiv {
         padding: 10% 10%;
     }
 }
 @media (max-width: 420px) {
-    .form-div {
+    .formDiv {
         padding: 10% 5%;
     }
-    .input-group {
+    .inputGroup {
         flex-direction: column;
     }
-    .input-group select {
+    .inputGroup select {
         width: 100%;
     }
 }

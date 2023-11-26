@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosInstance from "../../api/axiosInstance";
 import styles from './Login.module.css';
 import Wave from "./wave.png";
@@ -8,10 +8,14 @@ import Header from '../../components/Header/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faUser } from '@fortawesome/free-solid-svg-icons';
 import { toast } from "react-toastify";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from "../../app/hooks";
 import { userActions } from "../../features/userSlice";
+import Tilt from "react-parallax-tilt"
 const Login = () => {
+    const params = useParams()
+    console.log(params)
+    const [route, setRoute] = useState('');
     const [isInvalidEmail, setIsValidEmail] = useState(false);
     const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
     const navigate = useNavigate();
@@ -62,14 +66,33 @@ const Login = () => {
                 console.error('Error submitting form:', error);
             });
     };
-
+    useEffect(() => {
+        const isValidType = (type) => ['doctorslogin', 'patientslogin', 'adminlogin', 'hospitalslogin'].includes(type);
+        const { type } = params;
+        if (!isValidType(type)) {
+            navigate("/page-not-found", { replace: true });
+        } else {
+            const url = type.replace("login", "register");
+            console.log(url);
+            setRoute(url);
+        }
+    }, [])
     return (
         <>
             <Header />
             <img className={styles.wave} src={Wave} alt="wave" />
             <div className={styles.container}>
                 <div className={styles.img}>
-                    <img src={Background} alt="background" />
+                    <Tilt
+                        tiltMaxAngleX={20}
+                        tiltMaxAngleY={20}
+                        glareEnable={true}
+                        glareMaxOpacity={0}
+                        gyroscope={true}
+                        scale={1.02}
+                        transitionSpeed={2000}>
+                        <img src={Background} alt="background" />
+                    </Tilt>
                 </div>
                 <div className={styles['login-content']}>
                     <form onSubmit={handleFormSubmit} className={styles.form}>
@@ -99,7 +122,7 @@ const Login = () => {
                         <input type="submit" className={styles.btn} value="Login" />
                         <div className={styles.register}>
                             <p>Don't Have an Account ? </p>
-                            <Link to={"/auth/patientsRegister"} style={{ fontSize: "1rem" }} >Register Here</Link>
+                            <Link to={`/auth/${route}`} style={{ fontSize: "1rem" }} >Register Here</Link>
                         </div>
                     </form>
                 </div>

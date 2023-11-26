@@ -39,7 +39,7 @@ exports.postLogin = (req, res) => {
                         });
                         return res
                             .status(200)
-                            .json({...patient._doc,type:"patients"});
+                            .json({ ...patient._doc, type: "patients" });
                     }
                     return res
                         .status(401)
@@ -264,6 +264,7 @@ exports.getFiltered = (req, res) => {
     const location = req.params.location;
     const speciality = req.params.speciality;
     let loc = req.params.location.toString().toLowerCase();
+
     if (location !== "All" && speciality !== "All") {
         Hospitals.find({
             city: loc,
@@ -271,8 +272,7 @@ exports.getFiltered = (req, res) => {
             verified: "true",
         })
             .then((hospitals) => {
-                console.log(hospitals);
-                res.render("results/filteredHospitals", {
+                res.json({
                     hospitals: hospitals,
                     speciality: speciality,
                     location: location,
@@ -280,13 +280,14 @@ exports.getFiltered = (req, res) => {
             })
             .catch((err) => {
                 console.log(err);
+                res.status(500).json({ error: 'Internal Server Error' });
             });
     }
+
     if (location === "All" && speciality !== "All") {
         Hospitals.find({ specialityDep: speciality, verified: "true" })
             .then((hospitals) => {
-                console.log(hospitals);
-                res.render("results/filteredHospitals", {
+                res.json({
                     hospitals: hospitals,
                     speciality: speciality,
                     location: location,
@@ -294,13 +295,14 @@ exports.getFiltered = (req, res) => {
             })
             .catch((err) => {
                 console.log(err);
+                res.status(500).json({ error: 'Internal Server Error' });
             });
     }
+
     if (location !== "All" && speciality === "All") {
         Hospitals.find({ city: loc, verified: "true" })
             .then((hospitals) => {
-                console.log(hospitals);
-                res.render("results/filteredHospitals", {
+                res.json({
                     hospitals: hospitals,
                     speciality: speciality,
                     location: location,
@@ -308,6 +310,7 @@ exports.getFiltered = (req, res) => {
             })
             .catch((err) => {
                 console.log(err);
+                res.status(500).json({ error: 'Internal Server Error' });
             });
     }
 };

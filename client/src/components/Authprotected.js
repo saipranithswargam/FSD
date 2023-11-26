@@ -5,11 +5,9 @@ import PageLoader from "./Loaders/PageLoader";
 import { toast } from "react-toastify";
 
 function AuthProtected() {
-    const location = useLocation();
     const user = useAppSelector((state) => state.user);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-
     useEffect(() => {
         setLoading(true);
         if (user.isLoggedIn) {

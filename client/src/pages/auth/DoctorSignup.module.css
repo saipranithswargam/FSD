@@ -10,11 +10,13 @@
     padding: 3vw 5vw;
     position: fixed;
 }
+
 .image-div img{
     width: 100%;
     margin-top: 3rem;
     border-radius: 10px;
 }
+
 .brand {
     color: #00856f;
     font-size: 40px;
@@ -48,7 +50,7 @@
     color: #7d7e78;
     margin: 15px 0;
 }
-.form h5 {
+form h5 {
     color: #26393a;
     font-size: 25px;
     font-weight: 400;
@@ -134,34 +136,12 @@ label {
 .btn:hover {
     background-position: right;
 }
-
 .invalid {
     color: red !important;
 }
 .errorParas {
     max-width: 20vw;
 }
-
-@keyframes shake {
-    0% {
-        margin-left: 0rem;
-    }
-    25% {
-        margin-left: 0.5rem;
-    }
-    75% {
-        margin-left: -0.5rem;
-    }
-    100% {
-        margin-left: 0rem;
-    }
-}
-
-.invalid {
-    animation: shake 0.2s ease-in-out 0s 2;
-    box-shadow: 0 0 0.6rem #ff0000;
-}
-
 @media (max-width: 1200px) {
     .form-div {
         right: 5vw;

@@ -4,7 +4,10 @@ import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
-import { Link } from "react-router-dom";
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Dropdown from 'react-bootstrap/Dropdown';
+import { Link, NavLink } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
 import styles from "./Header.module.css";
 const Header = () => {
@@ -33,9 +36,7 @@ const Header = () => {
         console.log("testing");
     };
 
-    /*styles variables*/
     const navbarStyles = `${styles.header} "bg-body-tertiary"`;
-    const navLinkStyles = `${styles.header__navLink} ${"pe-3"}`;
     return (
         <>
             {["lg"].map((expand) => (
@@ -59,29 +60,33 @@ const Header = () => {
                                 </Offcanvas.Title>
                             </Offcanvas.Header>
                             <Offcanvas.Body>
-                                <Nav className="justify-content-end flex-grow-1 pe-3 header__offcanvas">
-                                    <Nav.Link as={Link} to="/" className="">
+                                <Nav className="justify-content-end flex-grow-1 pe-5 header__offcanvas">
+                                    <Nav.Link as={Link} to="/" style={{ textAlign: "center" }}>
                                         Home
                                     </Nav.Link>
-                                    {!user.isLoggedIn && (
-                                        <Nav.Link
-                                            as={Link}
-                                            to="/auth/login"
-                                            className={navLinkStyles}
-                                        >
-                                            Login
-                                        </Nav.Link>
-                                    )}
                                     {user.isLoggedIn && (
                                         <Nav.Link
                                             as={Link}
                                             to="/patients/dashboard"
-                                            className={navLinkStyles}
+                                            style={{ textAlign: "center" }}
                                         >
                                             Dashboard
                                         </Nav.Link>
                                     )}
+                                    <Nav.Item style={{ height: "100%", position: "relative" }}>
+                                        <Dropdown style={{ height: "100%", textAlign: "center" }} bsPrefix={styles.buttonContainer} drop="start" >
+                                            <Dropdown.Toggle id="dropdown-basic" bsPrefix={styles.DropdownButton}>
+                                                Partners
+                                            </Dropdown.Toggle>
+                                            <Dropdown.Menu align={"start"} style={{ textAlign: "center" }}>
+                                                <Dropdown.Item to={"/auth/doctorslogin"} as={NavLink} >Doctors</Dropdown.Item>
+                                                <Dropdown.Item to={"/auth/hospitalslogin"} as={NavLink} >Hospitals</Dropdown.Item>
+                                                <Dropdown.Item to={"/auth/adminlogin"} as={NavLink} >Admin</Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                    </Nav.Item>
                                 </Nav>
+
                             </Offcanvas.Body>
                         </Navbar.Offcanvas>
                     </Container>

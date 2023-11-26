@@ -39,7 +39,6 @@ function App() {
                 .query({ name: "geolocation" })
                 .then((result) => {
                     if (result.state === "granted") {
-                        console.log("granted", result.state);
                         navigator.geolocation.getCurrentPosition(
                             storeLocation,
                             () => {},
@@ -51,7 +50,6 @@ function App() {
                             () => {},
                             { timeout: 5000, maximumAge: 0 }
                         );
-                        console.log(result.state);
                     } else if (result.state === "denied") {
                         //If denied then you have to show instructions to enable location
                     }

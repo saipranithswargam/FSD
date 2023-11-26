@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./Process.module.css";
+import Tilt from 'react-parallax-tilt';
 function Process() {
     const bellIcon = (
         <svg
@@ -30,32 +31,63 @@ function Process() {
         >
             <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
         </svg>
+
     );
     return (
         <>
             <div className={styles.background} id="steps">
                 <div className={styles.content}>
                     <h1>How it Works</h1>
+
                     <div className={styles.cards}>
-                        <div className={styles.card}>
-                            <div>{searchIcon}</div>
-                            <h1>Search Doctors</h1>
-                            <p>Search For Specialists Doctors Near You</p>
-                        </div>
-                        <div className={styles.card}>
-                            <div>{bellIcon}</div>
-                            <h1>Receive Your Matches</h1>
-                            <p>
-                                We Will Match You with the specialist You need
-                            </p>
-                        </div>
-                        <div className={styles.card}>
-                            <div>{fileIcon}</div>
-                            <h1>Make An Appointment</h1>
-                            <p>
-                                Schedule your Appointment with the best doctors
-                            </p>
-                        </div>
+                        <Tilt
+                            tiltMaxAngleX={20}
+                            tiltMaxAngleY={20}
+                            glareEnable={true}
+                            glareMaxOpacity={0}
+                            gyroscope={true}
+                            scale={1.02}
+                            transitionSpeed={2000}
+                        >
+                            <div className={styles.card}>
+                                <div>{searchIcon}</div>
+                                <h1>Search Doctors</h1>
+                                <p>Search For Specialists Doctors Near You</p>
+                            </div>
+                        </Tilt>
+                        <Tilt
+                            tiltMaxAngleX={20}
+                            tiltMaxAngleY={20}
+                            glareEnable={true}
+                            glareMaxOpacity={0}
+                            gyroscope={true}
+                            scale={1.02}
+                            transitionSpeed={2000}>
+                            <div className={styles.card}>
+                                <div>{bellIcon}</div>
+                                <h1>Receive Your Matches</h1>
+                                <p>
+                                    We Will Match You with the specialist You need
+                                </p>
+                            </div>
+                        </Tilt>
+                        <Tilt
+                            tiltMaxAngleX={20}
+                            tiltMaxAngleY={20}
+                            glareEnable={true}
+                            glareMaxOpacity={0}
+                            gyroscope={true}
+                            scale={1.02}
+                            transitionSpeed={2000}
+                        >
+                            <div className={styles.card}>
+                                <div>{fileIcon}</div>
+                                <h1>Make An Appointment</h1>
+                                <p>
+                                    Schedule your Appointment with the best doctors
+                                </p>
+                            </div>
+                        </Tilt>
                     </div>
                 </div>
             </div>
