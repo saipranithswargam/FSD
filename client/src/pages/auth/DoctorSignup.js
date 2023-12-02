@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
 import styles from './DoctorSignup.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Image from "./DoctorRegister.svg";
 import Tilt from 'react-parallax-tilt';
+import { toast } from "react-toastify";
 const DoctorSignup = () => {
+    const [isInvalidEmail, setIsValidEmail] = useState(false);
+    const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
+    const [isNumberInvalid, setIsNumberInvalid] = useState(false);
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
         age: '',
-        gender: '',
+        gender: 'Male',
         licenseNo: '',
         experience: '',
-        specialty: '',
+        specialty: 'Dermatologist',
         state: '',
         city: '',
         pincode: '',
@@ -19,26 +24,73 @@ const DoctorSignup = () => {
         email: '',
         password: '',
     });
+    const checkEmailValidity = (e) => {
+        const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+        if (!isValid) {
+            setIsValidEmail(true);
+        } else {
+            setIsValidEmail(false)
+        }
+    }
 
-    const doctorValidation = async (e) => {
+    const checkMobileNumberValidity = () => {
+        const isValid = /^[6-9]\d{9}$/.test(formData.mobileNum);
+        if (!isValid) {
+            setIsNumberInvalid(true);
+        } else {
+            setIsNumberInvalid(false);
+        }
+    }
+
+    const checkPasswordValidity = () => {
+        const isValid = /^(?=.*[A-Z]).{8,}$/.test(formData.password);
+        if (!isValid) {
+            setIsPasswordInvalid(true);
+        } else {
+            setIsPasswordInvalid(false);
+        }
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
-        //     const response = await fetch('/doctors/register', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(formData),
-        //     });
+        if (isInvalidEmail || isNumberInvalid || isPasswordInvalid) {
+            toast.warning("Please Check Validity Of Data Entered!", {
+                position: "top-right",
+                toastId: 5,
+            });
+            return;
+        }
+        try {
+            const response = await fetch('http://localhost:5050/doctors/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(formData),
+            });
 
-        //     if (response.ok) {
-        //         // Handle successful form submission, e.g., redirect to a success page
-        //         console.log('Form submitted successfully');
-        //     } else {
-        //         // Handle errors during form submission
-        //         console.error('Error submitting the form');
-        //     }
-    };
+            if (response.ok) {
+                const responseData = await response.json(); // This line gets the JSON data from the response
+                navigate("/auth/doctorslogin", { replace: true });
+                toast.success("Registration Successful", {
+                    position: "top-right",
+                    toastId: 5,
+                });
+            } else {
+                const errorData = await response.json(); // This line gets the JSON data from the error response
+                toast.error(errorData.message, {
+                    position: "top-right",
+                    toastId: 6,
+                });
+            }
+        } catch (err) {
+            toast.error(err.message, {
+                position: "top-right",
+                toastId: 6,
+            });
+        }
+    }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -68,7 +120,7 @@ const DoctorSignup = () => {
             <div className={styles["form-div"]}>
                 <h3>Ready to get started with CHS ?</h3>
                 <p>Join us by filling the following form</p>
-                <form onSubmit={doctorValidation}>
+                <form onSubmit={handleSubmit}>
                     <h5>Personal Details</h5>
                     <div className={styles["input-group"]}>
                         <input
@@ -161,8 +213,10 @@ const DoctorSignup = () => {
                         <input
                             placeholder="Mobile Number"
                             name="mobileNum"
-                            className="full-width"
-                            pattern="^[6-9]\d{9}$"
+                            className={`${isNumberInvalid ? styles.invalid : ""} `}
+                            onBlur={checkMobileNumberValidity}
+                            onFocus={() => { setIsNumberInvalid(false) }}
+                            value={formData.mobileNum}
                             title="mobile number must be of 10 digits"
                             required
                             onChange={handleInputChange}
@@ -170,7 +224,7 @@ const DoctorSignup = () => {
                         <input
                             placeholder="Hospital Registration No."
                             name="regNo"
-                            className="full-width"
+                            className={styles["full-width"]}
                             required
                             title="Hospital Registration Number"
                             onChange={handleInputChange}
@@ -181,14 +235,20 @@ const DoctorSignup = () => {
                             type="email"
                             required
                             id="input--email"
+                            className={`${styles.input} ${isInvalidEmail ? styles.invalid : " "} `}
+                            onBlur={checkEmailValidity}
+                            onFocus={() => { setIsValidEmail(false) }} value={formData.email}
                             onChange={handleInputChange}
                         />
                         <input
+                            className={`${styles.input} ${isPasswordInvalid ? styles.invalid : " "} `}
                             placeholder="Password"
                             name="password"
                             type="password"
                             id="input--password"
+                            value={formData.password}
                             required
+                            onBlur={checkPasswordValidity} onFocus={() => { setIsPasswordInvalid(false) }}
                             onChange={handleInputChange}
                         />
                     </div>

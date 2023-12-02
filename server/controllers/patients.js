@@ -672,7 +672,9 @@ exports.postModify = (req, res) => {
 };
 
 exports.Logout = (req, res, next) => {
-    req.session.destroy((err) => {
-        res.redirect("/");
-    });
+    res.clearCookie('chs');
+    req._id = null;
+    return res
+        .status(200)
+        .json({ message: "Logged out!!" });
 };

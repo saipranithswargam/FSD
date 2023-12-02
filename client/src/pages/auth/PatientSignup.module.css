@@ -135,9 +135,6 @@ label {
     background-position: right;
 }
 
-.invalid {
-    color: red !important;
-}
 .errorParas {
     max-width: 20vw;
 }

@@ -5,6 +5,7 @@ const ConfirmedAppointments = require("../models/confirmedAppointments");
 const nodemailer = require("nodemailer");
 const MedicalRecords = require("../models/medicalRecords");
 const Appointments = require("../models/appointments");
+const jwt = require("jsonwebtoken");
 let config = {
     service: "gmail",
     auth: {
@@ -29,8 +30,10 @@ exports.getLogin = (req, res) => {
 exports.postLogin = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-    Doctor.findOne({ email: email, verified: "true" })
+    console.log(req.body);
+    Doctor.findOne({ email: email})
         .then((doctor) => {
+            console.log(doctor)
             if (!doctor) {
                 return res.status(401).json({
                     success: false,
@@ -42,10 +45,22 @@ exports.postLogin = (req, res) => {
                 .compare(password, doctor.password)
                 .then((doMatch) => {
                     if (doMatch) {
-                        return res.status(200).json({
-                            success: true,
-                            message: "Login successful.",
+                        const token = jwt.sign(
+                            { id: doctor._id, type: 'doctors' },
+                            String(process.env.SECRET),
+                            {
+                                expiresIn: "3h",
+                            }
+                        );
+                        res.cookie("chs", token, {
+                            httpOnly: true,
+                            sameSite: "none",
+                            secure: true,
+                            maxAge: 24 * 60 * 60 * 1000,
                         });
+                        return res
+                            .status(200)
+                            .json({ ...doctor._doc, type: "patients" });
                     }
                     return res.status(401).json({
                         success: false,
@@ -82,12 +97,13 @@ exports.getRegister = (req, res) => {
 };
 
 exports.postRegister = (req, res) => {
+    console.log(req.body);
     const name = req.body.name;
     const age = req.body.age;
     const gender = req.body.gender;
-    const liscenceNo = req.body.liscenceNo;
+    const liscenceNo = req.body.licenseNo;
     const experience = req.body.experience;
-    const speciality = req.body.speciality;
+    const speciality = req.body.specialty;
     const state = req.body.state;
     const city = req.body.city;
     const pincode = req.body.pincode;
@@ -95,7 +111,6 @@ exports.postRegister = (req, res) => {
     const hregNo = req.body.regNo;
     const email = req.body.email;
     const password = req.body.password;
-    const confirmPassword = req.body.confirmPassword;
     Doctor.findOne({ email: email }).then((doctor) => {
         if (doctor) {
             return res.status(400).json({
@@ -113,6 +128,7 @@ exports.postRegister = (req, res) => {
                     });
                 }
                 Doctor.findOne({ liscenceNo: liscenceNo }).then((doc) => {
+                    console.log(doc);
                     if (doc) {
                         return res.status(400).json({
                             success: false,
@@ -479,7 +495,10 @@ exports.postModify = (req, res) => {
 };
 
 exports.Logout = (req, res, next) => {
-    req.session.destroy((err) => {
-        res.redirect("/");
-    });
+    res.clearCookie('chs');
+    req._id = null;
+    return res
+        .status(200)
+        .json({ message: "Logged out!!" });
 };
+

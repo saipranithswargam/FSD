@@ -10,7 +10,7 @@
     padding: 3vw 5vw;
     position: fixed;
 }
-.imageDiv img{
+.imageDiv img {
     width: 100%;
     margin-top: 3rem;
     border-radius: 10px;
@@ -103,7 +103,7 @@ label {
     vertical-align: text-top;
     height: fit-content;
 }
-.floatLeft{
+.floatLeft {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -135,10 +135,23 @@ label {
 }
 
 .invalid {
-    color: red !important;
+    animation: shake 0.2s ease-in-out 0s 2;
+    box-shadow: 0 0 0.6rem #ff0000;
 }
-.errorParas {
-    max-width: 20vw;
+
+@keyframes shake {
+    0% {
+        margin-left: 0rem;
+    }
+    25% {
+        margin-left: 0.5rem;
+    }
+    75% {
+        margin-left: -0.5rem;
+    }
+    100% {
+        margin-left: 0rem;
+    }
 }
 
 @keyframes shake {
@@ -182,7 +195,7 @@ label {
     }
     .formDiv {
         position: relative;
-        width: 100%;    
+        width: 100%;
         right: 0;
         padding: 10% 20%;
     }

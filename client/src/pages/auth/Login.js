@@ -11,10 +11,10 @@ import { toast } from "react-toastify";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from "../../app/hooks";
 import { userActions } from "../../features/userSlice";
-import Tilt from "react-parallax-tilt"
+import Tilt from "react-parallax-tilt";
 const Login = () => {
     const params = useParams()
-    console.log(params)
+    const [userType, setUserType] = useState('');
     const [route, setRoute] = useState('');
     const [isInvalidEmail, setIsValidEmail] = useState(false);
     const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
@@ -49,12 +49,14 @@ const Login = () => {
     const handleFormSubmit = (e) => {
         e.preventDefault();
 
-        axiosInstance.post('/patients/login', {
+        axiosInstance.post(`${userType}/login`, {
             email: email,
             password: password
         })
+        
             .then(response => {
                 console.log(response.data);
+                //changes need to be done in here as data is not as defined in redux
                 dispatch(userActions.setState({ ...response.data }));
                 navigate("/", { replace: true });
                 toast.success("Logged in successfully!", {
@@ -72,8 +74,9 @@ const Login = () => {
         if (!isValidType(type)) {
             navigate("/page-not-found", { replace: true });
         } else {
+            const userType = type.replace("login", "");
+            setUserType(userType);
             const url = type.replace("login", "register");
-            console.log(url);
             setRoute(url);
         }
     }, [])

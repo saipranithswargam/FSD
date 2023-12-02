@@ -1,23 +1,43 @@
 
 import React, { useState } from 'react';
-import styles from './HospitalSignup.module.css'; // Make sure to import your CSS file
-import { Link } from 'react-router-dom';
+import styles from './HospitalSignup.module.css';
+import { Link, useNavigate } from 'react-router-dom';
 import Tilt from 'react-parallax-tilt';
 import Image from "./HospitalRegister2.jpg"
+import { toast } from "react-toastify";
 const HospitalSignup = () => {
+    const [isInvalidEmail, setIsValidEmail] = useState(false);
+    const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         hname: '',
         regNo: '',
         email: '',
         password: '',
-        speciality: 'MultiSpeciality', // Default value
+        speciality: 'MultiSpeciality',
         otherSpeciality: '', // Hidden field
         government: 'Yes', // Default value
         state: '',
         city: '',
         pincode: '',
     });
+    const checkPasswordValidity = () => {
+        const isValid = /^(?=.*[A-Z]).{8,}$/.test(formData.password);
+        if (!isValid) {
+            setIsPasswordInvalid(true);
+        } else {
+            setIsPasswordInvalid(false);
+        }
+    }
 
+    const checkEmailValidity = (e) => {
+        const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+        if (!isValid) {
+            setIsValidEmail(true);
+        } else {
+            setIsValidEmail(false)
+        }
+    }
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -25,26 +45,45 @@ const HospitalSignup = () => {
             [name]: value,
         });
     };
-
-    const hospitalValidation = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData)
-        // const response = await fetch('/hospitals/register', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(formData),
-        // });
+        if (isInvalidEmail || isPasswordInvalid) {
+            toast.warning("Please Check Validity Of Data Entered!", {
+                position: "top-right",
+                toastId: 5,
+            });
+            return;
+        }
+        try {
+            const response = await fetch('http://localhost:5050/hospitals/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(formData),
+            });
 
-        // if (response.ok) {
-        //     // Handle successful form submission, e.g., redirect to a success page
-        //     console.log('Form submitted successfully');
-        // } else {
-        //     // Handle errors during form submission
-        //     console.error('Error submitting the form');
-        // }
-    };
+            if (response.ok) {
+                navigate("/auth/hospitalslogin", { replace: true });
+                toast.success("Registration Successful", {
+                    position: "top-right",
+                    toastId: 5,
+                });
+            } else {
+                const errorData = await response.json();
+                toast.error(errorData.message, {
+                    position: "top-right",
+                    toastId: 6,
+                });
+            }
+        } catch (err) {
+            toast.error(err.message, {
+                position: "top-right",
+                toastId: 6,
+            });
+        }
+    }
 
     return (
         <div className={styles.main}>
@@ -67,7 +106,7 @@ const HospitalSignup = () => {
                 <h3>Ready to start Partnership with CHS ?</h3>
                 <p>Complete the form below and get started:</p>
 
-                <form action="/hospitals/register" method="post" onSubmit={hospitalValidation}>
+                <form action="/hospitals/register" method="post" onSubmit={handleSubmit}>
                     <h5>Hospital Details</h5>
                     <div className={styles.inputGroup}>
                         <input
@@ -91,20 +130,25 @@ const HospitalSignup = () => {
                         <input
                             placeholder="Email"
                             name="email"
-                            className={styles.fullWidth}
                             type="email"
                             required
+                            id="input--email"
+                            className={`${styles.fullWidth} ${isInvalidEmail ? styles.invalid : " "} `}
+                            onBlur={checkEmailValidity}
+                            onFocus={() => { setIsValidEmail(false) }} value={formData.email}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div className={styles.inputGroup}>
                         <input
+                            className={`${styles.fullWidth} ${isPasswordInvalid ? styles.invalid : " "} `}
                             placeholder="Password"
                             name="password"
-                            className={styles.fullWidth}
-                            required
                             type="password"
                             id="input--password"
+                            value={formData.password}
+                            required
+                            onBlur={checkPasswordValidity} onFocus={() => { setIsPasswordInvalid(false) }}
                             onChange={handleInputChange}
                         />
                     </div>

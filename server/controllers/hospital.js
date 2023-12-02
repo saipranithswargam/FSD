@@ -6,6 +6,7 @@ const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const Doctors = require("../models/doctors");
 const Hospitals = require("../models/hospitals");
+const jwt = require('jsonwebtoken');
 let config = {
     service: "gmail",
     auth: {
@@ -29,44 +30,57 @@ exports.getLogin = (req, res) => {
 };
 
 exports.postLogin = (req, res) => {
-    const regNo = req.body.regNo;
+    const email = req.body.email;
     const password = req.body.password;
-    Hospital.findOne({ regNo: regNo, verified: "true" })
+    Hospital.findOne({ email: email })
         .then((hospital) => {
             if (!hospital) {
-                req.flash(
-                    "error",
-                    "Invalid Registration Number or password or you are not yet verified"
-                );
-                return res.redirect("/hospitals/login");
+                return res.status(401).json({
+                    success: false,
+                    message: "Invalid Registration Number or password or you are not yet verified"
+                });
             }
-            bcrypt
-                .compare(password, hospital.password)
+
+            bcrypt.compare(password, hospital.password)
                 .then((doMatch) => {
                     if (doMatch) {
-                        req.session.isLoggedIn = true;
-                        req.session.type = "hospital";
-                        req.session.hospital = hospital;
-                        return req.session.save((err) => {
-                            res.redirect("/hospitals/dashboard");
+                        const token = jwt.sign(
+                            { id: hospital._id, type: 'hospitals' },
+                            String(process.env.SECRET),
+                            {
+                                expiresIn: "3h",
+                            }
+                        );
+                        res.cookie("chs", token, {
+                            httpOnly: true,
+                            sameSite: "none",
+                            secure: true,
+                            maxAge: 24 * 60 * 60 * 1000,
                         });
+                        return res
+                            .status(200)
+                            .json({ ...hospital._doc, type: "hospitals" });
                     }
-                    req.flash(
-                        "error",
-                        "Invalid Registration Number or password."
-                    );
-                    res.redirect("/hospitals/login");
+                    return res.status(401).json({
+                        success: false,
+                        message: "Invalid email or password.",
+                    });
                 })
                 .catch((err) => {
                     console.log(err);
-                    req.flash(
-                        "error",
-                        "Invalid Registration Number or password."
-                    );
-                    res.redirect("/hospitals/login");
+                    return res.status(500).json({
+                        success: false,
+                        message: "Internal server error"
+                    });
                 });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            console.log(err);
+            return res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+        });
 };
 
 exports.getRegister = (req, res) => {
@@ -91,14 +105,13 @@ exports.postRegister = (req, res) => {
     const city = req.body.city.toString().toLowerCase();
     const pincode = req.body.pincode;
     const email = req.body.email;
+
     Hospital.findOne({ regNo: regNo })
         .then((hospital) => {
             if (hospital) {
-                req.flash(
-                    "error",
-                    "Hospital with this registration number already exists ! Try login instead !"
-                );
-                return res.redirect("/hospitals/register");
+                return res.status(400).json({
+                    message: 'Hospital with this registration number already exists! Try login instead!',
+                });
             }
             return bcrypt
                 .hash(password, 12)
@@ -112,20 +125,28 @@ exports.postRegister = (req, res) => {
                         password: hashedPassword,
                         government: isGovernment,
                         specialityDep: speciality,
-                        verified: "false",
+                        verified: 'false',
                         email: email,
                     });
                     return newHospital.save();
                 })
                 .then((result) => {
-                    res.render("success/hospitalRegistrationSucess");
+                    res.status(201).json({
+                        message: 'Hospital registration successful!',
+                    });
                 })
                 .catch((err) => {
                     console.log(err);
+                    res.status(500).json({
+                        message: 'Internal Server Error',
+                    });
                 });
         })
         .catch((err) => {
             console.log(err);
+            res.status(500).json({
+                message: 'Internal Server Error',
+            });
         });
 };
 
