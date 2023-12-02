@@ -110,11 +110,58 @@ exports.postRegister = (req, res) => {
 };
 
 exports.getHospitals = (req, res) => {
-    Hospitals.find({ verified: "true" }).then((hospitals) => {
-        res.render("results/hospitalsList", {
-            hospitals: hospitals,
-        });
-    });
+   
+            const { speciality, longitude, latitude, distance } = req.body;
+
+            if(speciality==="all")
+            {
+                Hospitals.find({
+                    location: {
+                        $nearSphere: {
+                            $geometry: {
+                                type: "Point",
+                                coordinates: [
+                                    parseFloat(longitude),
+                                    parseFloat(latitude),
+                                ],
+                            },
+                            $maxDistance: (Number(distance)*1000), // 5 kilometers in meters
+                        },
+                    },
+                }).then((locations) => {
+                    if (!locations) {
+                        console.error("Error finding locations:", err);
+                        res.status(500).send("Error finding locations");
+                    } else {
+                        res.status(200).json(locations);
+                    }
+                });
+            }
+            else
+            {
+                Hospitals.find({
+                    location: {
+                        $nearSphere: {
+                            $geometry: {
+                                type: "Point",
+                                coordinates: [
+                                    parseFloat(longitude),
+                                    parseFloat(latitude),
+                                ],
+                            },
+                            $maxDistance: (Number(distance)*1000), // 5 kilometers in meters
+                        },
+                    },
+                    specialityDep: { $in: [speciality] },
+                }).then((locations) => {
+                    if (!locations) {
+                        console.error("Error finding locations:", err);
+                        res.status(500).send("Error finding locations");
+                    } else {
+                        res.status(200).json(locations);
+                    }
+                });
+            }      
 };
 
 exports.getMedicalRecords = (req, res) => {

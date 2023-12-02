@@ -127,6 +127,10 @@ exports.postRegister = (req, res) => {
                         specialityDep: speciality,
                         verified: 'false',
                         email: email,
+                        location: {
+                            type: "Point",
+                            coordinates: [req.body.longitude, req.body.latitude],
+                          },
                     });
                     return newHospital.save();
                 })

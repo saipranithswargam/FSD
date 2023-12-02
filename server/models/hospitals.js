@@ -15,6 +15,18 @@ const hospitalSchema = new mongoose.Schema(
 
         specialityDep: { type: String },
 
+        location: {
+            type: {
+              type: String,
+              enum: ["Point"],
+              default: "Point",
+            },
+            coordinates: {
+              type: [Number],
+              required: true,
+            },
+          },
+
         email: { type: String },
         
         doctorsWorking: [
