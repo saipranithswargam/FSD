@@ -215,41 +215,46 @@ exports.addHospital = (req, res) => {
 exports.postAddHospital = (req, res) => {
     const hname = req.body.hospitalName;
     const regNo = req.body.regNo;
-    Hospital.findOne({ regNo: regNo, verified: "true" })
+    Hospital.findOne({ regNo: regNo })
         .then((hospital) => {
             if (!hospital) {
-                req.flash(
-                    "error",
-                    "Cannot find Hospital or Hospital hasn't been verified"
-                );
-                return res.redirect("/doctors/addhospital");
+                return res.status(400).json({
+                    success: false,
+                    message: "Cannot find Hospital ",
+                });
             }
-            const hospitalsAdded = req.doctor.hospitalsWorkingFor;
-            const isThere = hospitalsAdded.find((id) => {
-                return id.toString() === hospital._id.toString();
-            });
-            if (isThere) {
-                req.flash(
-                    "error",
-                    "Hospital Trying to already exists in your hospitals working list "
-                );
-                return res.redirect("/doctors/addhospital");
-            }
-            hospital.doctorsWorking.push(req.doctor._id);
-            hospital.save().then((result) => {
-                console.log(result);
-                Doctor.findById(req.doctor._id).then((doctor) => {
-                    doctor.hospitalsWorkingFor.push(hospital._id);
-                    doctor.save().then((result) => {
-                        res.render("success/hospitalAddedSuccess");
+            Doctor.findById(req._id).then((doctor) => {
+                const hospitalsAdded = doctor.hospitalsWorkingFor;
+                const isThere = hospitalsAdded.find((id) => id.toString() === hospital._id.toString());
+                if (isThere) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "Hospital already exists in your hospitals working list",
+                    });
+                }
+                hospital.doctorsWorking.push(req._id);
+                hospital.save().then((result) => {
+                    Doctor.findById(req._id).then((doctor) => {
+                        doctor.hospitalsWorkingFor.push(hospital._id);
+                        doctor.save().then((result) => {
+                            res.status(200).json({
+                                success: true,
+                                message: "Hospital added successfully",
+                            });
+                        });
                     });
                 });
-            });
+            })
         })
         .catch((err) => {
-            console.log(err);
+            console.error(err);
+            res.status(500).json({
+                success: false,
+                message: "Internal server error",
+            });
         });
 };
+
 
 exports.getRemoveHospital = (req, res) => {
     let message = req.flash("error");

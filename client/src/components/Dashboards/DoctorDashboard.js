@@ -14,7 +14,6 @@ const DoctorsDashboard = () => {
   const [profile, setProfile] = useState(true);
   const [addHospitals, setAddHospital] = useState(false);
   const [appointments, setAppointments] = useState(false);
-  // const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const [editProfileData, setEditProfileData] = useState({

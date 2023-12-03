@@ -354,7 +354,7 @@ exports.postChosen = (req, res) => {
 };
 
 exports.getDoctors = (req, res) => {
-    Hospital.findById(req.hospital._id)
+    Hospital.findById(req._id)
         .populate("doctorsWorking")
         .then((hospitalData) => {
             console.log(hospitalData);

@@ -10,7 +10,7 @@ const AddHospital = ({ isOpen, onClose }) => {
         console.log('Hospital Name:', hospitalName);
         console.log('Hospital RegNo:', hospitalRegNo);
         try {
-            const response = await fetch('/api/doctors/addhospital', {
+            const response = await fetch('http://localhost:5050/doctors/addhospital', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -30,8 +30,6 @@ const AddHospital = ({ isOpen, onClose }) => {
 
         } catch (error) {
             console.error('Error adding hospital:', error);
-
-
         }
 
         onClose();
