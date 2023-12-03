@@ -194,9 +194,11 @@ exports.getBookedAppointments = (req, res) => {
         .populate("patientId")
         .then((appointments) => {
             console.log(appointments);
-            res.render("results/confirmedDocAppointments", {
-                appointments: appointments,
-            });
+            res.status(200).json({ appointments: appointments });
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).json({ error: "Internal Server Error" });
         });
 };
 
