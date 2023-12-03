@@ -4,19 +4,19 @@ import { Outlet, useLocation, Navigate, useNavigate } from "react-router-dom";
 import PageLoader from "./Loaders/PageLoader";
 
 function Protected() {
-    const location = useLocation();
+    const location = useLocation()
     const user = useAppSelector((state) => state.user);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
-        if (user.isLoggedIn === false) {
+        if (!user.isLoggedIn) {
             navigate("/auth/patientslogin");
+        } else {
+            setLoading(false);
         }
-
-        setLoading(false);
-    }, []);
+    }, [user.isLoggedIn, navigate]);
 
     return loading ? <PageLoader /> : <Outlet />;
 }

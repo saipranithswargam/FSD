@@ -3,6 +3,7 @@ const Hospitals = require("../models/hospitals");
 const Doctors = require("../models/doctors");
 const Patients = require("../models/patients");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 let config = {
     service: "gmail",
@@ -29,32 +30,56 @@ exports.getLogin = (req, res) => {
 exports.postLogin = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
+
     Admin.findOne({ email: email })
-        .then((Admin) => {
-            if (!Admin) {
-                req.flash("error", "Invalid email or password.");
-                return res.redirect("/admin/login");
+        .then((admin) => {
+            if (!admin) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Invalid email or password."
+                });
             }
-            bcrypt
-                .compare(password, Admin.password)
+
+            bcrypt.compare(password, admin.password)
                 .then((doMatch) => {
                     if (doMatch) {
-                        req.session.isLoggedIn = true;
-                        req.session.type = "admin";
-                        req.session.admin = Admin;
-                        return req.session.save((err) => {
-                            res.redirect("/admin/dashboard");
+                        console.log(doMatch);
+                        const token = jwt.sign(
+                            { id: admin._id, type: 'admin' },
+                            String(process.env.SECRET),
+                            {
+                                expiresIn: "3h",
+                            }
+                        );
+                        res.cookie("chs", token, {
+                            httpOnly: true,
+                            sameSite: "none",
+                            secure: true,
+                            maxAge: 24 * 60 * 60 * 1000,
                         });
+                        return res
+                            .status(200)
+                            .json({ ...admin._doc, type: "admin" });
                     }
-                    req.flash("error", "Invalid email or password.");
-                    res.redirect("/admin/login");
+                    return res
+                        .status(401)
+                        .json({ message: "Invalid email or password." });
                 })
                 .catch((err) => {
                     console.log(err);
-                    res.redirect("/doctors/login");
+                    return res.status(500).json({
+                        success: false,
+                        message: "Internal server error"
+                    });
                 });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            console.log(err);
+            return res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+        });
 };
 
 exports.getDashboard = (req, res) => {
@@ -237,8 +262,10 @@ exports.postChosen = (req, res) => {
     }
 };
 
-exports.Logout = (req, res) => {
-    req.session.destroy((err) => {
-        res.redirect("/");
-    });
+exports.Logout = (req, res, next) => {
+    res.clearCookie('chs');
+    req._id = null;
+    return res
+        .status(200)
+        .json({ message: "Logged out!!" });
 };

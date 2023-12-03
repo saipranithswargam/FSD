@@ -25,6 +25,9 @@ const userSlice = createSlice({
             state.type = action.payload.type;
             state.mobileNumber = action.payload.mobileNum;
             state.city = action.payload.city;
+            state.pincode = action.payload.pincode;
+            state.gender = action.payload.gender;
+            state.state = action.payload.state;
         },
         setImage: (state, action) => {
             state.image = action.payload;

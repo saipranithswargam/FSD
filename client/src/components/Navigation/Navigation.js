@@ -5,13 +5,17 @@ import { ToastContainer } from "react-toastify";
 import AuthProtected from "../Authprotected";
 import PageLoader from "../Loaders/PageLoader";
 import Login from "../../pages/auth/Login";
+import { useAppSelector } from "../../app/hooks";
 import Register from "../../pages/auth/PatientSignup";
 import Protected from "../Protected";
 import Hospitals from "../../pages/Hospitals/Hospitals";
 import PageNotFound from "../../pages/PageNotFound/PageNotFound";
 import DoctorSignup from "../../pages/auth/DoctorSignup";
 import HospitalSignup from "../../pages/auth/HospitalSignup";
+import Dashboard from "../Dashboards/Dashboard";
+import Doctors from "../../pages/Doctors/Doctors";
 const Navigation = () => {
+    const user = useAppSelector((state) => state.user);
     return (
         <>
             <ToastContainer />
@@ -22,10 +26,12 @@ const Navigation = () => {
 
                 <Route path="/" element={<Protected />} >
                     <Route path="hospitals" element={<Hospitals />} />
-                    <Route path="patientsdashboard" element>
-                    </Route>
+                    <Route path="dashboard" element={<Dashboard type={user.type} />} />
                 </Route>
 
+                <Route path="/hospitals" element={<Protected />}>
+                    <Route path=":id" element={<Doctors />} />
+                </Route>
                 <Route path="/auth" element={<AuthProtected />}>
                     <Route
                         path=":type"

@@ -5,7 +5,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import Tilt from 'react-parallax-tilt';
 import Image from "./HospitalRegister2.jpg"
 import { toast } from "react-toastify";
+import { useAppSelector } from "../../app/hooks";
 const HospitalSignup = () => {
+    const user = useAppSelector((state) => state.user);
     const [isInvalidEmail, setIsValidEmail] = useState(false);
     const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
     const navigate = useNavigate();
@@ -55,13 +57,14 @@ const HospitalSignup = () => {
             return;
         }
         try {
+            const addedLocation = { ...formData, latitude: user.latitude, longitude: user.longitude };
             const response = await fetch('http://localhost:5050/hospitals/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify(formData),
+                body: JSON.stringify(addedLocation),
             });
 
             if (response.ok) {

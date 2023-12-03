@@ -6,10 +6,9 @@ import { userActions } from "./features/userSlice";
 import Navigation from "./components/Navigation/Navigation";
 import PageLoader from "./components/Loaders/PageLoader";
 function App() {
-    const [screenLoad, setScreenLoad] = useState(false);
+    const [screenLoad, setScreenLoad] = useState(true);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-
     const getUserData = async () => {
         setScreenLoad(true);
         try {

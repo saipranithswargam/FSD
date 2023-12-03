@@ -1,4 +1,6 @@
 .main{
-    padding: 7rem 5rem;
-    height: 1000vh;
+    padding: 7rem 9rem;
+}
+.hospitalsList{
+    margin-top: 4rem;
 }

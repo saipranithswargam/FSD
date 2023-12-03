@@ -1,59 +1,73 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import styles from './AddHospital.module.css';
-
-const AddHospital = () => {
+import { Modal, Button, Form } from 'react-bootstrap';
+import styles from "./AddHospital.module.css";
+const AddHospital = ({ isOpen, onClose }) => {
     const [hospitalName, setHospitalName] = useState('');
     const [hospitalRegNo, setHospitalRegNo] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Create a data object with the form input values
-        const data = {
-            hname: hospitalName,
-            regNo: hospitalRegNo,
-        };
-
+        console.log('Hospital Name:', hospitalName);
+        console.log('Hospital RegNo:', hospitalRegNo);
         try {
-            // Send a POST request to the API endpoint
-            const response = await axios.post('/api/doctors/addhospital', data);
+            const response = await fetch('/api/doctors/addhospital', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    hname: hospitalName,
+                    regNo: hospitalRegNo,
+                }),
+            });
 
-            // Handle the response as needed
-            console.log('Add Hospital Request Successful', response);
-            // You can also redirect or update the UI based on the response
+            if (!response.ok) {
+                throw new Error(`Request failed with status: ${response.status}`);
+            }
+
+            const responseData = await response.json();
+            console.log('Add Hospital Request Successful', responseData);
+
         } catch (error) {
-            // Handle errors and set the error message
-            console.error('Error adding hospital', error);
-            setErrorMessage('An error occurred while adding the hospital.');
+            console.error('Error adding hospital:', error);
+
+
         }
+
+        onClose();
     };
 
     return (
-        <div className={styles.mainDiv}>
-            <h1>Add Hospital</h1>
-            <form method="post" action="/doctors/addhospital" onSubmit={handleSubmit}>
-                <input
-                    name="hname"
-                    placeholder="Hospital Name"
-                    className={styles.name}
-                    value={hospitalName}
-                    onChange={(e) => setHospitalName(e.target.value)}
-                />
-                <input
-                    name="regNo"
-                    placeholder="Hospital RegNo."
-                    className={styles.regNo}
-                    value={hospitalRegNo}
-                    onChange={(e) => setHospitalRegNo(e.target.value)}
-                />
-                <button type="submit" className={styles.button}>
-                    Add Hospital
-                </button>
-                {errorMessage && <p className={styles.invalid}>{errorMessage}</p>}
-            </form>
-        </div>
+        <Modal show={isOpen} onHide={onClose}>
+            <Modal.Header closeButton>
+                <Modal.Title >Add Hospital</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className={styles.main}>
+                <Form onSubmit={handleSubmit} className={styles.form}>
+                    <Form.Group controlId="formHospitalName">
+                        <Form.Label style={{ paddingLeft: '0.5rem' }}>Hospital Name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={hospitalName}
+                            onChange={(e) => setHospitalName(e.target.value)}
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="formHospitalRegNo">
+                        <Form.Label style={{ paddingLeft: '0.5rem' }}>Hospital RegNo.</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={hospitalRegNo}
+                            onChange={(e) => setHospitalRegNo(e.target.value)}
+                        />
+                    </Form.Group>
+                    <div style={{ margin: '0 auto' }}>
+                        <Button variant="primary" type="submit" className={styles.btn}>
+                            Add Hospital
+                        </Button>
+                    </div>
+                </Form>
+            </Modal.Body>
+        </Modal>
     );
 };
 

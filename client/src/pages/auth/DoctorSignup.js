@@ -12,7 +12,7 @@ const DoctorSignup = () => {
     const [formData, setFormData] = useState({
         name: '',
         age: '',
-        gender: 'Male',
+        gender: 'male',
         licenseNo: '',
         experience: '',
         specialty: 'Dermatologist',
@@ -20,7 +20,6 @@ const DoctorSignup = () => {
         city: '',
         pincode: '',
         mobileNum: '',
-        regNo: '',
         email: '',
         password: '',
     });
@@ -219,14 +218,6 @@ const DoctorSignup = () => {
                             value={formData.mobileNum}
                             title="mobile number must be of 10 digits"
                             required
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            placeholder="Hospital Registration No."
-                            name="regNo"
-                            className={styles["full-width"]}
-                            required
-                            title="Hospital Registration Number"
                             onChange={handleInputChange}
                         />
                         <input

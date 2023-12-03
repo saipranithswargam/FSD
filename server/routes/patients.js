@@ -12,7 +12,7 @@ Router.post("/register", PatientController.postRegister);
 
 Router.get("/logout", isAuth, PatientController.Logout);
 
-Router.get("/hospitals", isAuth, PatientController.getHospitals);
+Router.post("/hospitals", isAuth, PatientController.getHospitals);
 
 Router.get("/medicalrecords", isAuth, PatientController.getMedicalRecords);
 

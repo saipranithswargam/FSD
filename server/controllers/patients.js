@@ -109,60 +109,57 @@ exports.postRegister = (req, res) => {
         });
 };
 
-exports.getHospitals = (req, res) => {
-   
-            const { speciality, longitude, latitude, distance } = req.body;
+exports.getHospitals = async (req, res) => {
+    if (req.body.speciality !== 'all') {
+        try {
+            const { longitude, latitude, distance, speciality } = req.body;
 
-            if(speciality==="all")
-            {
-                Hospitals.find({
-                    location: {
-                        $nearSphere: {
-                            $geometry: {
-                                type: "Point",
-                                coordinates: [
-                                    parseFloat(longitude),
-                                    parseFloat(latitude),
-                                ],
-                            },
-                            $maxDistance: (Number(distance)*1000), // 5 kilometers in meters
-                        },
-                    },
-                }).then((locations) => {
-                    if (!locations) {
-                        console.error("Error finding locations:", err);
-                        res.status(500).send("Error finding locations");
-                    } else {
-                        res.status(200).json(locations);
-                    }
-                });
+            if (!longitude || !latitude || !distance) {
+                return res.status(400).json({ message: "Longitude, latitude, and distance are required." });
             }
-            else
-            {
-                Hospitals.find({
-                    location: {
-                        $nearSphere: {
-                            $geometry: {
-                                type: "Point",
-                                coordinates: [
-                                    parseFloat(longitude),
-                                    parseFloat(latitude),
-                                ],
-                            },
-                            $maxDistance: (Number(distance)*1000), // 5 kilometers in meters
+            const locations = await Hospitals.find({
+                location: {
+                    $nearSphere: {
+                        $geometry: {
+                            type: "Point",
+                            coordinates: [parseFloat(longitude), parseFloat(latitude)],
                         },
+                        $maxDistance: Number(distance) * 1000,
                     },
-                    specialityDep: { $in: [speciality] },
-                }).then((locations) => {
-                    if (!locations) {
-                        console.error("Error finding locations:", err);
-                        res.status(500).send("Error finding locations");
-                    } else {
-                        res.status(200).json(locations);
-                    }
-                });
-            }      
+                },
+                specialityDep: speciality,
+            });
+            res.status(200).json(locations);
+        } catch (err) {
+            console.error("Error finding locations:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    } else {
+        try {
+            const { longitude, latitude, distance } = req.body;
+
+            if (!longitude || !latitude || !distance) {
+                return res.status(400).json({ message: "Longitude, latitude, and distance are required." });
+            }
+            const locations = await Hospitals.find({
+                location: {
+                    $nearSphere: {
+                        $geometry: {
+                            type: "Point",
+                            coordinates: [parseFloat(longitude), parseFloat(latitude)],
+                        },
+                        $maxDistance: Number(distance) * 1000,
+                    },
+                },
+            });
+            res.status(200).json(locations);
+        } catch (err) {
+            console.error("Error finding locations:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
 };
+
 
 exports.getMedicalRecords = (req, res) => {
     MedicalRecords.find({ patientId: req.patient._id })
@@ -393,19 +390,30 @@ exports.getDoctorsList = (req, res) => {
                             return doctor.verified === "true";
                         }
                     );
-                    res.render("results/listDoc", {
-                        doctors: finalDoctorsList,
-                        type: hospital.specialityDep,
-                        hospitalId: id,
-                        rating: rating - 1,
-                    });
+                    const jsonResponse = {
+                        success: true,
+                        data: {
+                            doctors: results.doctorsWorking,
+                            type: hospital.specialityDep,
+                            hospitalId: id,
+                            rating: rating - 1,
+                        }
+                    };
+
+                    res.status(200).json(jsonResponse);
                 });
             });
         })
         .catch((err) => {
             console.log(err);
+            const errorResponse = {
+                success: false,
+                message: "Internal server error"
+            };
+            res.status(500).json(errorResponse);
         });
 };
+
 
 exports.getBookDoctor = (req, res) => {
     const hospitalId = req.params.hospitalId;

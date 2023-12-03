@@ -12,6 +12,7 @@ const adminRoutes = require("./routes/admin");
 const Patients = require("./models/patients");
 const Hospitals = require("./models/hospitals");
 const Doctors = require("./models/doctors");
+const Admin = require("./models/admin");
 const app = express();
 app.use(express.static("public"));
 app.use(express.json({ limit: '50mb' }));
@@ -75,6 +76,22 @@ app.get("/check", verify, async (req, res) => {
             var modified_hospital = { ...hospital._doc, type: "hospitals" };
             console.log(modified_hospital);
             return res.status(200).json(modified_hospital);
+        } catch {
+            return res.status(400).send('error finding hospital!')
+        }
+    }
+    if (req._type === "admin") {
+        let admin = null;
+        try {
+            admin = await Admin.findById(req._id).exec();
+            if (!admin) {
+                return res.status(404).json({
+                    message: "admin Not Found",
+                });
+            }
+            var modified_admin = { ...admin._doc, type: "admin" };
+            console.log(modified_admin);
+            return res.status(200).json(modified_admin);
         } catch {
             return res.status(400).send('error finding hospital!')
         }

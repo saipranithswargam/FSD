@@ -130,7 +130,7 @@ exports.postRegister = (req, res) => {
                         location: {
                             type: "Point",
                             coordinates: [req.body.longitude, req.body.latitude],
-                          },
+                        },
                     });
                     return newHospital.save();
                 })
@@ -460,7 +460,9 @@ exports.postModify = (req, res) => {
 };
 
 exports.Logout = (req, res, next) => {
-    req.session.destroy((err) => {
-        res.redirect("/");
-    });
+    res.clearCookie('chs');
+    req._id = null;
+    return res
+        .status(200)
+        .json({ message: "Logged out!!" });
 };

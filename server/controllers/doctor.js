@@ -31,7 +31,7 @@ exports.postLogin = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     console.log(req.body);
-    Doctor.findOne({ email: email})
+    Doctor.findOne({ email: email })
         .then((doctor) => {
             console.log(doctor)
             if (!doctor) {
@@ -60,7 +60,7 @@ exports.postLogin = (req, res) => {
                         });
                         return res
                             .status(200)
-                            .json({ ...doctor._doc, type: "patients" });
+                            .json({ ...doctor._doc, type: "doctors" });
                     }
                     return res.status(401).json({
                         success: false,
@@ -97,7 +97,6 @@ exports.getRegister = (req, res) => {
 };
 
 exports.postRegister = (req, res) => {
-    console.log(req.body);
     const name = req.body.name;
     const age = req.body.age;
     const gender = req.body.gender;
@@ -108,7 +107,6 @@ exports.postRegister = (req, res) => {
     const city = req.body.city;
     const pincode = req.body.pincode;
     const mobileNum = req.body.mobileNum;
-    const hregNo = req.body.regNo;
     const email = req.body.email;
     const password = req.body.password;
     Doctor.findOne({ email: email }).then((doctor) => {
@@ -118,60 +116,51 @@ exports.postRegister = (req, res) => {
                 message: "E-Mail exists already, please pick a different one.",
             });
         }
-        Hospital.findOne({ regNo: hregNo, verified: "true" }).then(
-            (hospital) => {
-                if (!hospital) {
-                    return res.status(400).json({
-                        success: false,
-                        message:
-                            "Cannot find Hospital or hasn't been verified yet.",
-                    });
-                }
-                Doctor.findOne({ liscenceNo: liscenceNo }).then((doc) => {
-                    console.log(doc);
-                    if (doc) {
-                        return res.status(400).json({
-                            success: false,
-                            message:
-                                "Doctor already exists with the given License Number.",
-                        });
-                    }
-                    return bcrypt.hash(password, 12).then((hashedPassword) => {
-                        const newDoc = new Doctor({
-                            name: name,
-                            email: email,
-                            mobileNum: mobileNum,
-                            liscenceNo: liscenceNo,
-                            city: city,
-                            state: state,
-                            pincode: pincode,
-                            age: age,
-                            experience: experience,
-                            Speciality: speciality,
-                            password: hashedPassword,
-                            verified: "false",
-                        });
-                        newDoc.hospitalsWorkingFor.push(hospital._id);
-                        return newDoc
-                            .save()
-                            .then((result) => {
-                                return res.status(200).json({
-                                    success: true,
-                                    message: "Doctor registration successful.",
-                                });
-                            })
-                            .catch((error) => {
-                                return res.status(500).json({
-                                    success: false,
-                                    message: "Internal server error.",
-                                });
-                            });
-                    });
+        Doctor.findOne({ liscenceNo: liscenceNo }).then((doc) => {
+            console.log(doc);
+            if (doc) {
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Doctor already exists with the given License Number.",
                 });
             }
-        );
-    });
-};
+            return bcrypt.hash(password, 12).then((hashedPassword) => {
+                const newDoc = new Doctor({
+                    name: name,
+                    email: email,
+                    mobileNum: mobileNum,
+                    liscenceNo: liscenceNo,
+                    city: city,
+                    gender: gender,
+                    state: state,
+                    pincode: pincode,
+                    age: age,
+                    experience: experience,
+                    Speciality: speciality,
+                    password: hashedPassword,
+                    verified: "false",
+                });
+                return newDoc
+                    .save()
+                    .then((result) => {
+                        return res.status(200).json({
+                            success: true,
+                            message: "Doctor registration successful.",
+                        });
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        return res.status(500).json({
+                            success: false,
+                            message: "Internal server error.",
+                        });
+                    });
+            });
+        });
+    }
+    );
+}
 
 exports.getDashboard = async (req, res) => {
     console.log(req.doctor);
@@ -201,7 +190,7 @@ exports.getDashboard = async (req, res) => {
 };
 
 exports.getBookedAppointments = (req, res) => {
-    ConfirmedAppointments.find({ doctorId: req.doctor._id })
+    ConfirmedAppointments.find({ doctorId: req._id })
         .populate("patientId")
         .then((appointments) => {
             console.log(appointments);
@@ -362,12 +351,28 @@ exports.postPrescribe = (req, res) => {
 };
 
 exports.getHospitalsWorkingFor = (req, res) => {
-    req.doctor.populate("hospitalsWorkingFor").then((result) => {
-        res.render("results/hospitalsWorkingFor", {
-            hospitals: result.hospitalsWorkingFor,
+    Doctor.findById(req._id)
+        .populate("hospitalsWorkingFor")
+        .then((result) => {
+            const filteredHospitals = result.hospitalsWorkingFor.map((hospital) => ({
+                _id: hospital._id,
+                name: hospital.name,
+                city: hospital.city,
+                state: hospital.state,
+                pincode: hospital.pincode,
+            }));
+
+            return res.status(200).json(filteredHospitals);
+        })
+        .catch((error) => {
+            console.error(error);
+            return res.status(500).json({
+                success: false,
+                message: "Internal server error",
+            });
         });
-    });
 };
+
 
 exports.getMedicalRecords = (req, res) => {
     MedicalRecords.find({ patientId: req.params.patientId })

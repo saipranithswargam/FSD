@@ -17,6 +17,10 @@ const Hero = () => {
         navigate("/hospitals")
     }
 
+    const handleDashboard = () => {
+        navigate("/dashboard");
+    }
+
     return (
         <>
             <div className={styles.hero}>
@@ -30,9 +34,15 @@ const Hero = () => {
                             {!user.isLoggedIn && <button onClick={handleGetStartedClick}>
                                 Get Started
                             </button>}
-                            {user.isLoggedIn && <button onClick={handleBookAppointment}>
+                            {user.isLoggedIn && user.type === 'patients' && <button onClick={handleBookAppointment}>
                                 Book An Appointment
                             </button>}
+                            {
+                                user.isLoggedIn && user.type !== 'patients' && <button onClick={handleDashboard}>
+                                    Go to Dashboard
+                                </button>
+                            }
+
                         </div>
                     </div>
                 </div>

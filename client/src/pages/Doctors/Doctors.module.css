@@ -1,0 +1,6 @@
+.main{
+    margin-top: 4rem;
+    padding: 3rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}

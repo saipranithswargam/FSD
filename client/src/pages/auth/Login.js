@@ -53,10 +53,8 @@ const Login = () => {
             email: email,
             password: password
         })
-        
             .then(response => {
                 console.log(response.data);
-                //changes need to be done in here as data is not as defined in redux
                 dispatch(userActions.setState({ ...response.data }));
                 navigate("/", { replace: true });
                 toast.success("Logged in successfully!", {
@@ -123,10 +121,12 @@ const Login = () => {
                             </div>
                         </div>
                         <input type="submit" className={styles.btn} value="Login" />
-                        <div className={styles.register}>
-                            <p>Don't Have an Account ? </p>
-                            <Link to={`/auth/${route}`} style={{ fontSize: "1rem" }} >Register Here</Link>
-                        </div>
+                        {userType !== 'admin' &&
+                            <div className={styles.register}>
+                                <p>Don't Have an Account ? </p>
+                                <Link to={`/auth/${route}`} style={{ fontSize: "1rem" }} >Register Here</Link>
+                            </div>
+                        }
                     </form>
                 </div>
             </div>

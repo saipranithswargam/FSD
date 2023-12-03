@@ -70,7 +70,7 @@ const Header = () => {
                                                     <FontAwesomeIcon icon={faCircleUser} size="2xl" style={{ color: "#114639", }} />
                                                 </Dropdown.Toggle>
                                                 <Dropdown.Menu align={"start"} style={{ textAlign: "center" }}>
-                                                    <Dropdown.Item to={`${user.type}/dashboard`} as={NavLink} >Dashboard</Dropdown.Item>
+                                                    <Dropdown.Item to={"/dashboard"} as={NavLink} >Dashboard</Dropdown.Item>
                                                     <Dropdown.Divider />
                                                     <Dropdown.Item onClick={logout} >Logout</Dropdown.Item>
                                                 </Dropdown.Menu>
