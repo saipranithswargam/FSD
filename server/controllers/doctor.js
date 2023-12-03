@@ -273,17 +273,16 @@ exports.getRemoveHospital = (req, res) => {
 exports.postRemoveHospital = (req, res) => {
     var hname = req.body.hospitalName;
     const regNo = req.body.regNo;
+
     req.doctor.populate("hospitalsWorkingFor").then((result) => {
         const match = result.hospitalsWorkingFor.find((hospital) => {
             return hospital.regNo === regNo;
         });
+
         if (!match) {
-            req.flash(
-                "error",
-                "Hospital Trying to remove isn't there in your working hospital list "
-            );
-            return res.redirect("/doctors/removehospital");
+            return res.status(400).json({ error: "Hospital to remove isn't in your working hospital list" });
         }
+
         Doctor.findByIdAndUpdate(
             result._id,
             { $pullAll: { hospitalsWorkingFor: [match._id] } },
@@ -306,15 +305,17 @@ exports.postRemoveHospital = (req, res) => {
                             });
                         })
                         .then((result) => {
-                            res.render("success/hospitalRemovedSucess");
+                            res.status(200).json({ success: "Hospital removed successfully" });
                         });
                 });
             })
             .catch((err) => {
-                console.log(err);
+                console.error(err);
+                res.status(500).json({ error: "Internal Server Error" });
             });
     });
 };
+
 
 exports.getPrescribe = (req, res) => {
     console.log(req.params);
