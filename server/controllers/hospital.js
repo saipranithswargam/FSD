@@ -204,25 +204,55 @@ exports.getBookedAppointments = (req, res) => {
     ConfirmedAppointments.find({ hospitalId: req.hospital._id })
         .populate("doctorId patientId")
         .then((data) => {
-            res.render("results/bookedAppointments", { data: data });
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-};
-
-exports.getRequestedAppointments = (req, res) => {
-    Appointments.find({ hospitalId: req.hospital._id })
-        .populate("doctorId patientId")
-        .then((data) => {
-            res.render("results/requestedAppointments", {
-                data: data,
+            res.status(200).json({
+                bookedAppointments: data.map(appointment => ({
+                    _id: appointment._id,
+                    // Include all fields from the populated doctor and patient objects
+                    doctor: appointment.doctorId,
+                    patient: appointment.patientId,
+                    // Add other fields from the appointment object as needed
+                })),
             });
         })
         .catch((error) => {
-            console.log(error);
+            console.error(error);
+
+            // Handle different types of errors and send appropriate responses
+            if (error.name === "CastError" && error.kind === "ObjectId") {
+                return res.status(400).json({ error: "Invalid hospital ID" });
+            }
+
+            res.status(500).json({ error: "Internal Server Error" });
         });
 };
+
+
+exports.getRequestedAppointments = (req, res) => {
+    Appointments.find({ hospitalId: req._id })
+        .populate("doctorId patientId")
+        .then((data) => {
+            res.status(200).json({
+                requestedAppointments: data.map(appointment => ({
+                    _id: appointment._id,
+                    // Include all fields from the populated doctor and patient objects
+                    doctor: appointment.doctorId,
+                    patient: appointment.patientId,
+                    // Add other fields from the appointment object as needed
+                })),
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+
+            // Handle different types of errors and send appropriate responses
+            if (error.name === "CastError" && error.kind === "ObjectId") {
+                return res.status(400).json({ error: "Invalid hospital ID" });
+            }
+
+            res.status(500).json({ error: "Internal Server Error" });
+        });
+};
+
 
 exports.getResheduleAppointment = (req, res) => {
     const id = req.params.appointmentId;
@@ -354,18 +384,38 @@ exports.postChosen = (req, res) => {
 };
 
 exports.getDoctors = (req, res) => {
-    Hospital.findById(req.hospital._id)
+    Hospital.findById(req._id)
         .populate("doctorsWorking")
         .then((hospitalData) => {
-            console.log(hospitalData);
-            res.render("results/doctorsWorking", {
-                doctors: hospitalData.doctorsWorking,
+            if (!hospitalData) {
+                // If no hospital data is found, return a 404 Not Found response
+                return res.status(404).json({ error: "Hospital not found" });
+            }
+
+            const doctorsWorking = hospitalData.doctorsWorking.map((doctor) => ({
+                // Include only relevant data of each doctor, customize as needed
+                _id: doctor._id,
+                name: doctor.name,
+                liscenceNo: doctor.liscenceNo,
+                Speciality: doctor.Speciality
+            }));
+
+            res.status(200).json({
+                doctorsWorking: doctorsWorking,
             });
         })
         .catch((err) => {
-            console.log(err);
+            console.error(err);
+
+            // Handle different types of errors and send appropriate responses
+            if (err.name === "CastError" && err.kind === "ObjectId") {
+                return res.status(400).json({ error: "Invalid hospital ID" });
+            }
+
+            res.status(500).json({ error: "Internal Server Error" });
         });
 };
+
 
 exports.removeDoctor = (req, res) => {
     const id = req.params.doctorId;
