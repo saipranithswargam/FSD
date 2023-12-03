@@ -25,8 +25,6 @@ const ViewHospitalsWorking = () => {
             console.log('Error getting hospitals:', error);
         }
     };
-
-
     useEffect(() => {
         getHospitals();
     }, [])
@@ -46,7 +44,7 @@ const ViewHospitalsWorking = () => {
                     <FontAwesomeIcon icon={faPlus} size="2x" />
                 </Card.Body>
             </Card>
-            <AddHospital isOpen={showModal} onClose={handleHideModal} />
+            <AddHospital isOpen={showModal} onClose={handleHideModal} getHospitals={getHospitals} />
         </div>
     )
 }

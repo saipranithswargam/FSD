@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import styles from "./AddHospital.module.css";
-const AddHospital = ({ isOpen, onClose }) => {
+const AddHospital = ({ isOpen, onClose, getHospitals }) => {
     const [hospitalName, setHospitalName] = useState('');
     const [hospitalRegNo, setHospitalRegNo] = useState('');
 
-    const handleSubmit = async (e) => {
+    const handleSubmitAndFetchHospitals = async (e) => {
         e.preventDefault();
         console.log('Hospital Name:', hospitalName);
         console.log('Hospital RegNo:', hospitalRegNo);
+
         try {
+            // Submit the form
             const response = await fetch('http://localhost:5050/doctors/addhospital', {
                 method: 'POST',
                 headers: {
@@ -19,21 +21,26 @@ const AddHospital = ({ isOpen, onClose }) => {
                     hname: hospitalName,
                     regNo: hospitalRegNo,
                 }),
+                credentials: 'include'
             });
 
             if (!response.ok) {
                 throw new Error(`Request failed with status: ${response.status}`);
             }
 
+            // Process the response data if needed
             const responseData = await response.json();
-            console.log('Add Hospital Request Successful', responseData);
 
+            // Fetch hospitals after successful form submission
+            await getHospitals();
         } catch (error) {
             console.error('Error adding hospital:', error);
         }
 
+        // Close the modal or perform other actions as needed
         onClose();
     };
+
 
     return (
         <Modal show={isOpen} onHide={onClose}>
@@ -41,7 +48,7 @@ const AddHospital = ({ isOpen, onClose }) => {
                 <Modal.Title >Add Hospital</Modal.Title>
             </Modal.Header>
             <Modal.Body className={styles.main}>
-                <Form onSubmit={handleSubmit} className={styles.form}>
+                <Form onSubmit={handleSubmitAndFetchHospitals} className={styles.form}>
                     <Form.Group controlId="formHospitalName">
                         <Form.Label style={{ paddingLeft: '0.5rem' }}>Hospital Name</Form.Label>
                         <Form.Control
