@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import styles from "./AddHospital.module.css";
+import { toast } from "react-toastify";
 const AddHospital = ({ isOpen, onClose, getHospitals }) => {
     const [hospitalName, setHospitalName] = useState('');
     const [hospitalRegNo, setHospitalRegNo] = useState('');
@@ -28,16 +29,19 @@ const AddHospital = ({ isOpen, onClose, getHospitals }) => {
                 throw new Error(`Request failed with status: ${response.status}`);
             }
 
-            // Process the response data if needed
             const responseData = await response.json();
-
-            // Fetch hospitals after successful form submission
             await getHospitals();
+            setHospitalName('');
+            setHospitalRegNo('');
+            toast.success("Hospital Added Successfully!", {
+                position: "top-right",
+            });
         } catch (error) {
+            toast.error("Error adding hospital!", {
+                position: "top-right",
+            });
             console.error('Error adding hospital:', error);
         }
-
-        // Close the modal or perform other actions as needed
         onClose();
     };
 

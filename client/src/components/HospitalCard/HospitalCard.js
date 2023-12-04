@@ -14,7 +14,8 @@ const HospitalCard = (props) => {
             </div>
             <div className={styles.details}>
                 <h1>{props.hospital.name}</h1>
-                <p className={styles.address}><span>{props.hospital.city}</span><span> ,</span><span>{props.hospital.state}</span><span> ,</span><span>{props.hospital.pincode}</span></p>
+                <p className={styles.paras}><span>{props.hospital.city}</span><span> ,</span><span>{props.hospital.state}</span><span> ,</span><span>{props.hospital.pincode}</span></p>
+                <p className={styles.paras} ><span>{props.hospital.specialityDep}</span></p>
                 <button className={styles.btn} onClick={viewDoctorsClickHandler}>View Doctors</button>
             </div>
         </div>

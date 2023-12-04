@@ -67,7 +67,7 @@ const ProfileImageUpdate = () => {
                     />
                 ) : (
                     <div className={styles["update-image__image-icon"]}>
-                        {user.name[0].toUpperCase()}
+                        {user.name ? user.name[0].toUpperCase() : 'U'}
                     </div>
                 )}
             </label>

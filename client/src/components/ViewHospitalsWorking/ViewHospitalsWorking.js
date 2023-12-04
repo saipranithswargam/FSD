@@ -5,6 +5,7 @@ import { Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddHospital from '../AddHospital/AddHospital';
+import DoctorsDashboardHospitalCard from '../DoctorDashboardHospitalCard/DoctorDashboardHospitalCard';
 const ViewHospitalsWorking = () => {
     const [showModal, setShowModal] = useState(false);
     const [hospitalsWorkingIn, setHospitalsWorkingIn] = useState([]);
@@ -16,6 +17,11 @@ const ViewHospitalsWorking = () => {
         setShowModal(false);
     };
 
+    const handleRemoveHospital = (hospitalId) => {
+        setHospitalsWorkingIn((prevHospitals) =>
+            prevHospitals.filter((hospital) => hospital._id !== hospitalId)
+        );
+    };
     const getHospitals = async () => {
         try {
             const response = await axiosInstance.get("/doctors/gethospitalsworkingfor");
@@ -25,6 +31,7 @@ const ViewHospitalsWorking = () => {
             console.log('Error getting hospitals:', error);
         }
     };
+
     useEffect(() => {
         getHospitals();
     }, [])
@@ -32,11 +39,9 @@ const ViewHospitalsWorking = () => {
         <div className={styles.main}>
             {
                 hospitalsWorkingIn.map((hospital) => (
-                    <Card key={hospital._id} className={styles.hospitalDetailsCard}>
-                        <h1>{hospital.name}</h1>
-                        <p className={styles.address}><span>{hospital.city}</span><span> ,</span><span>{hospital.state}</span><span> ,</span><span>{hospital.pincode}</span></p>
-                        <button className={styles.btn}>Remove Hospital</button>
-                    </Card>
+                    <DoctorsDashboardHospitalCard key={hospital._id}
+                        hospital={hospital}
+                        onRemove={handleRemoveHospital} />
                 ))
             }
             <Card onClick={handleShowModal} style={{ width: '18rem', cursor: 'pointer', height: '18rem' }}>

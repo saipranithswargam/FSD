@@ -36,7 +36,6 @@ const DoctorsDashboard = () => {
       pincode: user.pincode,
       currentPassword: "",
       newPassword: "",
-      confirmNewPassword: "",
     });
     setEditProfile(false);
   };
@@ -47,7 +46,7 @@ const DoctorsDashboard = () => {
   };
 
   const validatePhoneNumber = () => {
-    return false
+    return /^[6-9]\d{9}$/.test(editProfileData.mobileNumber);
   };
   const saveChangesHandler = async () => {
     if (editProfileData.currentPassword.length === 0) {
@@ -69,25 +68,25 @@ const DoctorsDashboard = () => {
     const updatedData = {
       name: editProfileData.name,
       mobileNumber: editProfileData.mobileNumber,
-      email: editProfileData.email,
       city: editProfileData.city,
       pincode: editProfileData.pincode,
       currentPassword: editProfileData.currentPassword,
       newPassword: editProfileData.newPassword,
     };
-    // setLoading(true);
     try {
+      // setLoading(true);
       const response = await axiosInstance.post(
-        "/users/updateinfo",
+        "/doctors/modify",
         updatedData
       );
-      // setLoading(false);
       setEditProfile(false);
       console.log(response.data);
       dispatch(userActions.setState(response.data));
       toast.success("Profile Updated Successfully!", {
         position: "top-right",
       });
+      resetFormData();
+      // setLoading(false);
     } catch (err) {
       console.log(err);
       resetFormData();
@@ -178,13 +177,7 @@ const DoctorsDashboard = () => {
                 <input
                   type="email"
                   value={editProfileData.email}
-                  disabled={!editProfile}
-                  onChange={(e) =>
-                    setEditProfileData({
-                      ...editProfileData,
-                      email: e.target.value,
-                    })
-                  }
+                  disabled
                 />
               </div>
             </div>
@@ -200,6 +193,7 @@ const DoctorsDashboard = () => {
                       mobileNumber: e.target.value,
                     })
                   }
+                  onBlur={validatePhoneNumber}
                 />
               </div>
               <div className={styles.InputDiv}>

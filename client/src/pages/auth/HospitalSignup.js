@@ -12,7 +12,7 @@ const HospitalSignup = () => {
     const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        hname: '',
+        name: '',
         regNo: '',
         email: '',
         password: '',
@@ -114,7 +114,7 @@ const HospitalSignup = () => {
                     <div className={styles.inputGroup}>
                         <input
                             placeholder="Hospital Name"
-                            name="hname"
+                            name="name"
                             className={styles.fullWidth}
                             required
                             onChange={handleInputChange}

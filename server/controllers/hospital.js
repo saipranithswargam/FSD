@@ -96,7 +96,7 @@ exports.getRegister = (req, res) => {
 };
 
 exports.postRegister = (req, res) => {
-    const hname = req.body.hname;
+    const name = req.body.name;
     const regNo = req.body.regNo;
     const speciality = req.body.speciality;
     const isGovernment = req.body.government;
@@ -117,7 +117,7 @@ exports.postRegister = (req, res) => {
                 .hash(password, 12)
                 .then((hashedPassword) => {
                     const newHospital = new Hospital({
-                        hName: hname,
+                        name: name,
                         regNo: regNo,
                         city: city,
                         state: state,
@@ -286,7 +286,7 @@ exports.getAcceptAppointment = (req, res) => {
                         to: "saipranithswargam@gmail.com",
                         subject: "Appointment Confirmed",
                         html: `
-                            <p>You Appointment for the doctor ${Confirmed.doctorId.name} has been confirmed by hospital ${req.hospital.hName}</p>
+                            <p>You Appointment for the doctor ${Confirmed.doctorId.name} has been confirmed by hospital ${req.hospital.name}</p>
                             <p>Appointment Date : ${Confirmed.appointmentDate}</p>
                             <p>Appointment Time : ${Confirmed.appointmentTime} </p>
                             `,
@@ -326,7 +326,7 @@ exports.postResheduleAppointment = (req, res) => {
                         to: "saipranithswargam@gmail.com", //need to change
                         subject: "Appointment Confirmed",
                         html: `
-                                <p>Your Appointment for the doctor ${Confirmed.doctorId.name} has been Resheduled by hospital ${req.hospital.hName}</p>
+                                <p>Your Appointment for the doctor ${Confirmed.doctorId.name} has been Resheduled by hospital ${req.hospital.name}</p>
                                 <p>Resheduled Appointment Date : ${Confirmed.appointmentDate}</p>
                                 <p>Resheduled Appointment Time : ${Confirmed.appointmentTime} </p>
                                 `,
@@ -388,26 +388,14 @@ exports.getDoctors = (req, res) => {
         .populate("doctorsWorking")
         .then((hospitalData) => {
             if (!hospitalData) {
-                // If no hospital data is found, return a 404 Not Found response
                 return res.status(404).json({ error: "Hospital not found" });
             }
-
-            const doctorsWorking = hospitalData.doctorsWorking.map((doctor) => ({
-                // Include only relevant data of each doctor, customize as needed
-                _id: doctor._id,
-                name: doctor.name,
-                liscenceNo: doctor.liscenceNo,
-                Speciality: doctor.Speciality
-            }));
-
             res.status(200).json({
-                doctorsWorking: doctorsWorking,
+                doctorsWorking: hospitalData.doctorsWorking,
             });
         })
         .catch((err) => {
             console.error(err);
-
-            // Handle different types of errors and send appropriate responses
             if (err.name === "CastError" && err.kind === "ObjectId") {
                 return res.status(400).json({ error: "Invalid hospital ID" });
             }
@@ -416,41 +404,50 @@ exports.getDoctors = (req, res) => {
         });
 };
 
-
 exports.removeDoctor = (req, res) => {
     const id = req.params.doctorId;
+    let hospitalResult;
+    console.log(id);
     Hospital.findByIdAndUpdate(
-        req.hospital._id,
+        req._id,
         { $pullAll: { doctorsWorking: [id] } },
         { new: true }
     )
         .then((result) => {
+            hospitalResult = result;
             return Doctors.findByIdAndUpdate(
                 id,
                 { $pullAll: { hospitalsWorkingFor: [result._id] } },
                 { new: true }
             );
         })
-        .then((finalresult) => {
+        .then((finalResult) => {
             return Appointments.deleteMany({
-                hospitalId: req.hospital._id,
+                hospitalId: req._id,
                 doctorId: id,
             });
         })
-        .then((deleted) => {
+        .then((deletedAppointments) => {
             return ConfirmedAppointments.deleteMany({
-                hospitalId: req.hospital._id,
+                hospitalId: req._id,
                 doctorId: id,
             });
         })
-        .then((deletedConfirm) => {
-            res.redirect("/hospitals/doctors");
-            console.log(deletedConfirm);
+        .then((deletedConfirmedAppointments) => {
+            res.json({
+                success: true,
+                message: 'Doctor removed successfully',
+            });
         })
         .catch((err) => {
-            console.log(err);
+            res.status(500).json({
+                success: false,
+                message: 'Error removing doctor',
+                error: err.message,
+            });
         });
 };
+
 
 exports.getmodify = (req, res) => {
     let message = req.flash("error");
@@ -465,48 +462,41 @@ exports.getmodify = (req, res) => {
     });
 };
 
-exports.postModify = (req, res) => {
-    let email = req.body.email;
-    if (email === req.hospital.email) {
-        const hname = req.body.hname;
-        const state = req.body.state;
-        const city = req.body.city.toString().toLowerCase();
-        const pincode = req.body.pincode;
-        Hospital.findByIdAndUpdate(req.hospital._id, {
-            hName: hname,
-            city: city,
-            state: state,
-            pincode: pincode,
-        }).then((result) => {
-            return res.redirect("/hospitals/dashboard");
+exports.postModify = async (req, res) => {
+
+    const body = req.body;
+    console.log(req._id, req.body);
+    let user = null;
+    try {
+        user = await Hospital.findById(req._id).exec();
+    } catch (err) {
+        return res.status(500).json({ message: "Internal error occurred!" });
+    }
+    user.name = body.name;
+    user.mobileNum = body.mobileNumber;
+    user.email = body.email;
+    user.city = body.city;
+    user.petParent = body.petParent;
+    const passwordCompare = await bcrypt.compare(
+        body.currentPassword,
+        user.password
+    );
+    if (!passwordCompare) {
+        return res.status(409).json({
+            message: "Wrong password entered : Cannot edit account details!",
         });
     }
-    if (email !== req.hospital.email) {
-        Hospital.findOne({ email: email }).then((hospital) => {
-            const hname = req.body.hname;
-            const state = req.body.state;
-            const city = req.body.city.toString().toLowerCase();
-            const pincode = req.body.pincode;
-            if (!hospital) {
-                Hospital.findByIdAndUpdate(req.hospital._id, {
-                    hName: hname,
-                    city: city,
-                    state: state,
-                    pincode: pincode,
-                    email: email,
-                }).then((result) => {
-                    return res.redirect("/hospitals/dashboard");
-                });
-            }
-            if (hospital) {
-                req.flash(
-                    "error",
-                    "Given Email to modify Already Registerd please give another."
-                );
-                return res.redirect("/hospitals/modify");
-            }
-        });
+    if (body.newPassword && body.newPassword.length > 0) {
+        const hashedPassword = bcrypt.hashSync(body.newPassword, 10);
+        user.password = hashedPassword;
     }
+    try {
+        await user.save();
+    } catch (err) {
+        return res.status(500).json({ message: "Internal error occurred!" });
+    }
+    const updatedDoc = { ...user._doc, type: "hospitals" };
+    return res.status(200).json(updatedDoc);
 };
 
 exports.Logout = (req, res, next) => {

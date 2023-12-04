@@ -271,18 +271,16 @@ exports.getRemoveHospital = (req, res) => {
 };
 
 exports.postRemoveHospital = (req, res) => {
-    var hname = req.body.hospitalName;
     const regNo = req.body.regNo;
-
-    req.doctor.populate("hospitalsWorkingFor").then((result) => {
+    console.log(req.body.regNo);
+    Doctor.findById(req._id).populate("hospitalsWorkingFor").then((result) => {
+        console.log(result)
         const match = result.hospitalsWorkingFor.find((hospital) => {
             return hospital.regNo === regNo;
         });
-
         if (!match) {
             return res.status(400).json({ error: "Hospital to remove isn't in your working hospital list" });
         }
-
         Doctor.findByIdAndUpdate(
             result._id,
             { $pullAll: { hospitalsWorkingFor: [match._id] } },
@@ -291,17 +289,17 @@ exports.postRemoveHospital = (req, res) => {
             .then((newDoctor) => {
                 Hospital.findOneAndUpdate(
                     { regNo: regNo },
-                    { $pullAll: { doctorsWorking: [req.doctor._id] } },
+                    { $pullAll: { doctorsWorking: [req._id] } },
                     { new: true }
                 ).then((finalObject) => {
                     Appointments.deleteMany({
                         hospitalId: match._id,
-                        doctorId: req.doctor._id,
+                        doctorId: req._id,
                     })
                         .then((result) => {
                             return ConfirmedAppointments.deleteMany({
                                 hospitalId: match.id,
-                                doctorId: req.doctor._id,
+                                doctorId: req._id,
                             });
                         })
                         .then((result) => {
@@ -315,8 +313,6 @@ exports.postRemoveHospital = (req, res) => {
             });
     });
 };
-
-
 exports.getPrescribe = (req, res) => {
     console.log(req.params);
     res.render("results/prescription", {
@@ -368,6 +364,7 @@ exports.getHospitalsWorkingFor = (req, res) => {
                 city: hospital.city,
                 state: hospital.state,
                 pincode: hospital.pincode,
+                regNo: hospital.regNo,
             }));
 
             return res.status(200).json(filteredHospitals);
@@ -443,68 +440,41 @@ exports.getModify = (req, res) => {
     });
 };
 
-exports.postModify = (req, res) => {
+exports.postModify = async (req, res) => {
     console.log(req.body);
     let email = req.body.email;
-    if (email === req.doctor.email) {
-        const name = req.body.name;
-        const age = req.body.age;
-        const liscenceNo = req.body.liscenceNo;
-        const experience = req.body.experience;
-        const state = req.body.state;
-        const city = req.body.city;
-        const pincode = req.body.pincode;
-        const mobileNum = req.body.mobileNum;
-        Doctor.findByIdAndUpdate(req.doctor._id, {
-            name: name,
-            mobileNum: mobileNum,
-            liscenceNo: liscenceNo,
-            city: city,
-            state: state,
-            pincode: pincode,
-            age: age,
-            experience: experience,
-        }).then((result) => {
-            console.log(result);
-            return res.redirect("/doctors/dashboard");
+    const body = req.body;
+    let user = null;
+    try {
+        user = await Doctor.findById(req._id).exec();
+    } catch (err) {
+        return res.status(500).json({ message: "Internal error occurred!" });
+    }
+    user.name = body.name;
+    user.mobileNum = body.mobileNumber;
+    user.city = body.city;
+    user.pincode = body.pincode;
+
+    const passwordCompare = await bcrypt.compare(
+        body.currentPassword,
+        user.password
+    );
+    if (!passwordCompare) {
+        return res.status(409).json({
+            message: "Wrong password entered : Cannot edit account details!",
         });
     }
-    if (email !== req.doctor.email) {
-        Doctor.findOne({ email: email }).then((doctor) => {
-            if (!doctor) {
-                const email = req.body.email;
-                const name = req.body.name;
-                const age = req.body.age;
-                const liscenceNo = req.body.liscenceNo;
-                const experience = req.body.experience;
-                const state = req.body.state;
-                const city = req.body.city;
-                const pincode = req.body.pincode;
-                const mobileNum = req.body.mobileNum;
-                Doctor.findByIdAndUpdate(req.doctor._id, {
-                    email: email,
-                    name: name,
-                    mobileNum: mobileNum,
-                    liscenceNo: liscenceNo,
-                    city: city,
-                    state: state,
-                    pincode: pincode,
-                    age: age,
-                    experience: experience,
-                }).then((result) => {
-                    console.log(result);
-                    return res.redirect("/doctors/dashboard");
-                });
-            }
-            if (doctor) {
-                req.flash(
-                    "error",
-                    "Given Email to modify Already Registerd please give another."
-                );
-                res.redirect("/doctors/modify");
-            }
-        });
+    if (body.newPassword && body.newPassword.length > 0) {
+        const hashedPassword = bcrypt.hashSync(body.newPassword, 10);
+        user.password = hashedPassword;
     }
+    try {
+        await user.save();
+    } catch (err) {
+        return res.status(500).json({ message: "Internal error occurred!" });
+    }
+    const updatedDoc = { ...user._doc, type: "doctors" };
+    return res.status(200).json(updatedDoc);
 };
 
 exports.Logout = (req, res, next) => {

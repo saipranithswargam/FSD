@@ -137,7 +137,6 @@ exports.getHospitals = async (req, res) => {
     } else {
         try {
             const { longitude, latitude, distance } = req.body;
-
             if (!longitude || !latitude || !distance) {
                 return res.status(400).json({ message: "Longitude, latitude, and distance are required." });
             }
@@ -152,6 +151,7 @@ exports.getHospitals = async (req, res) => {
                     },
                 },
             });
+            console.log(locations);
             res.status(200).json(locations);
         } catch (err) {
             console.error("Error finding locations:", err);
@@ -372,36 +372,8 @@ exports.getDoctorsList = (req, res) => {
     const id = req.params.id;
     Hospitals.findById(id)
         .then((hospital) => {
-            Rating.find({ hospitalId: id }).then((documents) => {
-                let count = documents.length;
-                let sum = 0;
-                for (let doc of documents) {
-                    sum += doc.rating;
-                }
-                let rating = 0;
-                if (sum !== 0 && count !== 0) {
-                    rating = Math.round(sum / count);
-                } else {
-                    rating = -1;
-                }
-                hospital.populate("doctorsWorking").then((results) => {
-                    const finalDoctorsList = results.doctorsWorking.filter(
-                        (doctor) => {
-                            return doctor.verified === "true";
-                        }
-                    );
-                    const jsonResponse = {
-                        success: true,
-                        data: {
-                            doctors: results.doctorsWorking,
-                            type: hospital.specialityDep,
-                            hospitalId: id,
-                            rating: rating - 1,
-                        }
-                    };
-
-                    res.status(200).json(jsonResponse);
-                });
+            hospital.populate("doctorsWorking").then((results) => {
+                return res.status(200).json(results.doctorsWorking);
             });
         })
         .catch((err) => {
@@ -410,10 +382,9 @@ exports.getDoctorsList = (req, res) => {
                 success: false,
                 message: "Internal server error"
             };
-            res.status(500).json(errorResponse);
+            return res.status(500).json(errorResponse);
         });
 };
-
 
 exports.getBookDoctor = (req, res) => {
     const hospitalId = req.params.hospitalId;
@@ -431,7 +402,8 @@ exports.postBookDoctor = (req, res) => {
     const appointmentTime = req.body.appointmentTime;
     const diseaseDescription = req.body.diseaseDescription;
     const type = req.body.type;
-    const patientId = req.patient._id;
+    const patientId = req._id;
+    console.log(req.body);
     const appointment = new Appointments({
         patientId: patientId,
         hospitalId: hospitalId,
@@ -441,17 +413,18 @@ exports.postBookDoctor = (req, res) => {
         appointmentTime: appointmentTime,
         diseaseDescription: diseaseDescription,
     });
+
     appointment
         .save()
         .then((result) => {
             console.log(result);
-            res.render("booked");
+            res.status(200).json({ message: 'Appointment booked successfully', result });
         })
         .catch((err) => {
             console.log(err);
+            res.status(500).json({ error: 'An error occurred while booking the appointment', err });
         });
 };
-
 exports.cancleRequestedAppointment = (req, res) => {
     console.log(req.body);
     if (req.body.type === "requested") {

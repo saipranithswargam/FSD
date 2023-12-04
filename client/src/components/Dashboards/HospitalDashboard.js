@@ -9,9 +9,11 @@ import { toast } from "react-toastify";
 import ProfileImageUpdate from "./UpdateImage";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
+import ViewDoctorsWorking from "../ViewDoctorsWorking/ViewDoctorsWorking";
+import ViewRequestedAppointements from "../ViewRequestedAppointments/ViewRequestedAppointements";
 const HospitalDashboard = () => {
   const [profile, setProfile] = useState(true);
-  const [Doctors, setDoctors] = useState(false);
+  const [ViewDoctors, setViewDoctors] = useState(false);
   const [appointments, setAppointments] = useState(false);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
@@ -21,6 +23,7 @@ const HospitalDashboard = () => {
     city: user.city,
     state: user.state,
     pincode: user.pincode,
+    currentPassword: "",
     newPassword: "",
   });
   const resetFormData = () => {
@@ -30,6 +33,7 @@ const HospitalDashboard = () => {
       city: user.city,
       state: user.state,
       pincode: user.pincode,
+      currentPassword: "",
       newPassword: "",
     });
     setEditProfile(false);
@@ -40,9 +44,7 @@ const HospitalDashboard = () => {
     setEditProfile(true);
   };
 
-  const validatePhoneNumber = () => {
-    return false
-  };
+
   const saveChangesHandler = async () => {
     if (editProfileData.currentPassword.length === 0) {
       toast.warn("Current Password is mandatory !", {
@@ -51,18 +53,8 @@ const HospitalDashboard = () => {
       resetFormData();
       return;
     }
-    if (!validatePhoneNumber()) {
-      console.log("phoneNumber is invalid please try again !");
-      toast.error("Please enter a valid phone number.", {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-      });
-      resetFormData();
-      return;
-    }
     const updatedData = {
       name: editProfileData.name,
-      email: editProfileData.email,
       city: editProfileData.city,
       state: editProfileData.state,
       pincode: editProfileData.pincode,
@@ -72,7 +64,7 @@ const HospitalDashboard = () => {
     // setLoading(true);
     try {
       const response = await axiosInstance.post(
-        "/users/updateinfo",
+        "/hospitals/modify",
         updatedData
       );
       // setLoading(false);
@@ -82,6 +74,7 @@ const HospitalDashboard = () => {
       toast.success("Profile Updated Successfully!", {
         position: "top-right",
       });
+      resetFormData();
     } catch (err) {
       console.log(err);
       resetFormData();
@@ -98,12 +91,12 @@ const HospitalDashboard = () => {
 
   const setProfileHandler = () => {
     setProfile(true);
-    setDoctors(false);
+    setViewDoctors(false);
     setAppointments(false);
 
   }
-  const getDoctorsHandler = () => {
-    setDoctors(true);
+  const getViewDoctorsHandler = () => {
+    setViewDoctors(true);
     setProfile(false);
     setAppointments(false);
   }
@@ -111,11 +104,11 @@ const HospitalDashboard = () => {
   const viewAppointmentsHandler = () => {
     setAppointments(true);
     setProfile(false);
-    setDoctors(false)
+    setViewDoctors(false)
   }
 
   let activeProfileStyles = profile ? styles.activeButton : styles.button;
-  let activeHospitalStyles = Doctors ? styles.activeButton : styles.button;
+  let activeHospitalStyles = ViewDoctors ? styles.activeButton : styles.button;
   let activeAppointmentStyles = appointments ? styles.activeButton : styles.button;
 
   return (
@@ -131,7 +124,7 @@ const HospitalDashboard = () => {
         <div className={styles.lower}>
           <div className={styles.buttonsDiv}>
             <button className={activeProfileStyles} onClick={setProfileHandler} >Profile</button>
-            <button className={activeHospitalStyles} onClick={getDoctorsHandler} >Doctors</button>
+            <button className={activeHospitalStyles} onClick={getViewDoctorsHandler} >ViewDoctors</button>
             <button className={activeAppointmentStyles} onClick={viewAppointmentsHandler} >Appointments</button>
           </div>
         </div>
@@ -172,13 +165,7 @@ const HospitalDashboard = () => {
                 <input
                   type="email"
                   value={editProfileData.email}
-                  disabled={!editProfile}
-                  onChange={(e) =>
-                    setEditProfileData({
-                      ...editProfileData,
-                      email: e.target.value,
-                    })
-                  }
+                  disabled
                 />
               </div>
             </div>
@@ -273,12 +260,14 @@ const HospitalDashboard = () => {
               </div>
             )}
           </div>
-          {
-            Doctors && <p>Doctors</p>
-          }
         </div>
         }
-
+        {
+          ViewDoctors && <ViewDoctorsWorking />
+        }
+        {
+          appointments && <ViewRequestedAppointements />
+        }
       </div>
 
       <Footer />
