@@ -28,6 +28,8 @@ const userSlice = createSlice({
             state.pincode = action.payload.pincode;
             state.gender = action.payload.gender;
             state.state = action.payload.state;
+            state.latitude = 78.0001;
+            state.longitude = 80.0001;
         },
         setImage: (state, action) => {
             state.image = action.payload;
@@ -36,8 +38,10 @@ const userSlice = createSlice({
             state.name = action.payload;
         },
         setLocation: (state, action) => {
-            state.latitude = action.payload.latitude;
-            state.longitude = action.payload.longitude;
+            state.latitude = 78.0001;
+            // state.latitude = action.payload.latitude;
+            state.longitude = 80.0001;
+            // state.longitude = action.payload.longitude;
         },
     },
 });

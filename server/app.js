@@ -105,7 +105,8 @@ app.use("/admin", adminRoutes);
 const port = process.env.PORT || 5050;
 
 mongoose
-    .connect(process.env.MONGO_URI)
+    // .connect(process.env.MONGO_URI)
+    .connect("mongodb://localhost:27017")
     .then(() => {
         console.log("database connected");
         app.listen(port, () => {

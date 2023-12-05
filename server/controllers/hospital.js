@@ -231,20 +231,11 @@ exports.getRequestedAppointments = (req, res) => {
     Appointments.find({ hospitalId: req._id })
         .populate("doctorId patientId")
         .then((data) => {
-            res.status(200).json({
-                requestedAppointments: data.map(appointment => ({
-                    _id: appointment._id,
-                    // Include all fields from the populated doctor and patient objects
-                    doctor: appointment.doctorId,
-                    patient: appointment.patientId,
-                    // Add other fields from the appointment object as needed
-                })),
-            });
+            res.status(200).json(data);
         })
         .catch((error) => {
             console.error(error);
 
-            // Handle different types of errors and send appropriate responses
             if (error.name === "CastError" && error.kind === "ObjectId") {
                 return res.status(400).json({ error: "Invalid hospital ID" });
             }
@@ -265,8 +256,8 @@ exports.getResheduleAppointment = (req, res) => {
     });
 };
 
-exports.getAcceptAppointment = (req, res) => {
-    Appointments.findById(req.params.appointmentId)
+exports.postAcceptAppointment = (req, res) => {
+    Appointments.findById(req.body.appointmentId)
         .then((newAppointment) => {
             const confirmAppointment = new ConfirmedAppointments({
                 hospitalId: newAppointment.hospitalId,
@@ -278,15 +269,14 @@ exports.getAcceptAppointment = (req, res) => {
                 type: newAppointment.type,
             });
             confirmAppointment.save().then((result) => {
-                result.populate("doctorId patientId").then((Confirmed) => {
+                result.populate("doctorId patientId hospitalId").then((Confirmed) => {
                     res.render("success/appointmentConfirmed");
                     let message = {
                         from: "testingnode061229@gmail.com",
-                        // to: Confirmed.patientId.email,
                         to: "saipranithswargam@gmail.com",
                         subject: "Appointment Confirmed",
                         html: `
-                            <p>You Appointment for the doctor ${Confirmed.doctorId.name} has been confirmed by hospital ${req.hospital.name}</p>
+                            <p>You Appointment for the doctor ${Confirmed.doctorId.name} has been confirmed by hospital ${Confirmed.hospitalId.name}</p>
                             <p>Appointment Date : ${Confirmed.appointmentDate}</p>
                             <p>Appointment Time : ${Confirmed.appointmentTime} </p>
                             `,
@@ -301,11 +291,13 @@ exports.getAcceptAppointment = (req, res) => {
         });
 };
 
-exports.postResheduleAppointment = (req, res) => {
+exports.postRescheduleAppointment = (req, res) => {
+    console.log(req.body);
     Appointments.findById(req.body.appointmentId)
         .then((result) => {
             result.appointmentDate = req.body.appointmentDate;
             result.appointmentTime = req.body.appointmentTime;
+            console.log(result);
             return result.save();
         })
         .then((newAppointment) => {
@@ -319,25 +311,39 @@ exports.postResheduleAppointment = (req, res) => {
                 type: newAppointment.type,
             });
             confirmAppointment.save().then((result) => {
-                result.populate("doctorId patientId").then((Confirmed) => {
-                    res.render("success/appointmentConfirmed");
+                result.populate('doctorId patientId hospitalId').then((confirmed) => {
+                    res.status(200).json({
+                        message: 'Appointment Rescheduled and Confirmed',
+                        data: {
+                            doctorName: confirmed.doctorId.name,
+                            hospitalName: confirmed.hospitalId.name,
+                            appointmentDate: confirmed.appointmentDate,
+                            appointmentTime: confirmed.appointmentTime,
+                        },
+                    });
+
                     let message = {
-                        from: "testingnode061229@gmail.com",
-                        to: "saipranithswargam@gmail.com", //need to change
-                        subject: "Appointment Confirmed",
+                        from: 'testingnode061229@gmail.com',
+                        to: 'saipranithswargam@gmail.com', //need to change
+                        subject: 'Appointment Confirmed',
                         html: `
-                                <p>Your Appointment for the doctor ${Confirmed.doctorId.name} has been Resheduled by hospital ${req.hospital.name}</p>
-                                <p>Resheduled Appointment Date : ${Confirmed.appointmentDate}</p>
-                                <p>Resheduled Appointment Time : ${Confirmed.appointmentTime} </p>
-                                `,
+                <p>Your Appointment for the doctor ${confirmed.doctorId.name} has been Rescheduled by hospital ${req.body.hospitalName}</p>
+                <p>Rescheduled Appointment Date : ${confirmed.appointmentDate}</p>
+                <p>Rescheduled Appointment Time : ${confirmed.appointmentTime} </p>
+              `,
                     };
                     transporter.sendMail(message);
-                    return newAppointment.deleteOne();
+
+                    newAppointment.deleteOne();
                 });
             });
         })
-        .then((error) => {
-            console.log(error);
+        .catch((error) => {
+            console.error(error);
+            res.status(500).json({
+                message: 'Internal Server Error',
+                error: error.message,
+            });
         });
 };
 

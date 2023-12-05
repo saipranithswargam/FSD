@@ -9,9 +9,13 @@ import { toast } from "react-toastify";
 import ProfileImageUpdate from "./UpdateImage";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
+import PatientsRequestedAppointments from "../PatientsRequestedAppointments/PatientsRequestedAppointments";
 const PatientDashboard = () => {
   // const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const [profile, setProfile] = useState(true);
+  const [appointments, setAppointments] = useState(false);
+  const [confirmAppointments, setConfirmAppointments] = useState(false);
   const user = useAppSelector((state) => state.user);
   const [editProfileData, setEditProfileData] = useState({
     name: user.name,
@@ -42,7 +46,22 @@ const PatientDashboard = () => {
   const editClickHandler = () => {
     setEditProfile(true);
   };
+  const setProfileHandler = () => {
+    setProfile(true);
+    setAppointments(false);
+    setConfirmAppointments(false);
 
+  }
+  const setAppointmentHandler = () => {
+    setAppointments(true);
+    setProfile(false);
+    setConfirmAppointments(false);
+  }
+  const setConfirmAppointmentHandler = () => {
+    setConfirmAppointments(true);
+    setAppointments(false);
+    setProfile(false);
+  }
   const validatePhoneNumber = () => {
     return false
   };
@@ -99,8 +118,9 @@ const PatientDashboard = () => {
     resetFormData();
   }, []);
 
-  let activeProfileStyles = true ? styles.activeButton : styles.button;
-
+  let activeProfileStyles = profile ? styles.activeButton : styles.button;
+  let activeAppointmentStyles = appointments ? styles.activeButton : styles.button;
+  let activeConfirmAppointmentStyles = confirmAppointments ? styles.activeButton : styles.button;
   return (
     <>
       <Header />
@@ -114,163 +134,173 @@ const PatientDashboard = () => {
         </div>
         <div className={styles.lower}>
           <div className={styles.buttonsDiv}>
-            <button className={activeProfileStyles}>Profile</button>
+            <button className={activeProfileStyles} onClick={setProfileHandler} >Profile</button>
+            <button className={activeAppointmentStyles} onClick={setAppointmentHandler} >Requested Appointments</button>
+            <button className={activeConfirmAppointmentStyles} onClick={setConfirmAppointmentHandler} >Confirmed Appointments</button>
           </div>
         </div>
-        <div className={styles.profile}>
-          <div className={styles.upperHeading}>
-            <h1>Profile</h1>
-            {!editProfile && (
-              <button onClick={editClickHandler}>
-                <FontAwesomeIcon icon={faPen} style={{ color: '#49c1a5' }} size={"lg"} /> Edit Profile
-              </button>
-            )}
-            {editProfile && (
-              <div className={styles.buttonsDiv}>
-                <button onClick={resetFormData}>Discard</button>
-                <button onClick={saveChangesHandler}>
-                  Update Info
+        {profile &&
+          <div className={styles.profile}>
+            <div className={styles.upperHeading}>
+              <h1>Profile</h1>
+              {!editProfile && (
+                <button onClick={editClickHandler}>
+                  <FontAwesomeIcon icon={faPen} style={{ color: '#49c1a5' }} size={"lg"} /> Edit Profile
                 </button>
-              </div>
-            )}
-          </div>
-          <div className={styles.profileManagement}>
-            <div className={styles.InputGroup}>
-              <div className={styles.InputDiv}>
-                <label>Name</label>
-                <input
-                  value={editProfileData.name}
-                  onChange={(e) =>
-                    setEditProfileData({
-                      ...editProfileData,
-                      name: e.target.value,
-                    })
-                  }
-                  disabled={!editProfile}
-                />
-              </div>
-              <div className={styles.InputDiv}>
-                <label>Email</label>
-                <input
-                  type="email"
-                  value={editProfileData.email}
-                  disabled={!editProfile}
-                  onChange={(e) =>
-                    setEditProfileData({
-                      ...editProfileData,
-                      email: e.target.value,
-                    })
-                  }
-                />
-              </div>
+              )}
+              {editProfile && (
+                <div className={styles.buttonsDiv}>
+                  <button onClick={resetFormData}>Discard</button>
+                  <button onClick={saveChangesHandler}>
+                    Update Info
+                  </button>
+                </div>
+              )}
             </div>
-            <div className={styles.InputGroup}>
-              <div className={styles.InputDiv}>
-                <label>MobileNumber</label>
-                <input
-                  value={editProfileData.mobileNumber}
-                  disabled={!editProfile}
-                  onChange={(e) =>
-                    setEditProfileData({
-                      ...editProfileData,
-                      mobileNumber: e.target.value,
-                    })
-                  }
-                />
+            <div className={styles.profileManagement}>
+              <div className={styles.InputGroup}>
+                <div className={styles.InputDiv}>
+                  <label>Name</label>
+                  <input
+                    value={editProfileData.name}
+                    onChange={(e) =>
+                      setEditProfileData({
+                        ...editProfileData,
+                        name: e.target.value,
+                      })
+                    }
+                    disabled={!editProfile}
+                  />
+                </div>
+                <div className={styles.InputDiv}>
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    value={editProfileData.email}
+                    disabled={!editProfile}
+                    onChange={(e) =>
+                      setEditProfileData({
+                        ...editProfileData,
+                        email: e.target.value,
+                      })
+                    }
+                  />
+                </div>
               </div>
-              <div className={styles.InputDiv}>
-                <label>City</label>
-                <input
-                  value={editProfileData.city}
-                  disabled={!editProfile}
-                  onChange={(e) =>
-                    setEditProfileData({
-                      ...editProfileData,
-                      city: e.target.value,
-                    })
-                  }
-                />
+              <div className={styles.InputGroup}>
+                <div className={styles.InputDiv}>
+                  <label>MobileNumber</label>
+                  <input
+                    value={editProfileData.mobileNumber}
+                    disabled={!editProfile}
+                    onChange={(e) =>
+                      setEditProfileData({
+                        ...editProfileData,
+                        mobileNumber: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className={styles.InputDiv}>
+                  <label>City</label>
+                  <input
+                    value={editProfileData.city}
+                    disabled={!editProfile}
+                    onChange={(e) =>
+                      setEditProfileData({
+                        ...editProfileData,
+                        city: e.target.value,
+                      })
+                    }
+                  />
+                </div>
               </div>
-            </div>
-            <div className={styles.InputGroup}>
-              <div className={styles.InputDiv}>
-                <label>Pincode</label>
-                <input
-                  type="text"
-                  value={editProfileData.pincode}
-                  disabled={!editProfile}
-                  required
-                  onChange={(e) =>
-                    setEditProfileData({
-                      ...editProfileData,
-                      pincode: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className={styles.InputDiv}>
-                <label>Gender</label>
-                <input type="text"
-                  value={editProfileData.gender}
-                  disabled={!editProfile}
-                  required
-                  onChange={(e) =>
-                    setEditProfileData({
-                      ...editProfileData,
-                      gender: e.target.value,
-                    })
-                  } />
+              <div className={styles.InputGroup}>
+                <div className={styles.InputDiv}>
+                  <label>Pincode</label>
+                  <input
+                    type="text"
+                    value={editProfileData.pincode}
+                    disabled={!editProfile}
+                    required
+                    onChange={(e) =>
+                      setEditProfileData({
+                        ...editProfileData,
+                        pincode: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className={styles.InputDiv}>
+                  <label>Gender</label>
+                  <input type="text"
+                    value={editProfileData.gender}
+                    disabled={!editProfile}
+                    required
+                    onChange={(e) =>
+                      setEditProfileData({
+                        ...editProfileData,
+                        gender: e.target.value,
+                      })
+                    } />
 
 
+                </div>
               </div>
+              <div className={styles.InputGroup}>
+                <div className={styles.InputDiv}>
+                  <label>Current Password</label>
+                  <input
+                    type="password"
+                    value={editProfileData.currentPassword}
+                    disabled={!editProfile}
+                    required
+                    onChange={(e) =>
+                      setEditProfileData({
+                        ...editProfileData,
+                        currentPassword: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className={styles.InputDiv}>
+                  <label>New Password</label>
+                  <input
+                    type="password"
+                    disabled={!editProfile}
+                    value={editProfileData.newPassword}
+                    onChange={(e) =>
+                      setEditProfileData({
+                        ...editProfileData,
+                        newPassword: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+              {editProfile && (
+                <div className={styles.bottomButtonsDiv}>
+                  {editProfile && (
+                    <div className={styles.buttonsDiv}>
+                      <button onClick={resetFormData}>
+                        Discard
+                      </button>
+                      <button onClick={saveChangesHandler}>
+                        Update Info
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-            <div className={styles.InputGroup}>
-              <div className={styles.InputDiv}>
-                <label>Current Password</label>
-                <input
-                  type="password"
-                  value={editProfileData.currentPassword}
-                  disabled={!editProfile}
-                  required
-                  onChange={(e) =>
-                    setEditProfileData({
-                      ...editProfileData,
-                      currentPassword: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className={styles.InputDiv}>
-                <label>New Password</label>
-                <input
-                  type="password"
-                  disabled={!editProfile}
-                  value={editProfileData.newPassword}
-                  onChange={(e) =>
-                    setEditProfileData({
-                      ...editProfileData,
-                      newPassword: e.target.value,
-                    })
-                  }
-                />
-              </div>
-            </div>
-            {editProfile && (
-              <div className={styles.bottomButtonsDiv}>
-                {editProfile && (
-                  <div className={styles.buttonsDiv}>
-                    <button onClick={resetFormData}>
-                      Discard
-                    </button>
-                    <button onClick={saveChangesHandler}>
-                      Update Info
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
-        </div>
+        }
+        {
+          appointments && <PatientsRequestedAppointments type={"requestedappointments"} />
+        }
+        {
+          confirmAppointments && <PatientsRequestedAppointments type={"confirmendappointments"} />
+        }
       </div>
       <Footer />
     </>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import styles from "./DoctorListCard.module.css";
 import { toast } from 'react-toastify';
-
+import Image from "./doc.jpg";
 const DoctorsListCard = ({ doctor, hospitalId }) => {
     const [modalShow, setModalShow] = useState(false);
     const [appointmentDate, setAppointmentDate] = useState('');
@@ -57,7 +57,7 @@ const DoctorsListCard = ({ doctor, hospitalId }) => {
     return (
         <div className={styles.main}>
             <img
-                src='https://media.istockphoto.com/id/177373093/photo/indian-male-doctor.jpg?s=612x612&w=0&k=20&c=5FkfKdCYERkAg65cQtdqeO_D0JMv6vrEdPw3mX1Lkfg='
+                src={Image}
                 width={"100%"}
                 height={200}
                 alt={doctor._id}

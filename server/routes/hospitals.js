@@ -26,10 +26,10 @@ Router.get(
     hospitalController.getBookedAppointments
 );
 
-Router.get(
-    "/acceptappointment/:appointmentId",
+Router.post(
+    "/acceptappointment",
     isAuth,
-    hospitalController.getAcceptAppointment
+    hospitalController.postAcceptAppointment
 );
 
 Router.get(
@@ -41,7 +41,7 @@ Router.get(
 Router.post(
     "/resheduleappointment",
     isAuth,
-    hospitalController.postResheduleAppointment
+    hospitalController.postRescheduleAppointment
 );
 
 Router.get(
