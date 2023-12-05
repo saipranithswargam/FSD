@@ -6,6 +6,7 @@ import Features from "../components/Features/Features";
 import Process from "../components/Process/Process";
 import Testimonials from "../components/Testimonials/Testimonials";
 import Footer from "../components/Footer/Footer";
+import DownloadPdf from "../components/DownloadPdf/DownloadPdf"
 const Home = () => {
     return (
         <>
@@ -14,6 +15,7 @@ const Home = () => {
             <Partners />
             <Features />
             <Process />
+            <DownloadPdf />
             <Testimonials />
             <Footer />
         </>

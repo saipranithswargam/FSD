@@ -10,12 +10,14 @@ import ProfileImageUpdate from "./UpdateImage";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import PatientsRequestedAppointments from "../PatientsRequestedAppointments/PatientsRequestedAppointments";
+import PatientMedicalRecords from "../PatientsMedicalRecords/PatientsMedicalRecords";
 const PatientDashboard = () => {
   // const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const [profile, setProfile] = useState(true);
   const [appointments, setAppointments] = useState(false);
   const [confirmAppointments, setConfirmAppointments] = useState(false);
+  const [medicalRecords, setMedicalRecords] = useState(false);
   const user = useAppSelector((state) => state.user);
   const [editProfileData, setEditProfileData] = useState({
     name: user.name,
@@ -50,17 +52,27 @@ const PatientDashboard = () => {
     setProfile(true);
     setAppointments(false);
     setConfirmAppointments(false);
+    setMedicalRecords(false);
 
   }
   const setAppointmentHandler = () => {
     setAppointments(true);
     setProfile(false);
     setConfirmAppointments(false);
+    setMedicalRecords(false);
   }
   const setConfirmAppointmentHandler = () => {
     setConfirmAppointments(true);
     setAppointments(false);
     setProfile(false);
+    setMedicalRecords(false);
+  }
+
+  const setMedicalRecordsHandler = () => {
+    setConfirmAppointments(false);
+    setAppointments(false);
+    setProfile(false);
+    setMedicalRecords(true);
   }
   const validatePhoneNumber = () => {
     return false
@@ -121,6 +133,7 @@ const PatientDashboard = () => {
   let activeProfileStyles = profile ? styles.activeButton : styles.button;
   let activeAppointmentStyles = appointments ? styles.activeButton : styles.button;
   let activeConfirmAppointmentStyles = confirmAppointments ? styles.activeButton : styles.button;
+  let activeMedicalRecords = medicalRecords ? styles.activeButton : styles.button;
   return (
     <>
       <Header />
@@ -137,6 +150,7 @@ const PatientDashboard = () => {
             <button className={activeProfileStyles} onClick={setProfileHandler} >Profile</button>
             <button className={activeAppointmentStyles} onClick={setAppointmentHandler} >Requested Appointments</button>
             <button className={activeConfirmAppointmentStyles} onClick={setConfirmAppointmentHandler} >Confirmed Appointments</button>
+            <button className={activeMedicalRecords} onClick={setMedicalRecordsHandler} >Medical Records</button>
           </div>
         </div>
         {profile &&
@@ -300,6 +314,9 @@ const PatientDashboard = () => {
         }
         {
           confirmAppointments && <PatientsRequestedAppointments type={"confirmendappointments"} />
+        }
+        {
+          medicalRecords && <PatientMedicalRecords />
         }
       </div>
       <Footer />

@@ -270,26 +270,39 @@ exports.postAcceptAppointment = (req, res) => {
             });
             confirmAppointment.save().then((result) => {
                 result.populate("doctorId patientId hospitalId").then((Confirmed) => {
-                    res.render("success/appointmentConfirmed");
+                    let jsonResponse = {
+                        success: true,
+                        message: "Appointment confirmed successfully",
+                        confirmedAppointment: {
+                            doctorName: Confirmed.doctorId.name,
+                            hospitalName: Confirmed.hospitalId.name,
+                            appointmentDate: Confirmed.appointmentDate,
+                            appointmentTime: Confirmed.appointmentTime,
+                        }
+                    };
+                    res.json(jsonResponse);
+
                     let message = {
                         from: "testingnode061229@gmail.com",
                         to: "saipranithswargam@gmail.com",
                         subject: "Appointment Confirmed",
                         html: `
-                            <p>You Appointment for the doctor ${Confirmed.doctorId.name} has been confirmed by hospital ${Confirmed.hospitalId.name}</p>
-                            <p>Appointment Date : ${Confirmed.appointmentDate}</p>
-                            <p>Appointment Time : ${Confirmed.appointmentTime} </p>
-                            `,
+                            <p>Your appointment for the doctor ${Confirmed.doctorId.name} has been confirmed by hospital ${Confirmed.hospitalId.name}</p>
+                            <p>Appointment Date: ${Confirmed.appointmentDate}</p>
+                            <p>Appointment Time: ${Confirmed.appointmentTime} </p>
+                        `,
                     };
                     transporter.sendMail(message);
                     return newAppointment.deleteOne();
                 });
             });
         })
-        .then((error) => {
-            console.log(error);
+        .catch((error) => {
+            console.error(error);
+            res.status(500).json({ success: false, message: "Internal server error" });
         });
 };
+
 
 exports.postRescheduleAppointment = (req, res) => {
     console.log(req.body);

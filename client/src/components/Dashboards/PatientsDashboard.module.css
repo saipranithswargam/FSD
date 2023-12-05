@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500&display=swap");
-.main{
+.main {
     margin-top: 3rem;
 }
 .upper {
@@ -53,7 +53,10 @@
 .buttonsDiv button:first-child {
     border-right: 1px solid #42a991;
 }
-.buttonsDiv button:last-child{
+.buttonsDiv button:last-child {
+    border-left: 1px solid #42a991;
+}
+.buttonsDiv button:nth-child(3) {
     border-left: 1px solid #42a991;
 }
 .profile {
@@ -139,7 +142,7 @@
     outline: none;
     border: 1px solid #42a991;
 }
-.review{
+.review {
     min-height: 70vh;
     width: 70%;
     margin: 0 auto;

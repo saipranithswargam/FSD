@@ -194,7 +194,7 @@ exports.getBookedAppointments = (req, res) => {
         .populate("patientId")
         .then((appointments) => {
             console.log(appointments);
-            res.status(200).json({ appointments: appointments });
+            res.status(200).json(appointments);
         })
         .catch((error) => {
             console.error(error);
@@ -328,7 +328,7 @@ exports.postPrescribe = (req, res) => {
     const medicalRecord = new MedicalRecords({
         hospitalId: req.body.hospitalId,
         patientId: req.body.patientId,
-        doctorId: req.doctor._id,
+        doctorId: req._id,
         bloodPressure: req.body.bloodPressure,
         temperature: req.body.temperature,
         height: req.body.height,
@@ -340,17 +340,17 @@ exports.postPrescribe = (req, res) => {
         medicines: req.body.medicines,
         date: date.toLocaleDateString(),
     });
-    medicalRecord
-        .save()
-        .then((medicalrecord) => {
-            return ConfirmedAppointments.findById(req.body.appointmentId);
-        })
-        .then((appointment) => {
-            return appointment.deleteOne();
-        })
+
+    medicalRecord.save()
+        .then((medicalrecord) => ConfirmedAppointments.findById(req.body.appointmentId))
+        .then((appointment) => appointment?.deleteOne())
         .then((result) => {
             console.log(result);
-            res.render("success/prescriptionSuccess");
+            res.json({ success: true, message: "Prescription saved successfully." });
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).json({ success: false, message: "Internal Server Error" });
         });
 };
 
@@ -380,12 +380,11 @@ exports.getHospitalsWorkingFor = (req, res) => {
 
 
 exports.getMedicalRecords = (req, res) => {
+    console.log(req.params);
     MedicalRecords.find({ patientId: req.params.patientId })
         .populate("hospitalId patientId doctorId")
         .then((medicalRecords) => {
-            res.render("results/getPatientMedicalRecords", {
-                data: medicalRecords,
-            });
+            res.status(200).json(medicalRecords);
         })
         .catch((err) => {
             console.log(err);

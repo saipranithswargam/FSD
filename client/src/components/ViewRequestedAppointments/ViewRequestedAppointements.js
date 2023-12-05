@@ -12,7 +12,7 @@ const ViewRequestedAppointments = () => {
     const submitConfirmAppointment = async (appointment) => {
         console.log(appointment)
         try {
-            const response = await fetch('http://localhost:5050/hospitals/resheduleappointment', {
+            const response = await fetch('http://localhost:5050/hospitals/acceptappointment', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

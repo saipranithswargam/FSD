@@ -165,26 +165,19 @@ exports.getHospitals = async (req, res) => {
 
 
 exports.getMedicalRecords = (req, res) => {
-    MedicalRecords.find({ patientId: req.patient._id })
+    MedicalRecords.find({ patientId: req._id })
         .populate("hospitalId doctorId")
         .then((data) => {
-            const doctors = data.map((medicalRecord) => {
-                return medicalRecord.doctorId;
-            });
-            const hospitals = data.map((medicalRecord) => {
-                return medicalRecord.hospitalId;
-            });
-            var set1 = new Set(hospitals);
-            const finalHospitals = [...set1];
-            var set2 = new Set(doctors);
-            const finalDoctors = [...set2];
-            res.render("results/medicalRecords", {
-                data: data,
-                doctors: finalDoctors,
-                hospitals: finalHospitals,
+            res.json(data);
+        })
+        .catch((error) => {
+            res.status(500).json({
+                success: false,
+                message: "Error retrieving medical records",
             });
         });
 };
+
 
 exports.postFilteredMedicalRecords = (req, res) => {
     if (req.body.doctor === "All" && req.body.hospital === "All") {
@@ -465,11 +458,43 @@ exports.postChosen = (req, res) => {
         return res.redirect("/patients/medicalrecords");
     }
 };
+exports.sendPdf = (req, res) => {
 
+    const pdfDoc = new PDFDocument();
+    const chunks = [];
+
+    pdfDoc.pipe(res);
+
+    pdfDoc.fontSize(26).text('hello', {
+        underline: true,
+        align: 'center',
+    });
+
+    pdfDoc.fontSize(26).text('iamUnserWater', {
+        underline: true,
+        align: 'center',
+    });
+
+    pdfDoc.end();
+
+    // Event handler for the 'data' event to collect chunks of the PDF
+    res.on('data', (chunk) => {
+        chunks.push(chunk);
+    });
+
+    // Event handler for the 'end' event to send the collected chunks to the frontend
+    res.on('end', () => {
+        const pdfBuffer = Buffer.concat(chunks);
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline; filename="' + "testing" + '"');
+        res.status(200).send(pdfBuffer);
+    });
+
+}
 exports.getMedicalRecord = (req, res) => {
     const medicalRecordId = req.params.medicalrecordId;
     MedicalRecords.findById(medicalRecordId)
-        .populate("hospitalId doctorId")
+        .populate("hospitalId doctorId patientId")
         .then((record) => {
             if (!record) {
                 return res.send("no medical record found");
@@ -482,7 +507,7 @@ exports.getMedicalRecord = (req, res) => {
                 'inline; filename="' + RecordName + '"'
             );
             pdfDoc.pipe(res);
-            pdfDoc.fontSize(26).text(record.hospitalId.hName, {
+            pdfDoc.fontSize(26).text(record.hospitalId.name, {
                 underline: true,
                 align: "center",
             });
@@ -491,7 +516,7 @@ exports.getMedicalRecord = (req, res) => {
                 align: "left",
             });
             pdfDoc.moveUp(1);
-            pdfDoc.fontSize(10).text("PatientName:" + req.patient.name, {
+            pdfDoc.fontSize(10).text("PatientName:" + record.patientId.name, {
                 align: "center",
             });
             pdfDoc.moveUp(1);

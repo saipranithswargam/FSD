@@ -10,6 +10,7 @@ import ProfileImageUpdate from "./UpdateImage";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ViewHospitalsWorking from "../ViewHospitalsWorking/ViewHospitalsWorking";
+import DoctorsBookedAppointments from "../DoctorsBookedAppointments/DoctorsBookedAppointments";
 const DoctorsDashboard = () => {
   const [profile, setProfile] = useState(true);
   const [addHospitals, setAddHospital] = useState(false);
@@ -292,6 +293,9 @@ const DoctorsDashboard = () => {
         }
         {
           addHospitals && <ViewHospitalsWorking />
+        }
+        {
+          appointments && <DoctorsBookedAppointments />
         }
       </div>
 
