@@ -84,7 +84,9 @@ const PatientsMedicalRecords = () => {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <DownloadPDFButton id={selectedMedicalRecord._id} />
+                    {selectedMedicalRecord && (
+                        <DownloadPDFButton id={selectedMedicalRecord._id} />
+                    )}
                 </Modal.Footer>
             </Modal>
         </div>
