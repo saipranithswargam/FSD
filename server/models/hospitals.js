@@ -6,6 +6,8 @@ const hospitalSchema = new mongoose.Schema(
 
         regNo: { type: String },
 
+        image: { type: String },
+        
         city: { type: String },
         state: { type: String },
         pincode: { type: String },

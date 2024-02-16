@@ -6,6 +6,8 @@ const doctorController = require("../controllers/doctor");
 
 const isAuth = require("../middleware/verify");
 
+const imageController = require("../util/image_upload");
+
 Router.get("/login", doctorController.getLogin);
 
 Router.post("/login", doctorController.postLogin);
@@ -63,5 +65,7 @@ Router.post("/chosen", isAuth, doctorController.postChosen);
 Router.get("/modify", isAuth, doctorController.getModify);
 
 Router.post("/modify", isAuth, doctorController.postModify);
+
+Router.post("/upload", isAuth, imageController.uploadImage, doctorController.uploadImage)
 
 module.exports = Router;

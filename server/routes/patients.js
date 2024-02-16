@@ -6,6 +6,8 @@ const isAuth = require("../middleware/verify");
 
 const PatientController = require("../controllers/patients");
 
+const imageController = require("../util/image_upload");
+
 Router.post("/login", PatientController.postLogin);
 
 Router.post("/register", PatientController.postRegister);
@@ -81,5 +83,6 @@ Router.get("/modify", isAuth, PatientController.getModify)
 
 Router.post("/modify", isAuth, PatientController.postModify)
 
+Router.post("/upload", isAuth, imageController.uploadImage, PatientController.uploadImage)
 
 module.exports = Router;

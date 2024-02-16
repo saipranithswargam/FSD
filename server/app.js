@@ -13,9 +13,13 @@ const Patients = require("./models/patients");
 const Hospitals = require("./models/hospitals");
 const Doctors = require("./models/doctors");
 const Admin = require("./models/admin");
+const morgan = require('morgan');
+const rfs = require('rotating-file-stream');
+const path = require('path')
 const app = express();
 app.use(express.static("public"));
 app.use(express.json({ limit: '50mb' }));
+app.use('/uploads', express.static('uploads'));
 app.use(
     cors({
         origin: [
@@ -29,6 +33,13 @@ app.use(
     })
 );
 app.use(cookieParser());
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+
+var accessLogStream = rfs.createStream("S20210010220.log", { interval: '2h', path: path.join(__dirname, 'log') })
+
+app.use(morgan('combined', { stream: accessLogStream }))
+
 app.get("/check", verify, async (req, res) => {
     if (req._type === "patients") {
         let patients = null;

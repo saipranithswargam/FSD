@@ -484,3 +484,26 @@ exports.Logout = (req, res, next) => {
         .json({ message: "Logged out!!" });
 };
 
+exports.uploadImage = async (req, res) => {
+    try {
+        if (!req._id) {
+            return res.status(400).json({ error: 'Invalid _id' });
+        }
+
+        const imagePath = `http://localhost:5050/${req.file.path}`;
+
+        const user = await Doctor.findById(req._id);
+
+        if (user.image) {
+            const previousImagePath = user.image.replace('http://localhost:5050/', '');
+            fs.unlinkSync(previousImagePath);
+        }
+
+        await Doctor.findByIdAndUpdate(req._id, { image: imagePath });
+
+        return res.json({ path: req.file.path });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+};

@@ -3,53 +3,45 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import convertToBase64 from "../../helper/ConvertToBase64";
 import axiosInstance from "../../api/axiosInstance";
 import { userActions } from "../../features/userSlice";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "./UpdateImage.module.css";
 const ProfileImageUpdate = () => {
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user);
-    const [image, setImage] = useState(user.image ? user.image : null);
-    const [change, setChange] = useState(false);
-    const [showSave, setShowSave] = useState(false);
+    const [image, setImage] = useState(user.image);
+    const [imagePath, setImagePath] = useState(user.image);
+    const [showSaveButton, setShowSaveButton] = useState(false);
     const dispatch = useAppDispatch();
 
-    const handleImage = async (e) => {
-        if (e.target.files) {
-            const file = e.target.files[0];
-            if (
-                file.type === "image/jpeg" ||
-                file.type === "image/png" ||
-                file.type === "image/jpg"
-            ) {
-                let base64 = await convertToBase64(file);
-                setShowSave(true);
-                setImage(base64);
-                setChange(true);
-            } else {
-            }
-        }
+    const handleImageChange = (e) => {
+        setImage(e.target.files[0]);
+        setImagePath(URL.createObjectURL(e.target.files[0])); // Preview image locally
+        setShowSaveButton(true);
     };
 
-    const updateImage = async (e) => {
-        setChange(false);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('image', image);
+
         try {
-            const type = user.type + 's';
-            await axiosInstance.post(`/${type}/updateimage`, {
-                image,
-                email: user.email,
+            const response = await axios.post(`http://localhost:5050/${user.type}/upload`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                withCredentials: true
             });
-            dispatch(userActions.setImage(image));
-            setChange(false);
-            setShowSave(false);
-        } catch (err) {
-            console.log(err);
-            if (err.message === "Network Error") {
-            } else {
+            if (response.status === 200) {
+                dispatch(userActions.setImage(`http://localhost:5050/${response?.data?.path}`))
+                setShowSaveButton(false);
             }
-            setChange(true);
+
+        } catch (error) {
+            console.error(error);
         }
     };
-
     return (
         <div className={styles["update-image"]}>
             <label className={styles["update-image__label"]} htmlFor="proimage">
@@ -57,11 +49,11 @@ const ProfileImageUpdate = () => {
                     type="file"
                     id="proimage"
                     hidden
-                    onChange={handleImage}
+                    onChange={handleImageChange}
                 />
                 {image ? (
                     <img
-                        src={image}
+                        src={imagePath}
                         alt=""
                         className={styles["update-image__image"]}
                     />
@@ -71,16 +63,7 @@ const ProfileImageUpdate = () => {
                     </div>
                 )}
             </label>
-            {showSave ? (
-                <button
-                    className={styles[" "]}
-                    id="probtn"
-                    onClick={updateImage}
-                    disabled={change ? false : true}
-                >
-                    Save
-                </button>
-            ) : null}
+            {showSaveButton && <button onClick={handleSubmit}>Save</button>}
         </div>
     );
 };

@@ -5,6 +5,7 @@ import { useAppDispatch } from "./app/hooks";
 import { userActions } from "./features/userSlice";
 import Navigation from "./components/Navigation/Navigation";
 import PageLoader from "./components/Loaders/PageLoader";
+import Upload from "./Upload";
 function App() {
     const [screenLoad, setScreenLoad] = useState(true);
     const navigate = useNavigate();
@@ -40,13 +41,13 @@ function App() {
                     if (result.state === "granted") {
                         navigator.geolocation.getCurrentPosition(
                             storeLocation,
-                            () => {},
+                            () => { },
                             { timeout: 5000, maximumAge: 0 }
                         );
                     } else if (result.state === "prompt") {
                         navigator.geolocation.getCurrentPosition(
                             storeLocation,
-                            () => {},
+                            () => { },
                             { timeout: 5000, maximumAge: 0 }
                         );
                     } else if (result.state === "denied") {
@@ -58,14 +59,14 @@ function App() {
                             console.log("granted", result.state);
                             navigator.geolocation.getCurrentPosition(
                                 storeLocation,
-                                () => {},
+                                () => { },
                                 { timeout: 5000, maximumAge: 0 }
                             );
                             //If granted then you can directly call your function here
                         } else if (result.state === "prompt") {
                             navigator.geolocation.getCurrentPosition(
                                 storeLocation,
-                                () => {},
+                                () => { },
                                 { timeout: 5000, maximumAge: 0 }
                             );
                             console.log(result.state);
@@ -83,7 +84,7 @@ function App() {
         getUserData();
         getUserLocation();
     }, []);
-
+    // return <Upload />
     return screenLoad ? <PageLoader /> : <Navigation />;
 }
 

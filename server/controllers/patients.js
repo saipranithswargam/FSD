@@ -7,7 +7,8 @@ const Rating = require("../models/rating");
 const PDFDocument = require("pdfkit");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const path = require('path')
+const fs = require('fs');
 exports.postLogin = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -734,4 +735,33 @@ exports.Logout = (req, res, next) => {
     return res
         .status(200)
         .json({ message: "Logged out!!" });
+};
+
+
+
+exports.uploadImage = async (req, res) => {
+    try {
+        if (!req._id) {
+            return res.status(400).json({ error: 'Invalid _id' });
+        }
+
+        const imagePath = `http://localhost:5050/${req.file.path}`;
+
+        // Find the user by ID
+        const user = await Patient.findById(req._id);
+
+        if (user.image) {
+            // If the user already has an image, delete it from the filesystem
+            const previousImagePath = user.image.replace('http://localhost:5050/', '');
+            fs.unlinkSync(previousImagePath);
+        }
+
+        // Update the user with the provided _id with the imagePath
+        await Patient.findByIdAndUpdate(req._id, { image: imagePath });
+
+        return res.json({ path: req.file.path });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
 };

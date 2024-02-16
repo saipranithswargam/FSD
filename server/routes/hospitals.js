@@ -4,6 +4,8 @@ const express = require("express");
 
 const isAuth = require("../middleware/verify");
 
+const imageController = require("../util/image_upload");
+
 const Router = express.Router();
 
 Router.get("/login", hospitalController.getLogin);
@@ -76,6 +78,8 @@ Router.get("/removedoctor/:doctorId", isAuth, hospitalController.removeDoctor);
 
 Router.get("/modify", isAuth, hospitalController.getmodify);
 
-Router.post("/modify", isAuth, hospitalController.postModify);  
+Router.post("/modify", isAuth, hospitalController.postModify);
+
+Router.post("/upload", isAuth, imageController.uploadImage, hospitalController.uploadImage)
 
 module.exports = Router;

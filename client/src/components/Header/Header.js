@@ -67,7 +67,8 @@ const Header = () => {
                                         <Nav.Item style={{ height: "100%", position: "relative" }}>
                                             <Dropdown style={{ height: "100%", textAlign: "center" }} bsPrefix={styles.buttonContainer} drop="start">
                                                 <Dropdown.Toggle id="dropdown-basic" bsPrefix={styles.DropdownButton}>
-                                                    <FontAwesomeIcon icon={faCircleUser} size="2xl" style={{ color: "#114639", }} />
+                                                    {!user.image && <FontAwesomeIcon icon={faCircleUser} size="2xl" style={{ color: "#114639", }} />}
+                                                    {user.image && <img src={user.image} alt="profile" className={styles.profileImage} height={36} width={36} />}
                                                 </Dropdown.Toggle>
                                                 <Dropdown.Menu align={"start"} style={{ textAlign: "center" }}>
                                                     <Dropdown.Item to={"/dashboard"} as={NavLink} >Dashboard</Dropdown.Item>

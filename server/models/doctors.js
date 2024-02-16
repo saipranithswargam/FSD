@@ -8,6 +8,8 @@ const doctorSchema = new mongoose.Schema(
 
         mobileNum: { type: String },
 
+        image: { type: String },
+
         liscenceNo: { type: String },
 
         city: { type: String },

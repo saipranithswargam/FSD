@@ -6,6 +6,8 @@ const patientSchema = new mongoose.Schema(
 
         email: { type: String },
 
+        image: { type: String },
+
         mobileNum: { type: String },
 
         password: { type: String },
