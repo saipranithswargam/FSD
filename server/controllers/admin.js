@@ -343,3 +343,33 @@ exports.getGraphData = (req, res) => {
     });
 
 }
+
+exports.getAppointmentStatus = async (req, res) => {
+    try {
+        const { patientId } = req.body;
+
+        // Check if patient exists
+        const patient = await Patients.findById(patientId);
+        if (!patient) {
+            return res.status(404).json({ message: "Patient not found" });
+        }
+
+        // Check if patient has appointments
+        const appointments = await Appointments.findOne({ patientId });
+        // Check if patient has confirmed appointments
+        const confirmedAppointments = await ConfirmedAppointments.findOne({ patientId });
+
+        // Determine appointment status
+        let appointmentStatus = "Not booked";
+        if (confirmedAppointments) {
+            appointmentStatus = "Confirmed";
+        } else if (appointments) {
+            appointmentStatus = "Pending";
+        }
+
+        res.status(200).json({ appointmentStatus });
+    } catch (error) {
+        console.error("Error checking appointment status:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
