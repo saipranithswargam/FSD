@@ -6,6 +6,7 @@ const nodemailer = require("nodemailer");
 const MedicalRecords = require("../models/medicalRecords");
 const Appointments = require("../models/appointments");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 let config = {
     service: "gmail",
     auth: {

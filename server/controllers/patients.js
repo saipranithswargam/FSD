@@ -114,54 +114,6 @@ exports.getHospitals = async (req, res) => {
     Hospitals.find({}).then(locations => {
         res.status(200).json(locations);
     })
-    // if (req.body.speciality !== 'all') {
-    //     try {
-    //         const { longitude, latitude, distance, speciality } = req.body;
-    //         console.log(longitude,latitude)
-    //         if (!longitude || !latitude || !distance) {
-    //             return res.status(400).json({ message: "Longitude, latitude, and distance are required." });
-    //         }
-    //         const locations = await Hospitals.find({
-    //             location: {
-    //                 $nearSphere: {
-    //                     $geometry: {
-    //                         type: "Point",
-    //                         coordinates: [parseFloat(longitude), parseFloat(latitude)],
-    //                     },
-    //                     $maxDistance: Number(distance) * 1000,
-    //                 },
-    //             },
-    //             specialityDep: speciality,
-    //         });
-    //         res.status(200).json(locations);
-    //     } catch (err) {
-    //         console.error("Error finding locations:", err);
-    //         res.status(500).json({ error: "Internal Server Error" });
-    //     }
-    // } else {
-    //     try {
-    //         const { longitude, latitude, distance } = req.body;
-    //         if (!longitude || !latitude || !distance) {
-    //             return res.status(400).json({ message: "Longitude, latitude, and distance are required." });
-    //         }
-    //         const locations = await Hospitals.find({
-    //             location: {
-    //                 $nearSphere: {
-    //                     $geometry: {
-    //                         type: "Point",
-    //                         coordinates: [parseFloat(longitude), parseFloat(latitude)],
-    //                     },
-    //                     $maxDistance: Number(distance) * 1000,
-    //                 },
-    //             },
-    //         });
-    //         console.log(locations);
-    //         res.status(200).json(locations);
-    //     } catch (err) {
-    //         console.error("Error finding locations:", err);
-    //         res.status(500).json({ error: "Internal Server Error" });
-    //     }
-    // }
 };
 
 
@@ -302,7 +254,7 @@ exports.getFiltered = (req, res) => {
     const speciality = req.params.speciality;
     let loc = req.params.location.toString().toLowerCase();
 
-    if (location !== "All" && speciality !== "All") {
+    if (location !== "all" && speciality !== "all") {
         Hospitals.find({
             city: loc,
             specialityDep: speciality,
@@ -321,7 +273,7 @@ exports.getFiltered = (req, res) => {
             });
     }
 
-    if (location === "All" && speciality !== "All") {
+    if (location === "all" && speciality !== "all") {
         Hospitals.find({ specialityDep: speciality, verified: "true" })
             .then((hospitals) => {
                 res.json({
@@ -336,7 +288,7 @@ exports.getFiltered = (req, res) => {
             });
     }
 
-    if (location !== "All" && speciality === "All") {
+    if (location !== "all" && speciality === "all") {
         Hospitals.find({ city: loc, verified: "true" })
             .then((hospitals) => {
                 res.json({
@@ -353,13 +305,49 @@ exports.getFiltered = (req, res) => {
 };
 
 exports.postFiltered = (req, res) => {
-    if (req.body.location === "All" && req.body.speciality === "All") {
+    if (req.body.location === "all" && req.body.speciality === "all") {
         return res.redirect("/patients/hospitals");
     }
     res.redirect(
         `/patients/hospitals/filtered/${req.body.location}/${req.body.speciality}`
     );
 };
+
+exports.getNearByHospitals = async (req, res) => {
+    const { radius, longitude, latitude, speciality } = req.params;
+    console.log(req.params);
+    if (speciality !== 'all') {
+        const hospitals = await Hospitals.find({
+            location: {
+                $near: {
+                    $geometry: {
+                        type: "Point",
+                        coordinates: [parseFloat(longitude),
+                        parseFloat(latitude),]
+                    },
+                    $maxDistance: Number(radius) * 1000,
+                }
+            },
+            specialityDep: speciality
+        })
+        return res.status(200).json(hospitals);
+    }
+    else {
+        const hospitals = await Hospitals.find({
+            location: {
+                $near: {
+                    $geometry: {
+                        type: "Point",
+                        coordinates: [parseFloat(longitude),
+                        parseFloat(latitude),]
+                    },
+                    $maxDistance: Number(radius) * 1000,
+                }
+            },
+        })
+        return res.status(200).json(hospitals);
+    }
+}
 
 exports.getDoctorsList = (req, res) => {
     const id = req.params.id;

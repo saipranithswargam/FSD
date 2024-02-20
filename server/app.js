@@ -36,7 +36,7 @@ app.use(cookieParser());
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
-var accessLogStream = rfs.createStream("S20210010220.log", { interval: '2h', path: path.join(__dirname, 'log') })
+var accessLogStream = rfs.createStream("CHS", { interval: '2h', path: path.join(__dirname, 'log') })
 
 app.use(morgan('combined', { stream: accessLogStream }))
 
@@ -119,11 +119,13 @@ mongoose
     // .connect(process.env.MONGO_URI)
     .connect("mongodb://localhost:27017")
     .then(() => {
-        console.log("database connected");
+        // const mongoClient = mongoose.connection.getClient();
+        // mongoClient.db().collection('hospitals').createIndex({ location: '2dsphere' });
+        // console.log("database connected");
         app.listen(port, () => {
             console.log(`server listening on port ${port}`);
         });
     })
-    .catch((err) => {
+    .catch((err) => {   
         console.log(err);
     });

@@ -42,4 +42,11 @@ Router.get("/logout", isAuth, AdminController.Logout);
 
 Router.get("/patients", isAuth, AdminController.getPatients);
 
+Router.get("/doctors", isAuth, AdminController.getDoctors);
+
+Router.get("/hospitals", isAuth, AdminController.getHospitals);
+
+Router.get("/getGraphData", isAuth, AdminController.getGraphData)
+
+
 module.exports = Router;

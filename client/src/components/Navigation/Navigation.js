@@ -14,6 +14,13 @@ import DoctorSignup from "../../pages/auth/DoctorSignup";
 import HospitalSignup from "../../pages/auth/HospitalSignup";
 import Dashboard from "../Dashboards/Dashboard";
 import Doctors from "../../pages/Doctors/Doctors";
+import Admin from "../../pages/Admin/Admin";
+import AdminPatientList from "../../pages/AdminPatientList/AdminPatientList";
+import AdminPatients from "../../pages/AdminPatients/AdminPatients";
+import AdminDoctorsList from "../../pages/AdminDoctorList/AdminDoctorList";
+import AdminDoctors from "../../pages/AdminDoctors/AdminDoctors";
+import AdminHospitalList from "../../pages/AdminHospitalList/AdminHospitalList";
+import AdminHospital from "../../pages/AdminHospital/AdminHospital";
 const Navigation = () => {
     const user = useAppSelector((state) => state.user);
     return (
@@ -23,7 +30,23 @@ const Navigation = () => {
                 <Route path="/">
                     <Route path="" element={<Home />} />
                 </Route>
+                <Route path="/admin/dashboard">
+                    <Route index element={<Admin />} />
+                    <Route path="patients">
+                        <Route index element={<AdminPatientList />} />
+                        <Route path=":patientId" element={<AdminPatients />} />
+                    </Route>
 
+                    <Route path="doctors">
+                        <Route index element={<AdminDoctorsList />} />
+                        <Route path=":doctorId" element={<AdminDoctors />} />
+                    </Route>
+
+                    <Route path="hospitals">
+                        <Route index element={<AdminHospitalList />} />
+                        <Route path=":hospitalId" element={<AdminHospital />} />
+                    </Route>
+                </Route>
                 <Route path="/" element={<Protected />} >
                     <Route path="hospitals" element={<Hospitals />} />
                     <Route path="dashboard" element={<Dashboard type={user.type} />} />

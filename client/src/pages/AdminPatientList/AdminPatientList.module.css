@@ -1,0 +1,7 @@
+.patient-list {
+    display: flex;
+    width: 100%;
+}
+.patient-list .PatientlistContainer {
+    flex: 6;
+}

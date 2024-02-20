@@ -38,6 +38,8 @@ Router.get(
 
 Router.post("/hospitals/filtered", isAuth, PatientController.postFiltered);
 
+Router.get("/hospitals/:radius/:longitude/:latitude/:speciality", PatientController.getNearByHospitals);
+
 Router.get("/doctorlist/:id", isAuth, PatientController.getDoctorsList);
 
 Router.get(

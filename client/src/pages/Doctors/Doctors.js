@@ -4,7 +4,9 @@ import { useParams } from 'react-router-dom';
 import Header from '../../components/Header/Header';
 import DoctorsListCard from '../../components/DoctorListCard/DoctorsListCard';
 import FetchLoader from '../../components/Loaders/fetchLoader';
-import { NoData } from '../../components/NoData/NoData';
+import NoData from '../../components/NoData/NoData';
+import BackToTopButton from '../../components/BackToTopButton/BackToTopButton';
+let doctorsData = [];
 const Doctors = () => {
     const params = useParams();
     const [doctors, setDoctors] = useState([]);
@@ -25,7 +27,7 @@ const Doctors = () => {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            console.log(data);
+            doctorsData = data;
             setDoctors(data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -34,7 +36,13 @@ const Doctors = () => {
             setLoading(false);
         }
     };
-
+    const filterData = (e) => {
+        const Speciality = e.target.value;
+        if (Speciality === 'all')
+            return setDoctors(doctorsData);
+        const filteredData = doctorsData.filter(doctor => doctor?.Speciality === Speciality);
+        setDoctors(filteredData);
+    }
     useEffect(() => {
         fetchData();
     }, []);
@@ -42,19 +50,40 @@ const Doctors = () => {
     return (
         <>
             <Header />
-            {doctors.length !== 0 &&
-                <div className={styles.main}>
-                    {!loading && doctors.map((doctor) => (
-                        <DoctorsListCard key={doctor.id} doctor={doctor} hospitalId={id} />
-                    ))}
+            <BackToTopButton />
+            <div className={styles.main}>
+                <div className={styles.doctorFilter}>
+                    <label>
+                        Filter by Speciality:
+                        <select onChange={filterData} className={styles.input}>
+                            <option value={'all'}>All</option>
+                            <option>Dermatologist</option>
+                            <option>Gastroenterologist</option>
+                            <option>Orthopedic</option>
+                            <option>Orthopaedics</option>
+                            <option>ENT</option>
+                            <option>Ophthalmologist</option>
+                            <option>Other</option>
+                        </select>
+                    </label>
                 </div>
-            }
-            {
-                doctors.length === 0 && !loading && <NoData />
-            }
-            {
-                loading && <FetchLoader />
-            }
+                <div className={styles.doctorsList}>
+                    {doctors.length !== 0 &&
+                        <>
+                            {!loading && doctors.map((doctor) => (
+                                <DoctorsListCard key={doctor._id} doctor={doctor} hospitalId={id} />
+                            ))}
+                        </>
+                    }
+                </div>
+                {
+                    doctors.length === 0 && !loading && <div className="noData"> <NoData /> </div>
+                }
+                {
+                    loading && <FetchLoader />
+                }
+            </div>
+
         </>
     );
 };

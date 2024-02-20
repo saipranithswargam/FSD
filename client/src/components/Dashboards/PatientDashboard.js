@@ -12,7 +12,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import PatientsRequestedAppointments from "../PatientsRequestedAppointments/PatientsRequestedAppointments";
 import PatientMedicalRecords from "../PatientsMedicalRecords/PatientsMedicalRecords";
 const PatientDashboard = () => {
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const [profile, setProfile] = useState(true);
   const [appointments, setAppointments] = useState(false);

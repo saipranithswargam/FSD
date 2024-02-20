@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import styles from "./PatientsRequestedAppointments.module.css"
+import FetchLoader from '../Loaders/fetchLoader';
+import NoData from "../NoData/NoData";
 const PatientsRequestedAppointments = ({ type }) => {
     const [appointmentType, setAppointmentType] = useState('');
     const [appointments, setAppointments] = useState([]);
     const [error, setError] = useState(null);
-
+    const [loading, setLoading] = useState(false);
     const submitCancleAppointment = async (appointment) => {
         console.log(appointment)
         let dataType = ''
@@ -15,7 +17,7 @@ const PatientsRequestedAppointments = ({ type }) => {
         if (appointmentType === 'confirmendappointments') {
             dataType = 'confirmed';
         }
-        if (dataType === '') { return ;}
+        if (dataType === '') { return; }
         try {
             const response = await fetch('http://localhost:5050/patients/cancleRequestedAppointment', {
                 method: 'POST',
@@ -45,12 +47,14 @@ const PatientsRequestedAppointments = ({ type }) => {
 
     const fetchAppointments = () => {
         const apiUrl = `http://localhost:5050/patients/${appointmentType}`;
+        setLoading(true);
         fetch(apiUrl, {
             method: 'GET',
             credentials: 'include',
         })
             .then((response) => response.json())
             .then((data) => {
+                setLoading(false);
                 if (data.error) {
                     setError(data.error);
                 } else {
@@ -58,6 +62,7 @@ const PatientsRequestedAppointments = ({ type }) => {
                 }
             })
             .catch((error) => {
+                setLoading(false)
                 console.error('Error fetching data:', error);
                 setError('Error fetching data. Please try again later.');
             });
@@ -69,22 +74,33 @@ const PatientsRequestedAppointments = ({ type }) => {
 
     return (
         <div>
+            {
+                loading && <FetchLoader />
+            }
             <div className={styles.appointmentmain}>
-                {appointments.map((appointment) => (
-                    <div key={appointment._id} className={styles.appointmentCard}>
-                        <p>Doctor: {appointment.doctorId.name}</p>
-                        <p>Hospital: {appointment.hospitalId.name}</p>
-                        <p>Appointment Date: {appointment.appointmentDate}</p>
-                        <p>Appointment Time: {appointment.appointmentTime} </p>
-                        <div className={styles.buttonDiv}>
-                            <button className={styles.btn} onClick={(e) => {
-                                e.preventDefault();
-                                submitCancleAppointment(appointment);
-                            }}>Cancle appointment</button>
+                {
+                    !loading && appointments.length !== 0 &&
+                    appointments.map((appointment) => (
+                        <div key={appointment._id} className={styles.appointmentCard}>
+                            <p>Doctor: {appointment.doctorId.name}</p>
+                            <p>Hospital: {appointment.hospitalId.name}</p>
+                            <p>Appointment Date: {appointment.appointmentDate}</p>
+                            <p>Appointment Time: {appointment.appointmentTime} </p>
+                            <div className={styles.buttonDiv}>
+                                <button className={styles.btn} onClick={(e) => {
+                                    e.preventDefault();
+                                    submitCancleAppointment(appointment);
+                                }}>Cancle appointment</button>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+
+                }
             </div>
+            {
+                !loading && appointments.length === 0 &&
+                <div className="noData"> <NoData /> </div>
+            }
         </div>
     );
 };

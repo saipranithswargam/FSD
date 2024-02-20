@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const Doctors = require("../models/doctors");
 const Hospitals = require("../models/hospitals");
 const jwt = require('jsonwebtoken');
+const fs = require("fs")
 let config = {
     service: "gmail",
     auth: {
@@ -129,7 +130,7 @@ exports.postRegister = (req, res) => {
                         email: email,
                         location: {
                             type: "Point",
-                            coordinates: [req.body.longitude, req.body.latitude],
+                            coordinates: [parseFloat(req.body.longitude), parseFloat(req.body.latitude)],
                         },
                     });
                     return newHospital.save();
@@ -541,7 +542,6 @@ exports.uploadImage = async (req, res) => {
             fs.unlinkSync(previousImagePath);
         }
 
-        // Update the user with the provided _id with the imagePath
         await Hospital.findByIdAndUpdate(req._id, { image: imagePath });
 
         return res.json({ path: req.file.path });

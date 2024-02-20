@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@mui/x-data-grid": "^6.19.4",
+    "react-circular-progressbar": "^2.1.0"
+  }
+}

@@ -27,7 +27,7 @@ const Header = () => {
                 position: "top-right",
                 toastId: 7,
             });
-            navigate("/");
+            navigate("/", { replace: true });
         } catch (err) {
             console.log(err);
             toast.error(err.response.data.message, {
@@ -88,7 +88,7 @@ const Header = () => {
                                                     <Dropdown.Menu align={"start"} style={{ textAlign: "center" }}>
                                                         <Dropdown.Item to={"/auth/doctorslogin"} as={NavLink} >Doctors</Dropdown.Item>
                                                         <Dropdown.Item to={"/auth/hospitalslogin"} as={NavLink} >Hospitals</Dropdown.Item>
-                                                        {/* <Dropdown.Item to={"/auth/adminlogin"} as={NavLink} >Admin</Dropdown.Item> */}
+                                                        <Dropdown.Item to={"/auth/adminlogin"} as={NavLink} >Admin</Dropdown.Item>
                                                     </Dropdown.Menu>
                                                 </Dropdown>
                                             </Nav.Item>

@@ -4,26 +4,26 @@ import Header from '../../components/Header/Header';
 import styles from "./Hospitals.module.css";
 import { useAppSelector } from '../../app/hooks';
 import HospitalCard from '../../components/HospitalCard/HospitalCard';
+import BackToTopButton from '../../components/BackToTopButton/BackToTopButton';
+import FetchLoader from '../../components/Loaders/fetchLoader';
+import NoData from "../../components/NoData/NoData";
 const Hospitals = () => {
     const user = useAppSelector((state) => state.user);
     const [hospitals, setHospitals] = useState([]);
+    const [loading, setLoading] = useState(false);
     const fetchData = async (specialityFilter, radiusFilter) => {
         try {
+            setLoading(true);
             const filterData = { speciality: specialityFilter, distance: radiusFilter, latitude: user.latitude, longitude: user.longitude }
-            const response = await fetch(`http://localhost:5050/patients/hospitals`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(filterData),
-            });
+            const response = await fetch(`http://localhost:5050/patients/hospitals/${radiusFilter}/${user.longitude}/${user.latitude}/${specialityFilter}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
+            setLoading(false)
             const data = await response.json();
             setHospitals(data);
         } catch (error) {
+            setLoading(false)
             console.error('Error fetching data:', error);
         }
     };
@@ -38,11 +38,30 @@ const Hospitals = () => {
         <Header />
         <div className={styles.main}>
             <HospitalFilter filter={applyFilters} />
-            <div className={styles.hospitalsList}>
-                {hospitals.map((hospital) => (
-                    <HospitalCard key={hospital._id} hospital={hospital} />
-                ))}
-            </div>
+            {
+                !loading &&
+                <>
+                    {
+
+                        hospitals.length !== 0 &&
+
+                        <div className={styles.hospitalsList}>
+                            {hospitals.map((hospital) => (
+                                <HospitalCard key={hospital._id} hospital={hospital} />
+                            ))}
+                            <BackToTopButton />
+                        </div>
+
+                    }
+
+                    {
+                        hospitals.length === 0 && <NoData />
+                    }
+                </>
+            }
+            {
+                loading && <FetchLoader />
+            }
         </div>
     </>
     )

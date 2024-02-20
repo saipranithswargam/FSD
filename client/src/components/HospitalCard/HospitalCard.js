@@ -10,7 +10,7 @@ const HospitalCard = (props) => {
     return (
         <div className={styles.cardMain}>
             <div className={styles.imageDiv}>
-                <img src={Image} alt='testImage' />
+                <img src={props.hospital?.image === "" ? Image : props.hospital.image} alt='testImage' />
             </div>
             <div className={styles.details}>
                 <h1>{props.hospital.name}</h1>

@@ -1,0 +1,7 @@
+.hospital-list {
+    display: flex;
+    width: 100%;
+}
+.hospital-list .HospitalslistContainer {
+    flex: 6;
+}

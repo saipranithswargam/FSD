@@ -27,7 +27,7 @@ const HospitalFilter = (props) => {
                     Filter by Speciality:
                     <select value={specialityFilter} onChange={handleSpecialityChange} className={styles.input}>
                         <option value={'all'}>All</option>
-                        <option>MultiSpeciality</option>
+                        <option value={'MultiSpeciality'}>MultiSpeciality</option>
                         <option>Dermatology</option>
                         <option>GeneralSurgery</option>
                         <option>Gastroenterology</option>

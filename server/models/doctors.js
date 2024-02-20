@@ -8,7 +8,7 @@ const doctorSchema = new mongoose.Schema(
 
         mobileNum: { type: String },
 
-        image: { type: String },
+        image: { type: String, default: "" },
 
         liscenceNo: { type: String },
 

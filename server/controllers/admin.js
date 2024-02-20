@@ -2,6 +2,7 @@ const Admin = require("../models/admin");
 const Hospitals = require("../models/hospitals");
 const Doctors = require("../models/doctors");
 const Patients = require("../models/patients");
+const ConfirmedAppointments = require("../models/confirmedAppointments");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
@@ -30,7 +31,8 @@ exports.getLogin = (req, res) => {
 exports.postLogin = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-
+    // admin@123
+    //admin@gmail.com
     Admin.findOne({ email: email })
         .then((admin) => {
             if (!admin) {
@@ -244,15 +246,34 @@ exports.getVerifiedHospitals = (req, res) => {
 exports.getPatients = (req, res) => {
     Patients.find({})
         .then((patients) => {
-            res.render("adminResults/patientsList", {
-                patients: patients,
-            });
+            res.json(patients);
         })
         .catch((err) => {
             console.log(err);
+            res.status(500).json({ error: 'An error occurred while fetching patients' });
         });
 };
 
+exports.getHospitals = (req, res) => {
+    Hospitals.find({})
+        .then((hospitals) => {
+            res.json(hospitals);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({ error: 'An error occurred while fetching hospitals' });
+        });
+}
+exports.getDoctors = (req, res) => {
+    Doctors.find({})
+        .then((doctors) => {
+            res.json(doctors);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({ error: 'An error occurred while fetching doctors' });
+        });
+}
 exports.postChosen = (req, res) => {
     if (req.body.chosen === "verifyDoctor") {
         return res.redirect("/admin/verifydoctor");
@@ -269,3 +290,56 @@ exports.Logout = (req, res, next) => {
         .status(200)
         .json({ message: "Logged out!!" });
 };
+
+exports.getGraphData = (req, res) => {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+
+    const monthsArray = Array.from({ length: 12 }, (_, i) => ({ month: getMonthName(i + 1), totalAppointments: 0 }));
+
+    function getMonthName(monthNumber) {
+        switch (monthNumber) {
+            case 1: return 'Jan';
+            case 2: return 'Feb';
+            case 3: return 'Mar';
+            case 4: return 'Apr';
+            case 5: return 'May';
+            case 6: return 'Jun';
+            case 7: return 'Jul';
+            case 8: return 'Aug';
+            case 9: return 'Sep';
+            case 10: return 'Oct';
+            case 11: return 'Nov';
+            case 12: return 'Dec';
+            default: return '';
+        }
+    }
+    ConfirmedAppointments.aggregate([
+        {
+            $match: {
+                $expr: {
+                    $eq: [{ $year: { $toDate: "$appointmentDate" } }, currentYear]
+                }
+            }
+        },
+        {
+            $group: {
+                _id: { month: { $month: { $dateFromString: { dateString: "$appointmentDate" } } } },
+                totalAppointments: { $sum: 1 }
+            }
+        }
+    ]).exec().then(result => {
+        let numAppointments = 0;
+        result.forEach(month => {
+            const index = month._id.month - 1;
+            monthsArray[index] = { month: getMonthName(month._id.month), totalAppointments: month.totalAppointments };
+            numAppointments += month.totalAppointments
+        });
+        console.log(monthsArray);
+        return res.status(200).json({ data: monthsArray, total: numAppointments });
+    }).catch(err => {
+        console.error(err);
+        return res.status(500).json("internalServerError")
+    });
+
+}
