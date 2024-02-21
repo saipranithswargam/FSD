@@ -63,3 +63,9 @@
     color: gray;
     margin-bottom: 15px;
 }
+.loader {
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

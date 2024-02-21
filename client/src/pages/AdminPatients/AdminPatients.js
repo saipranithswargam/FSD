@@ -3,60 +3,89 @@ import Sidebar from "../../components/sidebar/sidebar";
 import Navbar from "../../components/navbar/navbar";
 import Chart from "../../components/chart/chart";
 import List from "../../components/table/table";
-
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import axiosInstance from "../../api/axiosInstance";
+import Avatar from "./user.png"
+import DotLoader from "../../components/Loaders/dotLoader";
 const AdminPatients = () => {
+    const [patient, setPatient] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [graphData, setGraphData] = useState([]);
+    const { patientId } = useParams();
+    const fetchUser = async () => {
+        try {
+            setLoading(true);
+            const response = await axiosInstance.get(`admin/patients/${patientId}`);
+            setLoading(false);
+            if (response.status === 200) {
+                console.log(response.data);
+                setPatient(response.data);
+            }
+        } catch (error) {
+            setLoading(false)
+        }
+    }
+    const pullData = (data) => {
+        setGraphData(data);
+    }
+    useEffect(() => {
+        fetchUser();
+    }, [])
     return (
         <div className={styles["patients"]}>
             <Sidebar />
             <div className={styles["patientsContainer"]}>
                 <Navbar />
                 <div className={styles["top"]}>
-                    <div className={styles["left"]}>
-                        <h1 className={styles["title"]}>Patients Information</h1>
-                        <div className={styles["item"]}>
-                            <img
-                                src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                                alt=""
-                                className={styles["itemImg"]}
-                            />
-                            <div className={styles["details"]}>
-                                <h1 className={styles["itemTitle"]}>Jane Doe</h1>
-                                <div className={styles["detailItem"]}>
-                                    <span className={styles["itemKey"]}>Email:</span>
-                                    <span className={styles["itemValue"]}>janedoe@gmail.com</span>
-                                </div>
-                                <div className={styles["detailItem"]}>
-                                    <span className={styles["itemKey"]}>Phone:</span>
-                                    <span className={styles["itemValue"]}>+91 2345 67 89</span>
-                                </div>
-                                <div className={styles["detailItem"]}>
-                                    <span className={styles["itemKey"]}>Address:</span>
-                                    <span className={styles["itemValue"]}>
-                                        630, Gnan Marg , Satyavedu
-                                    </span>
-                                </div>
-                                <div className={styles["detailItem"]}>
-                                    <span className={styles["itemKey"]}>Age:</span>
-                                    <span className={styles["itemValue"]}>65</span>
-                                </div>
-                                <div className={styles["detailItem"]}>
-                                    <span className={styles["itemKey"]}>Recent Disease:</span>
-                                    <span className={styles["itemValue"]}>Common Cold</span>
-                                </div>
-                                <div className={styles["detailItem"]}>
-                                    <span className={styles["itemKey"]}>Last Appointment Date:</span>
-                                    <span className={styles["itemValue"]}>16-02-2024</span>
+                    <div className={`${styles["left"]}`}>
+                        {
+                            loading && <div className={styles.loader}> <DotLoader /> </div>
+                        }
+                        {!loading && <>
+                            <h1 className={styles["title"]}>Patients Information</h1>
+                            <div className={styles["item"]}>
+                                <img
+                                    src={patient?.image === "" ? Avatar : patient?.image}
+                                    alt=""
+                                    className={styles["itemImg"]}
+                                />
+                                <div className={styles["details"]}>
+                                    <h1 className={styles["itemTitle"]}>{patient?.name}</h1>
+                                    <div className={styles["detailItem"]}>
+                                        <span className={styles["itemKey"]}>Email:</span>
+                                        <span className={styles["itemValue"]}>{patient?.email}</span>
+                                    </div>
+                                    <div className={styles["detailItem"]}>
+                                        <span className={styles["itemKey"]}>Phone:</span>
+                                        <span className={styles["itemValue"]}>{patient?.mobileNum}</span>
+                                    </div>
+                                    <div className={styles["detailItem"]}>
+                                        <span className={styles["itemKey"]}>Address:</span>
+                                        <span className={styles["itemValue"]}>
+                                            {`${patient?.city}, ${patient?.state}, ${patient?.pincode}`}
+                                        </span>
+                                    </div>
+                                    <div className={styles["detailItem"]}>
+                                        <span className={styles["itemKey"]}>Age:</span>
+                                        <span className={styles["itemValue"]}>{patient?.age}</span>
+                                    </div>
+                                    <div className={styles["detailItem"]}>
+                                        <span className={styles["itemKey"]}>Gender:</span>
+                                        <span className={styles["itemValue"]}>{patient?.gender}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </>
+                        }
                     </div>
                     <div className={styles["right"]}>
-                        <Chart aspect={3 / 1} title="Jane Doe's Appointments ( Last 1 Year)" />
+                        <Chart aspect={3 / 1} title={`${patient?.name} Confirmed Appointments ( Current Year)`} data={graphData} />
                     </div>
                 </div>
                 <div className={styles["bottom"]}>
                     <h1 className={styles["title"]}>Latest Appointments</h1>
-                    <List />
+                    <List id={patientId} type={"patients"} pullData={pullData} />
                 </div>
             </div>
         </div>

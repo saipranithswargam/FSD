@@ -8,6 +8,7 @@ import List from "../../components/table/table";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import FetchLoader from "../../components/Loaders/fetchLoader";
+import DotLoader from "../../components/Loaders/dotLoader";
 const Admin = () => {
     const [appointmentChartData, setAppointmentChartData] = useState([]);
     const [percentageChange, setPercentageChange] = useState(null);
@@ -57,7 +58,9 @@ const Admin = () => {
             <div className={styles["homeContainer"]}>
                 <Navbar />
                 {
-                    loading && <FetchLoader />
+                    loading && <div className={styles.loader}>
+                        <DotLoader />
+                    </div>
                 }
                 {
                     !loading && <>
@@ -72,12 +75,12 @@ const Admin = () => {
                             />
                             <Chart aspect={2 / 1} title="Appointments Per Month" data={appointmentChartData} />
                         </div>
-                        <div className={styles["listContainer"]}>
+                        {/* <div className={styles["listContainer"]}>
                             <div className={styles["listTitle"]}>
                                 Latest Appointments
                             </div>
                             <List />
-                        </div>
+                        </div> */}
                     </>
                 }
             </div>

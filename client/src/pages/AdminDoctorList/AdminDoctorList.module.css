@@ -5,3 +5,9 @@
 .doctors-list .DoctorslistContainer {
     flex: 6;
 }
+.loader {
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

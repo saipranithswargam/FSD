@@ -30,7 +30,7 @@ const Navigation = () => {
                 <Route path="/">
                     <Route path="" element={<Home />} />
                 </Route>
-                <Route path="/admin/dashboard">
+                <Route path="/admin/dashboard" element={<Protected />}>
                     <Route index element={<Admin />} />
                     <Route path="patients">
                         <Route index element={<AdminPatientList />} />

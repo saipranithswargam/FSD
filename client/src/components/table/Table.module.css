@@ -13,11 +13,18 @@
     padding: 5px;
     border-radius: 5px;
 }
-.table .status.Medicated {
+.table .status.confirmed {
     color: green;
     background-color: rgba(0, 128, 0, 0.151);
 }
-.table .status.Not-Medicated {
-    color: red;
+.table .status.pending {
+    color: goldenrod;
     background-color: rgba(189, 25, 3, 0.103);
+}
+
+.loader {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

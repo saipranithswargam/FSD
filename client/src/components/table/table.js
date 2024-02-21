@@ -6,50 +6,59 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import styles from "./Table.module.css"
+import { useEffect, useState } from "react";
+import axiosInstance from "../../api/axiosInstance";
+import DotLoader from "../Loaders/dotLoader";
 
-const List = () => {
-    const rows = [
-        {
-            id: 1143155,
-            patientName: "John Smith",
-            doctorName: "ABC",
-            appointmentDate: "1 March",
-            disease: "Common Cold",
-            status: "Medicated",
-        },
-        {
-            id: 2235235,
-            patientName: "Michael Doe",
-            doctorName: "XYZ",
-            appointmentDate: "1 March",
-            disease: "Common Cold",
-            status: "Medicated",
-        },
-        {
-            id: 2342353,
-            patientName: "John Smith",
-            doctorName: "Red",
-            appointmentDate: "1 March",
-            disease: "Common Cold",
-            status: "Not-Medicated",
-        },
-        {
-            id: 2357741,
-            patientName: "Jane Smith",
-            doctorName: "Razer",
-            appointmentDate: "1 March",
-            disease: "Common Cold",
-            status: "Medicated",
-        },
-        {
-            id: 2342355,
-            patientName: "Harold Carol",
-            doctorName: "ASUS",
-            appointmentDate: "1 March",
-            disease: "Common Cold",
-            status: "Not-Medicated",
-        },
-    ];
+const List = ({ id, type, pullData }) => {
+    const [rows, setRows] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchAppointments = async () => {
+        try {
+            setLoading(true);
+            const response = await axiosInstance.get(`admin/${type}/appointments/${id}`);
+            setLoading(false);
+            if (response.status === 200) {
+                console.log((response.data));
+                setRows(response.data);
+                const currentYear = new Date().getFullYear();
+                const appointmentsCount = {
+                    "Jan": 0,
+                    "Feb": 0,
+                    "Mar": 0,
+                    "Apr": 0,
+                    "May": 0,
+                    "Jun": 0,
+                    "Jul": 0,
+                    "Aug": 0,
+                    "Sep": 0,
+                    "Oct": 0,
+                    "Nov": 0,
+                    "Dec": 0
+                };
+                response.data.forEach(appointment => {
+                    const appointmentDate = new Date(appointment.appointmentDate);
+                    if (appointmentDate.getFullYear() === currentYear && appointment.status === "confirmed") {
+                        const month = appointmentDate.toLocaleString('default', { month: 'short' });
+                        appointmentsCount[month]++;
+                    }
+                });
+                const result = Object.entries(appointmentsCount).map(([month, totalAppointments]) => ({
+                    month,
+                    totalAppointments
+                }));
+                pullData(result);
+            }
+        } catch (error) {
+            setLoading(false);
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchAppointments();
+    }, []);
 
     return (
         <TableContainer component={Paper} className={styles["table"]}>
@@ -65,7 +74,7 @@ const List = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
+                    {!loading && rows?.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell className={styles["tableCell"]}>{row.id}</TableCell>
                             <TableCell className={styles["tableCell"]}>{row.patientName}</TableCell>
@@ -73,12 +82,15 @@ const List = () => {
                             <TableCell className={styles["tableCell"]}>{row.appointmentDate}</TableCell>
                             <TableCell className={styles["tableCell"]}>{row.disease}</TableCell>
                             <TableCell className={styles["tableCell"]}>
-                                <span className={`${styles.status}  ${row.status}`}>{row.status}</span>
+                                <span className={`${styles.status}  ${styles[row.status]}`}>{row.status}</span>
                             </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
+            {
+                loading && <div className={styles.loader}><DotLoader /></div>
+            }
         </TableContainer>
     );
 };

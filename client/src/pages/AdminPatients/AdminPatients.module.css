@@ -68,3 +68,10 @@
     color: lightgray;
     margin-bottom: 20px;
 }
+
+.loader {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

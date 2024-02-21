@@ -48,5 +48,24 @@ Router.get("/hospitals", isAuth, AdminController.getHospitals);
 
 Router.get("/getGraphData", isAuth, AdminController.getGraphData)
 
+Router.get("/checkAppointmentStatus", isAuth, AdminController.getAppointmentStatus);
+
+Router.delete("/patients/:id", isAuth, AdminController.deletePatient);
+
+Router.delete("/hospitals/:id", isAuth, AdminController.deleteHospital);
+
+Router.delete("/doctors/:id", isAuth, AdminController.deleteDoctor);
+
+Router.get("/patients/:id", isAuth, AdminController.getPatient)
+
+Router.get("/hospitals/:id", isAuth, AdminController.getHospital)
+
+Router.get("/doctors/:id", AdminController.getDoctor)
+
+Router.get("/patients/appointments/:id", isAuth, AdminController.getPatientAppointments)
+
+Router.get("/hospitals/appointments/:id", isAuth, AdminController.getHospitalAppointments)
+
+Router.get("/doctors/appointments/:id", isAuth, AdminController.getDoctorAppointments)
 
 module.exports = Router;

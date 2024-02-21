@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import styles from "./Widget.module.css"
 import { useEffect, useState } from "react";
 import axiosInstance from "../../api/axiosInstance"
-import FetchLoader from "../Loaders/fetchLoader";
+import DotLoader from "../Loaders/dotLoader";
 const Widget = ({ type }) => {
     let data;
     const [fetchedData, setFetchedData] = useState([]);
@@ -98,7 +98,7 @@ const Widget = ({ type }) => {
         setAmount(fetchedData?.length);
         setLastMonth(lastMonthPatients?.length);
         setThisMonth(thisMonthPatients?.length);
-    }, [fetchedData]) 
+    }, [fetchedData])
     useEffect(() => {
         const add = lastMonth === 0 ? 1 : lastMonth;
         const percentage = (Math.abs(thisMonth - lastMonth) / (lastMonth + add)) * 100;
@@ -107,9 +107,9 @@ const Widget = ({ type }) => {
 
     return (
         <>
-            <div className={styles["widget"]}>
+            <div className={`${!loading ? styles.widget : ''} ${loading ? styles.loading : ''}`}>
                 {
-                    loading && <p style={{ textAlign: "center", color: "red" }}>loading...</p>
+                    loading && <DotLoader />
                 }
                 {!loading && <>
                     <div className={styles["left"]}>

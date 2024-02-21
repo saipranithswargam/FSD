@@ -248,8 +248,8 @@ export const userColumnsHospitals = [
         width: 230,
     },
     {
-        field: "contact",
-        headerName: "Contact Number",
+        field: "registrationNumber",
+        headerName: "Registration Number",
         width: 170,
     },
     {

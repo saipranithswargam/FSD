@@ -6,6 +6,7 @@ const ConfirmedAppointments = require("../models/confirmedAppointments");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
+const Appointments = require("../models/appointments");
 let config = {
     service: "gmail",
     auth: {
@@ -254,25 +255,39 @@ exports.getPatients = (req, res) => {
         });
 };
 
-exports.getHospitals = (req, res) => {
-    Hospitals.find({})
-        .then((hospitals) => {
-            res.json(hospitals);
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).json({ error: 'An error occurred while fetching hospitals' });
-        });
+exports.getHospitals = async (req, res) => {
+    try {
+        const hospitals = await Hospitals.find();
+        const formattedHospitals = hospitals.map((hospital, index) => ({
+            id: index + 1,
+            _id: hospital._id,
+            hospitalName: hospital.name,
+            email: hospital.email,
+            registrationNumber: hospital.regNo,
+            status: hospital.specialityDep === "others" ? "not-specialized" : "specialized",
+            contact: hospital.contact,
+            address: `${hospital.city}, ${hospital.state}, ${hospital.pincode}`
+        }));
+        res.status(200).json(formattedHospitals);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 }
-exports.getDoctors = (req, res) => {
-    Doctors.find({})
-        .then((doctors) => {
-            res.json(doctors);
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).json({ error: 'An error occurred while fetching doctors' });
-        });
+exports.getDoctors = async (req, res) => {
+    try {
+        const doctors = await Doctors.find({}).populate("hospitalsWorkingFor");
+        const formattedDoctors = doctors.map((doctor, index) => ({
+            id: index + 1,
+            _id: doctor._id,
+            doctorsName: doctor.name,
+            email: doctor.email,
+            status: doctor.Speciality === "others" ? "not-specialized" : "specialized",
+            associatedHospital: doctor.hospitalsWorkingFor.length > 0 ? doctor.hospitalsWorkingFor[0].name : ""
+        }));
+        return res.status(200).json(formattedDoctors);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 }
 exports.postChosen = (req, res) => {
     if (req.body.chosen === "verifyDoctor") {
@@ -346,30 +361,210 @@ exports.getGraphData = (req, res) => {
 
 exports.getAppointmentStatus = async (req, res) => {
     try {
-        const { patientId } = req.body;
+        const patients = await Patients.find();
 
-        // Check if patient exists
-        const patient = await Patients.findById(patientId);
-        if (!patient) {
-            return res.status(404).json({ message: "Patient not found" });
+        const patientsAppointmentStatus = [];
+        let count = 1;
+        for (const patient of patients) {
+            const appointments = await Appointments.findOne({ patientId: patient._id });
+            const confirmedAppointments = await ConfirmedAppointments.findOne({ patientId: patient._id });
+
+            let appointmentStatus = "Not-Booked";
+            if (confirmedAppointments) {
+                appointmentStatus = "Confirmed";
+            } else if (appointments) {
+                appointmentStatus = "Pending";
+            }
+            patientsAppointmentStatus.push({
+                id: count,
+                _id: patient._id,
+                patientName: patient.name,
+                email: patient.email,
+                age: patient.age,
+                status: appointmentStatus
+            });
+            count++;
         }
-
-        // Check if patient has appointments
-        const appointments = await Appointments.findOne({ patientId });
-        // Check if patient has confirmed appointments
-        const confirmedAppointments = await ConfirmedAppointments.findOne({ patientId });
-
-        // Determine appointment status
-        let appointmentStatus = "Not booked";
-        if (confirmedAppointments) {
-            appointmentStatus = "Confirmed";
-        } else if (appointments) {
-            appointmentStatus = "Pending";
-        }
-
-        res.status(200).json({ appointmentStatus });
+        res.status(200).json(patientsAppointmentStatus);
     } catch (error) {
-        console.error("Error checking appointment status:", error);
+        console.error("Error checking appointment status for all patients:", error);
         res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+exports.deletePatient = async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    // try {
+    //     await Patients.findByIdAndDelete(id);
+    //     res.status(200).json({ "status": "deleted" });
+    // }
+    // catch (error) {
+    //     console.log(error);
+    //     res.status(500).json({ message: "Internal server error" });
+    // }
+    return res.status(200).json("test");
+}
+
+exports.deleteHospital = async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    // try {
+    //     await Hospitals.findByIdAndDelete(id);
+    //     res.status(200).json({ status: "deleted" });
+    // }
+    // catch (error) {
+    //     console.log(error);
+    //     res.status(500).json({ message: "Internal Server Error" })
+    // }
+    return res.status(200).json("test");
+}
+
+exports.deleteDoctor = async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    // try {
+    //     await Doctors.findByIdAndDelete(id);
+    //     res.status(200).json({ status: "deleted" });
+    // }
+    // catch (error) {
+    //     console.log(error);
+    //     res.status(500).json({ message: "Internal Server Error" })
+    // }
+    return res.status(200).json("test");
+}
+
+exports.getPatient = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const patient = await Patients.findById(id);
+        res.status(200).send(patient);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Internal Server Error" })
+    }
+}
+
+exports.getHospital = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const hospital = await Hospitals.findById(id);
+
+        if (!hospital) {
+            return res.status(404).json({ error: "Hospital not found" });
+        }
+
+        const modifiedHospital = {
+            ...hospital.toObject(),
+            specialityDep: hospital.specialityDep === "Others" ? "Not Specified" : hospital.specialityDep
+        };
+
+        res.json(modifiedHospital);
+    } catch (error) {
+        console.error("Error fetching hospital:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+
+}
+
+exports.getDoctor = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const doctor = await Doctors.findById(id);
+
+        if (!doctor) {
+            return res.status(404).json({ error: "Doctor not found" });
+        }
+
+        const modifiedDoctor = {
+            ...doctor.toObject(),
+            Speciality: doctor.Speciality === "Others" ? "Not Specified" : doctor.Speciality
+        };
+
+        res.json(modifiedDoctor);
+    } catch (error) {
+        console.error("Error fetching hospital:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+
+}
+
+exports.getPatientAppointments = async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    try {
+        // Get all appointments for the given id from both collections
+        const appointments = await Appointments.find({ patientId: id }).populate("patientId doctorId");
+        const confirmedAppointments = await ConfirmedAppointments.find({ patientId: id }).populate("patientId doctorId");
+
+        // Combine appointments from both collections
+        const allAppointments = [...appointments, ...confirmedAppointments];
+
+        // Transform appointments to have a unified 'status' field
+        const combinedAppointments = allAppointments.map(appointment => ({
+            id: appointment.id,
+            patientName: appointment.patientId.name,
+            doctorName: appointment.doctorId.name,
+            appointmentDate: appointment.appointmentDate,
+            disease: appointment.diseaseDescription,
+            status: confirmedAppointments.some(confirmedAppt => confirmedAppt.id === appointment.id) ? "confirmed" : "pending"
+        }));
+        res.json(combinedAppointments);
+    } catch (error) {
+        console.error("Error fetching appointments:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+exports.getHospitalAppointments = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const appointments = await Appointments.find({ hospitalId: id }).populate("patientId doctorId");
+        const confirmedAppointments = await ConfirmedAppointments.find({ hospitalId: id }).populate("patientId doctorId");
+
+        const allAppointments = [...appointments, ...confirmedAppointments];
+
+        const combinedAppointments = allAppointments.map(appointment => ({
+            id: appointment.id,
+            patientName: appointment.patientId.name,
+            doctorName: appointment.doctorId.name,
+            appointmentDate: appointment.appointmentDate,
+            disease: appointment.diseaseDescription,
+            status: confirmedAppointments.some(confirmedAppt => confirmedAppt.id === appointment.id) ? "confirmed" : "pending"
+        }));
+        res.json(combinedAppointments);
+    }
+    catch (error) {
+        console.error("Error fetching appointments:", error);
+        res.status(500).json({ error: "Internal server error" });
+
+    }
+}
+
+exports.getDoctorAppointments = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const appointments = await Appointments.find({ doctorId: id }).populate("patientId doctorId");
+        const confirmedAppointments = await ConfirmedAppointments.find({ doctorId: id }).populate("patientId doctorId");
+
+        const allAppointments = [...appointments, ...confirmedAppointments];
+
+        const combinedAppointments = allAppointments.map(appointment => ({
+            id: appointment.id,
+            patientName: appointment.patientId.name,
+            doctorName: appointment.doctorId.name,
+            appointmentDate: appointment.appointmentDate,
+            disease: appointment.diseaseDescription,
+            status: confirmedAppointments.some(confirmedAppt => confirmedAppt.id === appointment.id) ? "confirmed" : "pending"
+        }));
+        res.json(combinedAppointments);
+    }
+    catch (error) {
+        console.error("Error fetching appointments:", error);
+        res.status(500).json({ error: "Internal server error" });
+
     }
 }
