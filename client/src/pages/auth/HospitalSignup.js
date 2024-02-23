@@ -1,13 +1,15 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './HospitalSignup.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 import Tilt from 'react-parallax-tilt';
 import Image from "./HospitalRegister2.jpg"
 import { toast } from "react-toastify";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { userActions } from '../../features/userSlice';
 const HospitalSignup = () => {
-    const user = useAppSelector((state) => state.user);
+    const dispatch = useAppDispatch();
+    let user = useAppSelector((state) => state.user);
     const [isInvalidEmail, setIsValidEmail] = useState(false);
     const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
     const navigate = useNavigate();
@@ -23,14 +25,14 @@ const HospitalSignup = () => {
         city: '',
         pincode: '',
     });
-    const checkPasswordValidity = () => {
-        const isValid = /^(?=.*[A-Z]).{8,}$/.test(formData.password);
-        if (!isValid) {
-            setIsPasswordInvalid(true);
-        } else {
-            setIsPasswordInvalid(false);
-        }
-    }
+    // const checkPasswordValidity = () => {
+    //     const isValid = /^(?=.*[A-Z]).{8,}$/.test(formData.password);
+    //     if (!isValid) {
+    //         setIsPasswordInvalid(true);
+    //     } else {
+    //         setIsPasswordInvalid(false);
+    //     }
+    // }
 
     const checkEmailValidity = (e) => {
         const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
@@ -48,8 +50,9 @@ const HospitalSignup = () => {
         });
     };
     const handleSubmit = async (e) => {
+        console.log(user)
         e.preventDefault();
-        if (isInvalidEmail || isPasswordInvalid) {
+        if (isInvalidEmail) {
             toast.warning("Please Check Validity Of Data Entered!", {
                 position: "top-right",
                 toastId: 5,
@@ -87,6 +90,9 @@ const HospitalSignup = () => {
             });
         }
     }
+    useEffect(()=>{
+        dispatch(userActions.setLocation());
+    },[])
 
     return (
         <div className={styles.main}>
@@ -151,7 +157,7 @@ const HospitalSignup = () => {
                             id="input--password"
                             value={formData.password}
                             required
-                            onBlur={checkPasswordValidity} onFocus={() => { setIsPasswordInvalid(false) }}
+                            // onBlur={checkPasswordValidity} onFocus={() => { setIsPasswordInvalid(false) }}
                             onChange={handleInputChange}
                         />
                     </div>

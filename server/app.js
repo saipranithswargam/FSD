@@ -113,15 +113,20 @@ app.use("/hospitals", hospitalRoutes);
 app.use("/doctors", doctorRoutes);
 app.use("/admin", adminRoutes);
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
 const port = process.env.PORT || 5050;
 
 mongoose
-    // .connect(process.env.MONGO_URI)
-    .connect("mongodb://localhost:27017")
+    .connect(process.env.MONGO_URI)
+    // .connect("mongodb://localhost:27017")
     .then(() => {
-        // const mongoClient = mongoose.connection.getClient();
-        // mongoClient.db().collection('hospitals').createIndex({ location: '2dsphere' });
-        // console.log("database connected");
+        const mongoClient = mongoose.connection.getClient();
+        mongoClient.db().collection('hospitals').createIndex({ location: '2dsphere' });
+        console.log("database connected");
         app.listen(port, () => {
             console.log(`server listening on port ${port}`);
         });

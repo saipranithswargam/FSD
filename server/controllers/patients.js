@@ -325,7 +325,7 @@ exports.getNearByHospitals = async (req, res) => {
                         coordinates: [parseFloat(longitude),
                         parseFloat(latitude),]
                     },
-                    $maxDistance: Number(radius) * 1000,
+                    $maxDistance: (Number(radius) * 1000),
                 }
             },
             specialityDep: speciality

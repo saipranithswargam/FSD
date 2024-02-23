@@ -177,7 +177,7 @@ const PatientSignup = () => {
                   type="password"
                   id="input--password"
                   onChange={handleInputChange}
-                  onBlur={checkPasswordValidity} onFocus={() => { setIsPasswordInvalid(false) }}
+                  // onBlur={checkPasswordValidity} onFocus={() => { setIsPasswordInvalid(false) }}
                   value={formData.password}
                 />
 
