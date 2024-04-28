@@ -3,6 +3,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import styles from "./PatientsRequestedAppointments.module.css"
 import FetchLoader from '../Loaders/fetchLoader';
 import NoData from "../NoData/NoData";
+import ChatButton from "../ChatButton/ChatButton";
 const PatientsRequestedAppointments = ({ type }) => {
     const [appointmentType, setAppointmentType] = useState('');
     const [appointments, setAppointments] = useState([]);
@@ -91,6 +92,7 @@ const PatientsRequestedAppointments = ({ type }) => {
                                     e.preventDefault();
                                     submitCancleAppointment(appointment);
                                 }}>Cancle appointment</button>
+                                {appointmentType === 'confirmendappointments' && <ChatButton unreadCount={2} />}
                             </div>
                         </div>
                     ))

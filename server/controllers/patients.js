@@ -643,77 +643,45 @@ exports.getModify = (req, res) => {
     });
 };
 
-exports.postModify = (req, res) => {
-    let email = req.body.email;
-    if (email === req.patient.email) {
-        const name = req.body.name;
-        const gender = req.body.gender;
-        const age = req.body.age;
-        const height = req.body.height;
-        const weight = req.body.weight;
-        const allergies = req.body.allergies;
-        const bloodGroup = req.body.bloodGroup;
-        const state = req.body.state;
-        const city = req.body.city;
-        const pincode = req.body.pincode;
-        const mobileNumber = req.body.mobileNumber;
-        const maritalStatus = req.body.maritalStatus;
-        Patient.findByIdAndUpdate(req.patient, {
-            name: name,
-            mobileNum: mobileNumber,
-            height: height,
-            weight: weight,
-            state: state,
-            city: city,
-            pincode: pincode,
-            age: age,
-            gender: gender,
-            married: maritalStatus,
-            allergies: allergies,
-        }).then((result) => {
-            return res.redirect("/patients/dashboard");
-        });
+exports.postModify = async (req, res) => {
+    try {
+        const body = req.body;
+        console.log(body);
+        const patient = await Patient.findById(req._id);
+        const hashedPassword = bcrypt.hashSync(body.currentPassword, 12);
+        console.log(patient.password, hashedPassword);
+        if (patient.password !== hashedPassword) {
+            return res.status(400).json({ message: "Incorrect Password" });
+        }
+        const newPassword = body.newPassword;
+        const name = body.name;
+        const mobileNum = body.mobileNumber;
+        const city = body.city;
+        const pincode = body.pincode;
+        const gender = body.gender;
+        if (!newPassword) {
+            patient.name = name;
+            patient.mobileNum = mobileNum;
+            patient.city = city;
+            patient.pincode = pincode;
+            patient.gender = gender;
+            const newPatient = await patient.save();
+            return res.status(200).json(newPatient);
+        }
+        else {
+            const hashedPassword = bcrypt.hashSync(newPassword, 12);
+            patient.name = name;
+            patient.mobileNum = mobileNum;
+            patient.city = city;
+            patient.pincode = pincode;
+            patient.gender = gender;
+            patient.password = hashedPassword;
+            const newPatient = await patient.save();
+            return res.status(200).json(newPatient);
+        }
     }
-    if (email !== req.patient.email) {
-        Patient.findOne({ email: email }).then((patient) => {
-            if (!patient) {
-                const email = req.body.email;
-                const name = req.body.name;
-                const gender = req.body.gender;
-                const age = req.body.age;
-                const height = req.body.height;
-                const weight = req.body.weight;
-                const allergies = req.body.allergies;
-                const state = req.body.state;
-                const city = req.body.city;
-                const pincode = req.body.pincode;
-                const mobileNumber = req.body.mobileNumber;
-                const maritalStatus = req.body.maritalStatus;
-                Patient.findByIdAndUpdate(req.patient, {
-                    email: email,
-                    name: name,
-                    mobileNum: mobileNumber,
-                    height: height,
-                    weight: weight,
-                    state: state,
-                    city: city,
-                    pincode: pincode,
-                    age: age,
-                    gender: gender,
-                    married: maritalStatus,
-                    allergies: allergies,
-                }).then((result) => {
-                    return res.redirect("/patients/dashboard");
-                });
-            }
-            if (patient) {
-                req.flash(
-                    "error",
-                    "Given Email to modify Already Registerd please give another."
-                );
-                res.redirect("/patients/modify");
-            }
-        });
+    catch (error) {
+        return res.status(500).json({ message: "Internal server Error" })
     }
 };
 
@@ -724,8 +692,6 @@ exports.Logout = (req, res, next) => {
         .status(200)
         .json({ message: "Logged out!!" });
 };
-
-
 
 exports.uploadImage = async (req, res) => {
     try {

@@ -17,6 +17,7 @@ const morgan = require('morgan');
 const rfs = require('rotating-file-stream');
 const path = require('path')
 const app = express();
+const bcrypt = require('bcrypt');
 app.use(express.static("public"));
 app.use(express.json({ limit: '50mb' }));
 app.use('/uploads', express.static('uploads'));
@@ -117,15 +118,23 @@ const port = process.env.PORT || 5050;
 
 mongoose
     // .connect(process.env.MONGO_URI)
-    .connect("mongodb://localhost:27017")
+    .connect("mongodb://localhost:27017/fsd")
     .then(() => {
+        // const hashedPassword = bcrypt.hashSync("admin@123", 12);
+        // console.log(hashedPassword);
+        // const admin = new Admin({
+        //     name: "admin",
+        //     email: "admin@gmail.com",
+        //     password: hashedPassword,
+        // })
+        // admin.save();
         // const mongoClient = mongoose.connection.getClient();
         // mongoClient.db().collection('hospitals').createIndex({ location: '2dsphere' });
-        // console.log("database connected");
+        console.log("database connected");
         app.listen(port, () => {
             console.log(`server listening on port ${port}`);
         });
     })
-    .catch((err) => {   
+    .catch((err) => {
         console.log(err);
     });

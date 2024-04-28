@@ -81,8 +81,6 @@ Router.get(
 );
 Router.post("/chosen", isAuth, PatientController.postChosen);
 
-Router.get("/modify", isAuth, PatientController.getModify)
-
 Router.post("/modify", isAuth, PatientController.postModify)
 
 Router.post("/upload", isAuth, imageController.uploadImage, PatientController.uploadImage)

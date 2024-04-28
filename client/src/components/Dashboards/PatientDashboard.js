@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import PatientsRequestedAppointments from "../PatientsRequestedAppointments/PatientsRequestedAppointments";
 import PatientMedicalRecords from "../PatientsMedicalRecords/PatientsMedicalRecords";
+import DotLoader from "../Loaders/dotLoader";
 const PatientDashboard = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
@@ -74,18 +75,19 @@ const PatientDashboard = () => {
     setProfile(false);
     setMedicalRecords(true);
   }
-  const validatePhoneNumber = () => {
-    return false
+  const validatePhoneNumber = (phoneNumber) => {
+    const phonePattern = /^\d{10}$/;
+    return phonePattern.test(phoneNumber);
   };
   const saveChangesHandler = async () => {
-    if (editProfileData.currentPassword.length === 0) {
+    if (editProfileData?.currentPassword.length === 0) {
       toast.warn("Current Password is mandatory !", {
         position: "top-right",
       });
       resetFormData();
       return;
     }
-    if (!validatePhoneNumber()) {
+    if (!validatePhoneNumber(editProfileData?.mobileNumber)) {
       console.log("phoneNumber is invalid please try again !");
       toast.error("Please enter a valid phone number.", {
         position: toast.POSITION.TOP_RIGHT,
@@ -93,6 +95,13 @@ const PatientDashboard = () => {
       });
       resetFormData();
       return;
+    }
+    if (editProfileData?.email !== user.email) {
+      console.log("email cannot be changed !");
+      toast.error("Email cannot be changed", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
     }
     const updatedData = {
       name: editProfileData.name,
@@ -102,14 +111,15 @@ const PatientDashboard = () => {
       pincode: editProfileData.pincode,
       currentPassword: editProfileData.currentPassword,
       newPassword: editProfileData.newPassword,
+      gender: editProfileData.gender,
     };
-    // setLoading(true);
     try {
+      setLoading(true);
       const response = await axiosInstance.post(
-        "/users/updateinfo",
+        "/patients/modify",
         updatedData
       );
-      // setLoading(false);
+      setLoading(false);
       setEditProfile(false);
       console.log(response.data);
       dispatch(userActions.setState(response.data));
@@ -119,7 +129,7 @@ const PatientDashboard = () => {
     } catch (err) {
       console.log(err);
       resetFormData();
-      // setLoading(false);
+      setLoading(false);
       setEditProfile(false);
       toast.error(err.response.data.message, {
         position: "top-right",
@@ -171,7 +181,10 @@ const PatientDashboard = () => {
                 </div>
               )}
             </div>
-            <div className={styles.profileManagement}>
+            {
+              loading && <div><DotLoader /></div>
+            }
+            {!loading && <div className={styles.profileManagement}>
               <div className={styles.InputGroup}>
                 <div className={styles.InputDiv}>
                   <label>Name</label>
@@ -191,7 +204,7 @@ const PatientDashboard = () => {
                   <input
                     type="email"
                     value={editProfileData.email}
-                    disabled={!editProfile}
+                    disabled={true}
                     onChange={(e) =>
                       setEditProfileData({
                         ...editProfileData,
@@ -257,8 +270,6 @@ const PatientDashboard = () => {
                         gender: e.target.value,
                       })
                     } />
-
-
                 </div>
               </div>
               <div className={styles.InputGroup}>
@@ -307,6 +318,7 @@ const PatientDashboard = () => {
                 </div>
               )}
             </div>
+            }
           </div>
         }
         {
