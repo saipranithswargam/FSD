@@ -239,7 +239,7 @@ const DoctorSignup = () => {
                             id="input--password"
                             value={formData.password}
                             required
-                            onBlur={checkPasswordValidity} onFocus={() => { setIsPasswordInvalid(false) }}
+                            // onBlur={checkPasswordValidity} onFocus={() => { setIsPasswordInvalid(false) }}
                             onChange={handleInputChange}
                         />
                     </div>

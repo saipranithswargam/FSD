@@ -102,7 +102,7 @@ const ViewRequestedAppointments = () => {
     return (
         <div>
             <div className={styles.appointmentmain}>
-                {appointments.map((appointment) => (
+                {appointments?.map((appointment) => (
                     <div key={appointment._id} className={styles.appointmentCard}>
                         <p>Doctor: {appointment.doctorId.name}</p>
                         <p>Patient: {appointment.patientId.name}</p>

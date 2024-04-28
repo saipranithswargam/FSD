@@ -395,43 +395,40 @@ exports.getAppointmentStatus = async (req, res) => {
 exports.deletePatient = async (req, res) => {
     const { id } = req.params;
     console.log(id);
-    // try {
-    //     await Patients.findByIdAndDelete(id);
-    //     res.status(200).json({ "status": "deleted" });
-    // }
-    // catch (error) {
-    //     console.log(error);
-    //     res.status(500).json({ message: "Internal server error" });
-    // }
-    return res.status(200).json("test");
+    try {
+        await Patients.findByIdAndDelete(id);
+        res.status(200).json({ "status": "deleted" });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 }
 
 exports.deleteHospital = async (req, res) => {
     const { id } = req.params;
     console.log(id);
-    // try {
-    //     await Hospitals.findByIdAndDelete(id);
-    //     res.status(200).json({ status: "deleted" });
-    // }
-    // catch (error) {
-    //     console.log(error);
-    //     res.status(500).json({ message: "Internal Server Error" })
-    // }
-    return res.status(200).json("test");
+    try {
+        await Hospitals.findByIdAndDelete(id);
+        res.status(200).json({ status: "deleted" });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal Server Error" })
+    }
 }
 
 exports.deleteDoctor = async (req, res) => {
     const { id } = req.params;
     console.log(id);
-    // try {
-    //     await Doctors.findByIdAndDelete(id);
-    //     res.status(200).json({ status: "deleted" });
-    // }
-    // catch (error) {
-    //     console.log(error);
-    //     res.status(500).json({ message: "Internal Server Error" })
-    // }
-    return res.status(200).json("test");
+    try {
+        await Doctors.findByIdAndDelete(id);
+        res.status(200).json({ status: "deleted" });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal Server Error" })
+    }
 }
 
 exports.getPatient = async (req, res) => {
