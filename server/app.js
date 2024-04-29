@@ -30,7 +30,7 @@ const swaggerOptions = {
         description: 'One Single Place for Doctors, Patients and Hospitals',
       },
     },
-    apis: ['./routes/patients.js'  ,'./routes/doctors.js', './routes/hospitals.js'],
+    apis: ['./routes/patients.js'  ,'./routes/doctors.js', './routes/hospitals.js','./routes/admin.js'],
   };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
