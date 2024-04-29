@@ -498,12 +498,19 @@ Router.get("/modify", isAuth, doctorController.getModify);
 
 /**
  * @swagger
- * /doctors/modify:
- *   post:
+ * /doctors/modify/{id}:
+ *   put:
  *     summary: Modify doctor details
  *     tags: [Doctors]
  *     security:
  *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the doctor to modify
  *     requestBody:
  *       required: true
  *       content:
@@ -534,7 +541,8 @@ Router.get("/modify", isAuth, doctorController.getModify);
  *         description: Internal server error
  */
 
-Router.post("/modify", isAuth, doctorController.postModify);
+
+Router.put("/modify/:id", isAuth, doctorController.putModify);
 
 /**
  * @swagger

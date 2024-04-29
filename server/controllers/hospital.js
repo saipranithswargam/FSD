@@ -482,28 +482,31 @@ exports.getmodify = (req, res) => {
     });
 };
 
-exports.postModify = async (req, res) => {
-
+exports.putModify = async (req, res) => {
+    const hospitalId = req.params.id; // Assuming the hospital's ID is passed in the URL
     const body = req.body;
-    console.log(req._id, req.body);
     let user = null;
     try {
-        user = await Hospital.findById(req._id).exec();
+        user = await Hospital.findById(hospitalId).exec();
     } catch (err) {
         return res.status(500).json({ message: "Internal error occurred!" });
+    }
+    if (!user) {
+        return res.status(404).json({ message: "Hospital not found!" });
     }
     user.name = body.name;
     user.mobileNum = body.mobileNumber;
     user.email = body.email;
     user.city = body.city;
     user.petParent = body.petParent;
+
     const passwordCompare = await bcrypt.compare(
         body.currentPassword,
         user.password
     );
     if (!passwordCompare) {
         return res.status(409).json({
-            message: "Wrong password entered : Cannot edit account details!",
+            message: "Wrong password entered: Cannot edit account details!",
         });
     }
     if (body.newPassword && body.newPassword.length > 0) {
@@ -518,6 +521,7 @@ exports.postModify = async (req, res) => {
     const updatedDoc = { ...user._doc, type: "hospitals" };
     return res.status(200).json(updatedDoc);
 };
+
 
 exports.Logout = (req, res, next) => {
     res.clearCookie('chs');

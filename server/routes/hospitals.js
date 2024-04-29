@@ -511,12 +511,19 @@ Router.get("/modify", isAuth, hospitalController.getmodify);
 
 /**
  * @swagger
- * /hospitals/modify:
- *   post:
+ * /hospitals/modify/{id}:
+ *   put:
  *     summary: Modify hospital account details
  *     tags: [Hospitals]
  *     security:
  *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the hospital to modify
  *     requestBody:
  *       required: true
  *       content:
@@ -548,12 +555,19 @@ Router.get("/modify", isAuth, hospitalController.getmodify);
  *     responses:
  *       '200':
  *         description: Hospital account details modified successfully
+ *       '401':
+ *         description: Unauthorized access
+ *       '404':
+ *         description: Hospital not found
+ *       '409':
+ *         description: Wrong password entered
  *       '500':
  *         description: Internal server error
  */
 
 
-Router.post("/modify", isAuth, hospitalController.postModify);
+
+Router.post("/modify/:id", isAuth, hospitalController.putModify);
 
 /**
  * @swagger

@@ -614,12 +614,19 @@ Router.post("/chosen", isAuth, PatientController.postChosen);
 
 /**
  * @swagger
- * /patients/modify:
- *   post:
- *     summary: Modify data
+ * /patients/modify/{id}:
+ *   put:
+ *     summary: Modify patient data
  *     tags: [Patients]
  *     security:
  *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the patient to modify
  *     requestBody:
  *       required: true
  *       content:
@@ -643,14 +650,19 @@ Router.post("/chosen", isAuth, PatientController.postChosen);
  *                 type: string
  *     responses:
  *       '200':
- *         description: Successfully modified data
+ *         description: Successfully modified patient data
+ *       '400':
+ *         description: Incorrect Password
  *       '401':
  *         description: Unauthorized access
+ *       '500':
+ *         description: Internal server Error
  *       '404':
- *         description: Data not found
+ *         description: Patient not found
  */
 
-Router.post("/modify", isAuth, PatientController.postModify)
+
+Router.put("/modify/:id", isAuth, PatientController.putModify)
 
 /**
  * @swagger
