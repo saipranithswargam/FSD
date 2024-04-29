@@ -8,6 +8,15 @@ const imageController = require("../util/image_upload");
 
 const Router = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Hospitals
+ *   description: API endpoints for Hospitals
+ */
+
+
+
 Router.get("/login", hospitalController.getLogin);
 
 Router.post("/login", hospitalController.postLogin);

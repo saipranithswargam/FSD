@@ -93,7 +93,7 @@ Router.get("/logout", isAuth, PatientController.Logout);
  *     security:
  *       - cookieAuth: []
  *     requestBody:
- *       required: true
+ *       required: false
  *       content:
  *         application/json:
  *           schema:
@@ -147,7 +147,9 @@ Router.get("/medicalrecords", isAuth, PatientController.getMedicalRecords);
  *           schema:
  *             type: object
  *             properties:
- *               key:
+ *               hospital:
+ *                 type: string
+ *               doctor:
  *                 type: string
  *     responses:
  *       '200':
@@ -247,7 +249,9 @@ Router.get(
  *           schema:
  *             type: object
  *             properties:
- *               key:
+ *               location:
+ *                 type: string
+ *               speciality:
  *                 type: string
  *     responses:
  *       '200':
@@ -370,8 +374,21 @@ Router.get(
  *           schema:
  *             type: object
  *             properties:
- *               key:
+ *               hospitalId:
  *                 type: string
+ *               doctorId:
+ *                 type: string
+ *               appointmentDate:
+ *                 type: string
+ *               appointmentTime:
+ *                 type: string
+ *               diseaseDescription:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *               patientId:
+ *                 type: string
+ *  
  *     responses:
  *       '200':
  *         description: Successfully booked appointment
@@ -392,6 +409,16 @@ Router.post("/bookdoctor", isAuth, PatientController.postBookDoctor);
  *     tags: [Patients]
  *     security:
  *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               type:
+ *                 type: string
+ *      
  *     responses:
  *       '200':
  *         description: Successfully canceled appointment
@@ -497,7 +524,7 @@ Router.get("/rate/:hospitalId", isAuth, PatientController.getRating);
  *           schema:
  *             type: object
  *             properties:
- *               key:
+ *               type:
  *                 type: string
  *     responses:
  *       '200':
@@ -572,7 +599,7 @@ Router.get(
  *           schema:
  *             type: object
  *             properties:
- *               key:
+ *               chosen:
  *                 type: string
  *     responses:
  *       '200':
@@ -600,7 +627,19 @@ Router.post("/chosen", isAuth, PatientController.postChosen);
  *           schema:
  *             type: object
  *             properties:
- *               key:
+ *               currentPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               mobileNumber:
+ *                 type: string
+ *               city:
+ *                 type: string
+ *               pincode:
+ *                 type: string
+ *               gender:
  *                 type: string
  *     responses:
  *       '200':
@@ -622,7 +661,7 @@ Router.post("/modify", isAuth, PatientController.postModify)
  *     security:
  *       - cookieAuth: []
  *     requestBody:
- *       required: true
+ *       required: false
  *       content:
  *         multipart/form-data:
  *           schema:
