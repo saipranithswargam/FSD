@@ -3,7 +3,9 @@ name: Node.JS CI/CD
 
 on:
   push:
-    branches: [master]
+    paths:
+    - 'server/**'
+    branches: ["master"]
 jobs:
 
   test:
