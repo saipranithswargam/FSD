@@ -50,7 +50,6 @@ const HospitalSignup = () => {
         });
     };
     const handleSubmit = async (e) => {
-        console.log(user)
         e.preventDefault();
         if (isInvalidEmail) {
             toast.warning("Please Check Validity Of Data Entered!", {

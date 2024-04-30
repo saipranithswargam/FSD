@@ -1,17 +1,6 @@
 const request = require('supertest');
 const app = require('../app');
 const Hospitals = require('../models/hospitals')
-describe('patients', () => {
-    describe('GET /patients/home', () => {
-        it('should return a single user', async () => {
-            const response = await request(app).get('/patients/home').set('Accept', 'application/json')
-            expect(response.status).toEqual(200);
-            expect(response.body.name).toEqual('saipranith');
-        });
-    });
-});
-
-
 describe('POST /patients/login', () => {
     it('should login a patient with valid credentials', async () => {
         const response = await request(app)

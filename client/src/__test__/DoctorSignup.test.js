@@ -7,8 +7,9 @@ import { act } from 'react-dom/test-utils';
 
 describe('DoctorSignup Component', () => {
     it('submits the form and redirects to login page after successful registration', async () => {
+        global.fetch = jest.fn();
         // eslint-disable-next-line testing-library/no-unnecessary-act
-        await act(async() => render(<Router><DoctorSignup /></Router>))
+        await act(async () => render(<Router><DoctorSignup /></Router>))
         const nameInput = screen.getByPlaceholderText('Name');
         fireEvent.change(nameInput, { target: { value: 'saipranith' } });
         expect(nameInput.value).toBe('saipranith');
@@ -61,6 +62,12 @@ describe('DoctorSignup Component', () => {
 
         fireEvent.change(passwordInput, { target: { value: 'password123' } });
         expect(passwordInput.value).toBe('password123');
+
+
+        fireEvent.submit(screen.getByText('Submit'));
+        await waitFor(() => {
+            expect(fetch).toHaveBeenCalledTimes(1); 
+        });
 
     });
 });

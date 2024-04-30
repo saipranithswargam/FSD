@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, screen, act } from '@testing-library/react';
+import { render, fireEvent, screen, act, waitFor } from '@testing-library/react';
 import { MemoryRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureTestStore } from '../app/store';
@@ -8,10 +8,11 @@ import HospitalSignup from '../pages/auth/HospitalSignup';
 
 describe('HospitalSignup Component', () => {
     it('submits the form and redirects to login page after successful registration', async () => {
+        global.fetch = jest.fn();
         // eslint-disable-next-line testing-library/no-unnecessary-act
         const store = configureTestStore();
         // eslint-disable-next-line testing-library/no-unnecessary-act
-        act(()=>render(<Provider store={store}><Router><HospitalSignup /></Router></Provider>))
+        act(() => render(<Provider store={store}><Router><HospitalSignup /></Router></Provider>))
         const nameInput = screen.getByPlaceholderText('Hospital Name');
         fireEvent.change(nameInput, { target: { value: 'Hospital ABC' } });
         expect(nameInput.value).toBe('Hospital ABC');
@@ -39,5 +40,11 @@ describe('HospitalSignup Component', () => {
         const pincodeInput = screen.getByPlaceholderText('Pincode');
         fireEvent.change(pincodeInput, { target: { value: '500001' } });
         expect(pincodeInput.value).toBe('500001');
+
+        fireEvent.submit(screen.getByText('Submit'));
+        await waitFor(() => {
+            expect(fetch).toHaveBeenCalledTimes(1);
+        });
+
     });
 });
