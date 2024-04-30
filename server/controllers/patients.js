@@ -645,7 +645,7 @@ exports.getModify = (req, res) => {
 
 exports.putModify = async (req, res) => {
     try {
-        const patientId = req.params.id;
+        const patientId = req._id;
         const body = req.body;
         console.log(body);
         const patient = await Patient.findById(patientId);

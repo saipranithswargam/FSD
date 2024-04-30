@@ -7,14 +7,6 @@ const isAuth = require("../middleware/verify");
 const PatientController = require("../controllers/patients");
 
 const imageController = require("../util/image_upload");
-
-const HomeController = require("../controllers/home")
-
-Router.get('/home', HomeController.getHome)
-
-const HomeController = require("../controllers/home")
-
-Router.get('/home', HomeController.getHome)
 /**
  * @swagger
  * tags:
@@ -669,7 +661,7 @@ Router.post("/chosen", isAuth, PatientController.postChosen);
  */
 
 
-Router.put("/modify/:id", isAuth, PatientController.putModify)
+Router.post("/modify", isAuth, PatientController.putModify)
 
 /**
  * @swagger

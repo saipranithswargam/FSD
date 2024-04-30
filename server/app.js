@@ -50,7 +50,7 @@ app.use(
             "http://127.0.0.1:5500",
             "*",
         ],
-        methods: ["POST", "GET", "HEAD", "PUT", "DELETE"],
+        methods: ["POST", "GET", "HEAD", "PUT", "DELETE","PATCH"],
         credentials: true,
     })
 );
@@ -159,12 +159,12 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 5050;
 let server;
 mongoose
-    // .connect(process.env.MONGO_URI)
-    .connect("mongodb://localhost:27017")
+    .connect(process.env.MONGO_URI)
+    // .connect("mongodb://localhost:27017")
     .then(() => {
-        // const mongoClient = mongoose.connection.getClient();
-        // mongoClient.db().collection('hospitals').createIndex({ location: '2dsphere' });
-        // console.log("database connected");
+        const mongoClient = mongoose.connection.getClient();
+        mongoClient.db().collection('hospitals').createIndex({ location: '2dsphere' });
+        console.log("database connected");
     })
     .catch((err) => {
         console.log(err);

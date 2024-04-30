@@ -115,7 +115,7 @@ const PatientDashboard = () => {
     };
     try {
       setLoading(true);
-      const response = await axiosInstance.post(
+      const response = await axiosInstance.put(
         "/patients/modify",
         updatedData
       );
