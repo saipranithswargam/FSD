@@ -1,16 +1,9 @@
 name: React Test
-
 on:
   push:
     paths:
     - 'client/**'
-    branches:
-    - main
-  pull_request:
-    paths:
-    - 'client/**'
-    branches:
-    - main
+    branches: ["master"]
 
 jobs:
   test:
