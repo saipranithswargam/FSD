@@ -4,7 +4,7 @@
     "description": "FSSD college Project",
     "main": "index.js",
     "scripts": {
-        "test": "jasmine",
+        "test": "jest --reporters=default --reporters=jest-html-reporter",
         "start": "node app.js",
         "dev": "nodemon app.js"
     },
@@ -42,13 +42,18 @@
     },
     "devDependencies": {
         "@types/jasmine": "^5.1.4",
+        "babel-cli": "^6.26.0",
+        "babel-preset-env": "^1.7.0",
         "chai": "^5.1.0",
         "chai-http": "^4.4.0",
         "jasmine": "^5.1.0",
         "jasmine-expect": "^5.0.0",
         "jasmine-spec-reporter": "^7.0.0",
+        "jest": "^29.7.0",
+        "jest-html-reporter": "^3.10.2",
         "mocha": "^10.4.0",
         "nodemon": "^2.0.20",
+        "superagent": "^9.0.2",
         "supertest": "^7.0.0"
     }
 }
