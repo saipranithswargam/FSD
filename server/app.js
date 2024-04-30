@@ -168,8 +168,8 @@ app.get("/", (req, res) => {
 const port = process.env.PORT || 5050;
 let server;
 mongoose
-    // .connect(process.env.MONGO_URI)
-    .connect("mongodb://localhost:27017")
+    .connect(process.env.MONGO_URI)
+    // .connect("mongodb://localhost:27017")
     .then(() => {
         const mongoClient = mongoose.connection.getClient();
         mongoClient.db().collection('hospitals').createIndex({ location: '2dsphere' });
