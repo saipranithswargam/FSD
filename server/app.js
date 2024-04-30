@@ -20,7 +20,6 @@ const app = express();
 const bcrypt = require('bcrypt');
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
-
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
@@ -37,8 +36,10 @@ const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-const cache = require('./middleware/cache');
-const cacheClient = require('./cacheClient/redis-client')
+const cache = require('./middleware/node-cache');
+const cacheClient = require("./cacheClient/node-cache-client")
+// const cache = require('./middleware/cache');
+// const cacheClient = require('./cacheClient/redis-client')
 app.use(express.static("public"));
 app.use(express.json({ limit: '50mb' }));
 app.use('/uploads', express.static('uploads'));
@@ -74,10 +75,11 @@ app.get("/check", verify, cache, async (req, res) => {
             }
             patients.type = "patients";
             var modified_patients = { ...patients._doc, type: "patients" };
-            await cacheClient.set(req._id, JSON.stringify(modified_patients));
-            await cacheClient.expire(req._id, 1800);
+            cacheClient.set(req._id, JSON.stringify(modified_patients), 1800)
+            // await cacheClient.set(req._id, JSON.stringify(modified_patients));
+            // await cacheClient.expire(req._id, 1800);
             const value = await cacheClient.get(req._id);
-            console.log("value in redis", value);
+            console.log("value in cache", value);
             return res.status(200).json(modified_patients);
         }
         catch (err) {
@@ -95,9 +97,10 @@ app.get("/check", verify, cache, async (req, res) => {
                 });
             }
             var modified_user = { ...user._doc, type: "doctors" };
-            await cacheClient.set(req._id, JSON.stringify(modified_patients));
-            await cacheClient.expire(req._id, 1800);
-            await cacheClient.expire(req._id, 1800);
+            cacheClient.set(req._id, JSON.stringify(modified_user), 1800)
+            // await cacheClient.set(req._id, JSON.stringify(modified_patients));
+            // await cacheClient.expire(req._id, 1800);
+            // await cacheClient.expire(req._id, 1800);
             const value = await cacheClient.get(req._id);
             console.log("value in redis", value);
             return res.status(200).json(modified_user);
@@ -115,9 +118,10 @@ app.get("/check", verify, cache, async (req, res) => {
                 });
             }
             var modified_hospital = { ...hospital._doc, type: "hospitals" };
-            await cacheClient.set(req._id, JSON.stringify(modified_patients));
-            await cacheClient.expire(req._id, 1800);
-            await cacheClient.expire(req._id, 1800);
+            cacheClient.set(req._id, JSON.stringify(modified_hospital), 1800)
+            // await cacheClient.set(req._id, JSON.stringify(modified_patients));
+            // await cacheClient.expire(req._id, 1800);
+            // await cacheClient.expire(req._id, 1800);
             const value = await cacheClient.get(req._id);
             console.log("value in redis", value);
             return res.status(200).json(modified_hospital);
@@ -135,9 +139,10 @@ app.get("/check", verify, cache, async (req, res) => {
                 });
             }
             var modified_admin = { ...admin._doc, type: "admin" };
-            await cacheClient.set(req._id, JSON.stringify(modified_patients));
-            await cacheClient.expire(req._id, 1800);
-            await cacheClient.expire(req._id, 1800);
+            cacheClient.set(req._id, JSON.stringify(modified_admin), 1800)
+            // await cacheClient.set(req._id, JSON.stringify(modified_patients));
+            // await cacheClient.expire(req._id, 1800);
+            // await cacheClient.expire(req._id, 1800);
             const value = await cacheClient.get(req._id);
             console.log("value in redis", value);
             return res.status(200).json(modified_admin);
@@ -163,8 +168,8 @@ app.get("/", (req, res) => {
 const port = process.env.PORT || 5050;
 let server;
 mongoose
-    .connect(process.env.MONGO_URI)
-    // .connect("mongodb://localhost:27017")
+    // .connect(process.env.MONGO_URI)
+    .connect("mongodb://localhost:27017")
     .then(() => {
         const mongoClient = mongoose.connection.getClient();
         mongoClient.db().collection('hospitals').createIndex({ location: '2dsphere' });
