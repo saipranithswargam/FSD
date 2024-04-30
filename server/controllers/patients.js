@@ -643,11 +643,12 @@ exports.getModify = (req, res) => {
     });
 };
 
-exports.postModify = async (req, res) => {
+exports.putModify = async (req, res) => {
     try {
+        const patientId = req.params.id;
         const body = req.body;
         console.log(body);
-        const patient = await Patient.findById(req._id);
+        const patient = await Patient.findById(patientId);
         const hashedPassword = bcrypt.hashSync(body.currentPassword, 12);
         console.log(patient.password, hashedPassword);
         if (patient.password !== hashedPassword) {

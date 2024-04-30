@@ -440,15 +440,18 @@ exports.getModify = (req, res) => {
     });
 };
 
-exports.postModify = async (req, res) => {
+exports.putModify = async (req, res) => {
     console.log(req.body);
-    let email = req.body.email;
+    const doctorId = req.params.id; // Assuming the doctor's ID is passed in the URL
     const body = req.body;
     let user = null;
     try {
-        user = await Doctor.findById(req._id).exec();
+        user = await Doctor.findById(doctorId).exec();
     } catch (err) {
         return res.status(500).json({ message: "Internal error occurred!" });
+    }
+    if (!user) {
+        return res.status(404).json({ message: "Doctor not found!" });
     }
     user.name = body.name;
     user.mobileNum = body.mobileNumber;
@@ -476,6 +479,7 @@ exports.postModify = async (req, res) => {
     const updatedDoc = { ...user._doc, type: "doctors" };
     return res.status(200).json(updatedDoc);
 };
+
 
 exports.Logout = (req, res, next) => {
     res.clearCookie('chs');

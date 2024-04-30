@@ -18,6 +18,25 @@ const rfs = require('rotating-file-stream');
 const path = require('path')
 const app = express();
 const bcrypt = require('bcrypt');
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
+
+const swaggerOptions = {
+    definition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'CHS (Centralized Healthcare System)',
+        version: '1.0.0',
+        description: 'One Single Place for Doctors, Patients and Hospitals',
+      },
+    },
+    apis: ['./routes/patients.js'  ,'./routes/doctors.js', './routes/hospitals.js','./routes/admin.js'],
+  };
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 const cache = require('./middleware/cache');
 const cacheClient = require('./cacheClient/redis-client')
 app.use(express.static("public"));
