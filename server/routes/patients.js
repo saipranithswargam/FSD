@@ -8,6 +8,10 @@ const PatientController = require("../controllers/patients");
 
 const imageController = require("../util/image_upload");
 
+const HomeController = require("../controllers/home")
+
+Router.get('/home', HomeController.getHome)
+
 Router.post("/login", PatientController.postLogin);
 
 Router.post("/register", PatientController.postRegister);

@@ -5,7 +5,6 @@ import { useAppDispatch } from "./app/hooks";
 import { userActions } from "./features/userSlice";
 import Navigation from "./components/Navigation/Navigation";
 import PageLoader from "./components/Loaders/PageLoader";
-import Upload from "./Upload";
 function App() {
     const [screenLoad, setScreenLoad] = useState(true);
     const navigate = useNavigate();
@@ -84,7 +83,6 @@ function App() {
         getUserData();
         getUserLocation();
     }, []);
-    // return <Upload />
     return screenLoad ? <PageLoader /> : <Navigation />;
 }
 

@@ -45,14 +45,16 @@ const FrontPolyline = styled(Polyline)`
 `;
 
 const PageLoader = () => {
-    return (
-        <Container>
-            <Svg>
-                <BackPolyline points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24" id="back" />
-                <FrontPolyline points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24" id="front" />
-            </Svg>
-        </Container>
-    );
+  return (
+    <div data-testid="page-loader" >
+      <Container>
+        <Svg>
+          <BackPolyline points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24" id="back" />
+          <FrontPolyline points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24" id="front" />
+        </Svg>
+      </Container>
+    </div>
+  );
 };
 
 export default PageLoader;

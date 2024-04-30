@@ -18,6 +18,8 @@ const rfs = require('rotating-file-stream');
 const path = require('path')
 const app = express();
 const bcrypt = require('bcrypt');
+const cache = require('./middleware/cache');
+const cacheClient = require('./cacheClient/redis-client')
 app.use(express.static("public"));
 app.use(express.json({ limit: '50mb' }));
 app.use('/uploads', express.static('uploads'));
@@ -41,12 +43,11 @@ var accessLogStream = rfs.createStream("CHS", { interval: '2h', path: path.join(
 
 app.use(morgan('combined', { stream: accessLogStream }))
 
-app.get("/check", verify, async (req, res) => {
+app.get("/check", verify, cache, async (req, res) => {
     if (req._type === "patients") {
         let patients = null;
         try {
             patients = await Patients.findOne({ _id: req._id });
-            console.log(patients);
             if (!patients) {
                 return res.status(404).json({
                     message: "User Not Found",
@@ -54,9 +55,14 @@ app.get("/check", verify, async (req, res) => {
             }
             patients.type = "patients";
             var modified_patients = { ...patients._doc, type: "patients" };
+            await cacheClient.set(req._id, JSON.stringify(modified_patients));
+            await cacheClient.expire(req._id, 1800);
+            const value = await cacheClient.get(req._id);
+            console.log("value in redis", value);
             return res.status(200).json(modified_patients);
         }
-        catch {
+        catch (err) {
+            console.log(err);
             return res.status(400).send('error finding patients!');
         }
     }
@@ -70,7 +76,11 @@ app.get("/check", verify, async (req, res) => {
                 });
             }
             var modified_user = { ...user._doc, type: "doctors" };
-            console.log(modified_user);
+            await cacheClient.set(req._id, JSON.stringify(modified_patients));
+            await cacheClient.expire(req._id, 1800);
+            await cacheClient.expire(req._id, 1800);
+            const value = await cacheClient.get(req._id);
+            console.log("value in redis", value);
             return res.status(200).json(modified_user);
         } catch {
             return res.status(400).send('error finding user!')
@@ -86,7 +96,11 @@ app.get("/check", verify, async (req, res) => {
                 });
             }
             var modified_hospital = { ...hospital._doc, type: "hospitals" };
-            console.log(modified_hospital);
+            await cacheClient.set(req._id, JSON.stringify(modified_patients));
+            await cacheClient.expire(req._id, 1800);
+            await cacheClient.expire(req._id, 1800);
+            const value = await cacheClient.get(req._id);
+            console.log("value in redis", value);
             return res.status(200).json(modified_hospital);
         } catch {
             return res.status(400).send('error finding hospital!')
@@ -102,7 +116,11 @@ app.get("/check", verify, async (req, res) => {
                 });
             }
             var modified_admin = { ...admin._doc, type: "admin" };
-            console.log(modified_admin);
+            await cacheClient.set(req._id, JSON.stringify(modified_patients));
+            await cacheClient.expire(req._id, 1800);
+            await cacheClient.expire(req._id, 1800);
+            const value = await cacheClient.get(req._id);
+            console.log("value in redis", value);
             return res.status(200).json(modified_admin);
         } catch {
             return res.status(400).send('error finding hospital!')
@@ -120,18 +138,19 @@ app.use((err, req, res, next) => {
 });
 
 const port = process.env.PORT || 5050;
-
+let server;
 mongoose
-    .connect(process.env.MONGO_URI)
-    // .connect("mongodb://localhost:27017")
+    // .connect(process.env.MONGO_URI)
+    .connect("mongodb://localhost:27017")
     .then(() => {
         // const mongoClient = mongoose.connection.getClient();
         // mongoClient.db().collection('hospitals').createIndex({ location: '2dsphere' });
         // console.log("database connected");
-        app.listen(port, () => {
-            console.log(`server listening on port ${port}`);
-        });
     })
     .catch((err) => {
         console.log(err);
     });
+server = app.listen(port, () => {
+    console.log(`server listening on port ${port}`);
+});
+module.exports = server;

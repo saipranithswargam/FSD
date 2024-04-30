@@ -13,4 +13,11 @@ export const store = configureStore({
         ]),
 });
 
+export const configureTestStore = () =>
+  configureStore({
+    reducer: {
+      user: userReducer,
+    },
+  });
+
 export default store;

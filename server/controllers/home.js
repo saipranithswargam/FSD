@@ -3,5 +3,5 @@ exports.getHome = (req, res) => {
         name: "saipranith",
         email: "saipranithswargam",
     };
-    res.status(200).json({ object });
+    res.status(200).json(object);
 };

@@ -131,7 +131,7 @@ const PatientSignup = () => {
                 <input placeholder="Allergies Enter ',' separated" name="allergies" className={styles["full-width"]} onChange={handleInputChange} value={formData.allergies} />
               </div>
               <div className={`${styles["input-group"]} ${styles["float-left"]}`}>
-                <label className={styles["on-top"]}>Blood Group:</label>
+                <label className={styles["on-top"]} htmlFor="bloodGroup">Blood Group:</label>
                 <select name="bloodGroup" onChange={handleInputChange} value={formData.bloodGroup}>
                   <option>A Positive</option>
                   <option>A Negative</option>

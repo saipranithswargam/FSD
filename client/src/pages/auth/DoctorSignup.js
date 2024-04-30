@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Image from "./DoctorRegister.svg";
 import Tilt from 'react-parallax-tilt';
 import { toast } from "react-toastify";
+import { Router } from 'react-router-dom';
 const DoctorSignup = () => {
     const [isInvalidEmail, setIsValidEmail] = useState(false);
     const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
@@ -168,12 +169,12 @@ const DoctorSignup = () => {
                         />
                     </div>
                     <div className={`${styles["input-group"]} ${styles["float-left"]}`}>
-                        <label className={styles["on-top"]}>Specialty</label>
-                        <select name="specialty" onChange={handleInputChange}>
+                        <label className={styles["on-top"]} htmlFor="doctor-speciality" >Specialty</label>
+                        <select name="specialty" id='doctor-speciality' onChange={handleInputChange} data-testid='doctor_speciality'>
                             <option>Dermatologist</option>
                             <option>Gastroenterologist</option>
                             <option>Oncologist</option>
-                            <option>Orthopedic</option>
+                            <option>Orthopedic</option> 
                             <option>ENT</option>
                             <option>Ophthalmologist</option>
                             <option>Other</option>

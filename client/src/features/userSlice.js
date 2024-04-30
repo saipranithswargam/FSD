@@ -38,9 +38,8 @@ const userSlice = createSlice({
             state.name = action.payload;
         },
         setLocation: (state, action) => {
-            console.log("setting location");
             state.latitude =  15.4859;
-            // state.latitude = action.payload.latitude;
+            // state.latitude = action.payload.latitude;a
             state.longitude = 79.0758;
             // state.longitude = action.payload.longitude;
         },
