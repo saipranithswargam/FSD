@@ -23,15 +23,15 @@ const swaggerJsdoc = require("swagger-jsdoc");
 
 const swaggerOptions = {
     definition: {
-      openapi: '3.0.0',
-      info: {
-        title: 'CHS (Centralized Healthcare System)',
-        version: '1.0.0',
-        description: 'One Single Place for Doctors, Patients and Hospitals',
-      },
+        openapi: '3.0.0',
+        info: {
+            title: 'CHS (Centralized Healthcare System)',
+            version: '1.0.0',
+            description: 'One Single Place for Doctors, Patients and Hospitals',
+        },
     },
-    apis: ['./routes/patients.js'  ,'./routes/doctors.js', './routes/hospitals.js','./routes/admin.js'],
-  };
+    apis: ['./routes/patients.js', './routes/doctors.js', './routes/hospitals.js', './routes/admin.js'],
+};
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
@@ -50,7 +50,7 @@ app.use(
             "http://127.0.0.1:5500",
             "*",
         ],
-        methods: ["POST", "GET", "HEAD", "PUT", "DELETE","PATCH"],
+        methods: ["POST", "GET", "HEAD", "PUT", "DELETE", "PATCH"],
         credentials: true,
     })
 );
@@ -155,6 +155,10 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
 });
+
+app.get("/", (req, res) => {
+    res.send("api is live")
+})
 
 const port = process.env.PORT || 5050;
 let server;
