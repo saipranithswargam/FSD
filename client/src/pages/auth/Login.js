@@ -129,6 +129,9 @@ const Login = () => {
                             <div className={styles.register}>
                                 <p>Don't Have an Account ? </p>
                                 <Link to={`/auth/${route}`} style={{ fontSize: "1rem" }} >Register Here</Link>
+                                <p>
+                                    <Link to={`/forgotPassword/${userType}`}>Forgot Password</Link>
+                                </p>
                             </div>
                         }
                     </form>

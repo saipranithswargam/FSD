@@ -597,4 +597,8 @@ Router.post("/modify/:id", isAuth, hospitalController.putModify);
 
 Router.post("/upload", isAuth, imageController.uploadImage, hospitalController.uploadImage)
 
+Router.post("/forgot-password", hospitalController.forgotPassword);
+
+Router.post("/reset-password", hospitalController.resetpassword)
+
 module.exports = Router;

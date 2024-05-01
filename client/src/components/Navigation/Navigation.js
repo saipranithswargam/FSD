@@ -21,6 +21,8 @@ import AdminDoctorsList from "../../pages/AdminDoctorList/AdminDoctorList";
 import AdminDoctors from "../../pages/AdminDoctors/AdminDoctors";
 import AdminHospitalList from "../../pages/AdminHospitalList/AdminHospitalList";
 import AdminHospital from "../../pages/AdminHospital/AdminHospital";
+import ForgotPassword from "../ForgotPassword/ForgotPassword";
+import ResetPassword from "../ResetPassword/ResetPassword";
 const Navigation = () => {
     const user = useAppSelector((state) => state.user);
     return (
@@ -89,6 +91,11 @@ const Navigation = () => {
                 </Route>
 
                 <Route path="/page-not-found" element={<PageNotFound />} />
+
+                <Route path="/forgotPassword" element={<AuthProtected />}>
+                    <Route path=":type" element={<ForgotPassword />} />
+                </Route>
+                <Route path="/reset-password/:type/:token" element={<ResetPassword />} />
 
             </Routes>
         </>

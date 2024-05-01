@@ -553,3 +553,55 @@ exports.uploadImage = async (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+exports.resetpassword = async (req, res) => {
+    const { token, newPassword } = req.body;
+    try {
+
+        const decoded = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
+        const userEmail = decoded.email;
+
+        const user = await Hospital.findOne({ email: userEmail });
+
+        if (!user) {
+            return res.status(404).json('User not found');
+        }
+
+        const hashedPassword = bcrypt.hashSync(newPassword, 12);
+
+        user.password = hashedPassword;
+
+        await user.save();
+
+        return res.status(200).json('Password reset successfully');
+    } catch (error) {
+        console.log(error);
+        return res.status(401).json('Invalid or expired token');
+    }
+}
+
+exports.forgotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    const user = await Hospital.findOne({ email: email });
+    if (!user) {
+        return res.status(401).json({ message: "No user found with the given email" });
+    }
+    const token = jwt.sign({ email }, process.env.TOKEN_SECRET_KEY, { expiresIn: '1h' });
+    const mailOptions = {
+        from: "testingnode061229@gmail.com",
+        to: "saipranithswargam@gmail.com",
+        subject: 'Password Reset Request',
+        text: `To reset your password, click on the following link: https://centralisedhealthcare.vercel.app/reset-password/hospitals/${token}`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+            res.status(500).send('Error sending email');
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.status(200).send('Email sent successfully');
+        }
+    });
+}

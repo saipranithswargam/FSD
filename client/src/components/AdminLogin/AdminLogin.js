@@ -10,7 +10,6 @@ const AdminLogin = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Create a data object with the form input values
         const data = {
             email,
             password,
