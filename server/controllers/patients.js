@@ -594,59 +594,32 @@ exports.getMedicalRecord = (req, res) => {
             pdfDoc.fontSize(28).text("Centralized Healthcare System", {
                 bold: true,
                 align: "center",
+                underline: true
             });
 
             // Hospital name
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Hospital Name:", { bold: true });
-            pdfDoc.fontSize(12).text(record.hospitalId.name, {
-                underline: true,
-                align: "center",
-                bold: true,
-            });
+            pdfDoc.fontSize(18).text("Hospital Name:" + record.hospitalId.name, { bold: true });
 
             // Doctor name
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Doctor Name:", { bold: true });
-            pdfDoc.fontSize(12).text(record.doctorId.name, {
-                underline: true,
-                align: "center",
-                bold: true,
-            });
+            pdfDoc.fontSize(18).text("Doctor Name:" + record.doctorId.name, { bold: true });
 
             // Patient name
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Patient Name:", { bold: true });
-            pdfDoc.fontSize(12).text(record.patientId.name, {
-                underline: true,
-                align: "center",
-                bold: true,
-            });
+            pdfDoc.fontSize(18).text("Patient Name:" + record.patientId.name, { bold: true });
 
             // Date
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Date:", { bold: true });
-            pdfDoc.fontSize(12).text(record.date, {
-                underline: true,
-                align: "center",
-                bold: true,
-            });
+            pdfDoc.fontSize(18).text("Date:", + record.date, { bold: true });
 
             // Blood Pressure
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Blood Pressure:", { bold: true });
-            pdfDoc.fontSize(12).text(record.bloodPressure, {
-                align: "center",
-                bold: true,
-            });
+            pdfDoc.fontSize(18).text("Blood Pressure:" + record.bloodPressure, { bold: true });
 
             // Temperature
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Temperature:", { bold: true });
-            pdfDoc.fontSize(12).text(record.temperature, {
-                align: "center",
-                bold: true,
-            });
+            pdfDoc.fontSize(18).text("Temperature:" + record.temperature, { bold: true });
 
             // Medications
             pdfDoc.moveDown(0.5);
@@ -668,19 +641,11 @@ exports.getMedicalRecord = (req, res) => {
 
             // Surgery Requirement
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Surgery Requirement:", { bold: true });
-            pdfDoc.fontSize(12).text(record.surgery, {
-                align: "center",
-                bold: true,
-            });
+            pdfDoc.fontSize(18).text("Surgery Requirement:" + record.surgery, { bold: true });
 
             // Doctor's Note
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Doctor's Note:", { bold: true });
-            pdfDoc.fontSize(12).text(record.note, {
-                align: "center",
-                bold: true,
-            });
+            pdfDoc.fontSize(18).text("Doctor's Note:" + record.note, { bold: true });
 
             pdfDoc.end();
         })
@@ -688,7 +653,6 @@ exports.getMedicalRecord = (req, res) => {
             console.log(err);
         });
 };
-
 
 exports.getConsultedHospitals = (req, res) => {
     MedicalRecords.find({ patientId: req.patient._id })
