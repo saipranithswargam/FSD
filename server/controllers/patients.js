@@ -455,14 +455,12 @@ exports.sendPdf = (req, res) => {
 
     pdfDoc.pipe(res);
 
-    pdfDoc.fontSize(26).text('hello', {
-        underline: true,
-        align: 'center',
+    pdfDoc.fontSize(26).text('hello',
+        align: 'cent
     });
 
-    pdfDoc.fontSize(26).text('iamUnserWater', {
-        underline: true,
-        align: 'center',
+    pdfDoc.fontSize(26).text('iamUnserWater',
+        align: 'cent
     });
 
     pdfDoc.end();
@@ -498,10 +496,10 @@ exports.sendPdf = (req, res) => {
 //             );
 //             pdfDoc.pipe(res);
 //             pdfDoc.fontSize(26).text(record.hospitalId.name, {
-//                 underline: true,
-//                 
+//            
+//             
 //             });
-//             pdfDoc.moveDown(0.5);
+//             pdfDoc.moveDown(1.5);
 //             pdfDoc.fontSize(10).text("DoctorName:" + record.doctorId.name, {
 //                 align: "left",
 //             });
@@ -554,14 +552,14 @@ exports.sendPdf = (req, res) => {
 //                 pdfDoc.fontSize(10).text("No Tests Required");
 //             }
 //             pdfDoc.moveDown(1.5);
-//             pdfDoc.fontSize(12).text("Surgery Required : " + record.surgery, {
+//             pdfDoc.fontSize(16).text("Surgery Required : " + record.surgery, {
 //                 align: "left",
 //             });
 //             pdfDoc.moveDown(1.5);
 //             pdfDoc.fontSize(15).text("Doctors Note : ", {
 //                 align: "left",
 //             });
-//             pdfDoc.moveDown(0.5);
+//             pdfDoc.moveDown(1.5);
 //             pdfDoc.fontSize(11).text(record.note, {
 //                 align: "left",
 //             });
@@ -597,87 +595,83 @@ exports.getMedicalRecord = (req, res) => {
             });
 
             // Hospital name
-            pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Hospital Name:", { bold: true });
-            pdfDoc.fontSize(12).text(record.hospitalId.name, {
-                underline: true,
-                
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(18).text("Hospital Name:", { bold: true, underlined: true });
+            pdfDoc.fontSize(16).text(record.hospitalId.name, {
+
                 bold: true,
             });
 
             // Doctor name
-            pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Doctor Name:", { bold: true });
-            pdfDoc.fontSize(12).text(record.doctorId.name, {
-                underline: true,
-                
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(18).text("Doctor Name:", { bold: true, underlined: true });
+            pdfDoc.fontSize(16).text(record.doctorId.name, {
+
                 bold: true,
             });
 
             // Patient name
-            pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Patient Name:", { bold: true });
-            pdfDoc.fontSize(12).text(record.patientId.name, {
-                underline: true,
-                
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(18).text("Patient Name:", { bold: true, underlined: true });
+            pdfDoc.fontSize(16).text(record.patientId.name, {
+
                 bold: true,
             });
 
             // Date
-            pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Date:", { bold: true });
-            pdfDoc.fontSize(12).text(record.date, {
-                underline: true,
-                
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(18).text("Date:", { bold: true, underlined: true });
+            pdfDoc.fontSize(16).text(record.date, {
+
                 bold: true,
             });
 
             // Blood Pressure
-            pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Blood Pressure:", { bold: true });
-            pdfDoc.fontSize(12).text(record.bloodPressure, {
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(18).text("Blood Pressure:", { bold: true, underlined: true });
+            pdfDoc.fontSize(16).text(record.bloodPressure, {
                 
                 bold: true,
             });
 
             // Temperature
-            pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Temperature:", { bold: true });
-            pdfDoc.fontSize(12).text(record.temperature, {
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(18).text("Temperature:", { bold: true, underlined: true });
+            pdfDoc.fontSize(16).text(record.temperature, {
                 
                 bold: true,
             });
 
             // Medications
-            pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Medications:", { bold: true });
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(18).text("Medications:", { bold: true, underlined: true });
             record.medicines.forEach((medicine, index) => {
-                pdfDoc.fontSize(12).text(`${index + 1}. ${medicine}`);
+                pdfDoc.fontSize(16).text(`${index + 1}. ${medicine}`);
             });
 
             // Medical Tests
-            pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Medical Tests:", { bold: true });
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(18).text("Medical Tests:", { bold: true, underlined: true });
             if (record.medicalTests.length > 0) {
                 record.medicalTests.forEach((test, index) => {
-                    pdfDoc.fontSize(12).text(`${index + 1}. ${test}`);
+                    pdfDoc.fontSize(16).text(`${index + 1}. ${test}`);
                 });
             } else {
-                pdfDoc.fontSize(12).text("No medical tests required.");
+                pdfDoc.fontSize(16).text("No medical tests required.");
             }
 
             // Surgery Requirement
-            pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Surgery Requirement:", { bold: true });
-            pdfDoc.fontSize(12).text(record.surgery, {
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(18).text("Surgery Requirement:", { bold: true, underlined: true });
+            pdfDoc.fontSize(16).text(record.surgery, {
                 
                 bold: true,
             });
 
             // Doctor's Note
-            pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(18).text("Doctor's Note:", { bold: true });
-            pdfDoc.fontSize(12).text(record.note, {
+            pdfDoc.moveDown(1.5);
+            pdfDoc.fontSize(18).text("Doctor's Note:", { bold: true, underlined: true });
+            pdfDoc.fontSize(16).text(record.note, {
                 
                 bold: true,
             });
