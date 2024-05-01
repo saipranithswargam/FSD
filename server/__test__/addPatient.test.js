@@ -1,8 +1,6 @@
 const request = require('supertest');
 const { app } = require('../server');
 const Patients = require('../models/patients');
-const redisClient = require("../cacheClient/redis-client")
-jest.mock('../models/patients');
 
 describe('POST /addpatient', () => {
     it('responds with 200 status and saves the patient', async () => {
@@ -23,7 +21,4 @@ describe('POST /addpatient', () => {
     }, 10000);
 
 });
-afterAll(done => {
-    redisClient.quit();
-    done();
-});
+
