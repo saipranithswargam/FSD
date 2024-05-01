@@ -705,11 +705,6 @@ exports.uploadImage = async (req, res) => {
         // Find the user by ID
         const user = await Patient.findById(req._id);
 
-        if (user.image) {
-            // If the user already has an image, delete it from the filesystem
-            const previousImagePath = user.image.replace('http://localhost:5050/', '');
-            fs.unlinkSync(previousImagePath);
-        }
 
         // Update the user with the provided _id with the imagePath
         await Patient.findByIdAndUpdate(req._id, { image: imagePath });
