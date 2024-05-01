@@ -705,10 +705,11 @@ exports.uploadImage = async (req, res) => {
 
         const user = await Patient.findById(req._id);
 
-        const newPatient = await Patient.findByIdAndUpdate(req._id, { image: imagePath });
+        await Patient.findByIdAndUpdate(req._id, { image: imagePath });
 
+        const newPatient = await Patient.findOne({ _id: req._id });
         console.log(newPatient);
-        await CacheClient.set(newPatient._id, JSON.stringify({ ...newPatient._doc, type: "hospitals" }))
+        await CacheClient.set(newPatient._id, JSON.stringify({ ...newPatient._doc, type: "patients" }))
         await CacheClient.expire(req._id, 1800);
         return res.json({ path: req.file.path });
     } catch (error) {
