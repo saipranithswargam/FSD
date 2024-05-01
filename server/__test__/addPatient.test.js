@@ -1,6 +1,8 @@
 const request = require('supertest');
-const { app } = require('../server');
-const Patients = require('../models/patients');
+const { app } = require('../server'); 
+const Patients = require('../models/patients'); 
+
+jest.mock('../models/patients');
 
 describe('POST /addpatient', () => {
     it('responds with 200 status and saves the patient', async () => {
@@ -21,4 +23,3 @@ describe('POST /addpatient', () => {
     }, 10000);
 
 });
-
