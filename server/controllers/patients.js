@@ -501,7 +501,7 @@ exports.sendPdf = (req, res) => {
 //            
 //             
 //             });
-//             pdfDoc.moveDown(0.5);
+//             pdfDoc.moveDown(1);
 //             pdfDoc.fontSize(10).text("DoctorName:" + record.doctorId.name, {
 //                 align: "left",
 //             });
@@ -561,7 +561,7 @@ exports.sendPdf = (req, res) => {
 //             pdfDoc.fontSize(15).text("Doctors Note : ", {
 //                 align: "left",
 //             });
-//             pdfDoc.moveDown(0.5);
+//             pdfDoc.moveDown(1);
 //             pdfDoc.fontSize(11).text(record.note, {
 //                 align: "left",
 //             });
@@ -597,7 +597,7 @@ exports.getMedicalRecord = (req, res) => {
             });
 
             // Hospital name
-            pdfDoc.moveDown(0.5);
+            pdfDoc.moveDown(1);
             pdfDoc.fontSize(18).text("Hospital Name:", { bold: true, underlined: true });
             pdfDoc.fontSize(16).text(record.hospitalId.name, {
 
@@ -605,7 +605,7 @@ exports.getMedicalRecord = (req, res) => {
             });
 
             // Doctor name
-            pdfDoc.moveDown(0.5);
+            pdfDoc.moveDown(1);
             pdfDoc.fontSize(18).text("Doctor Name:", { bold: true, underlined: true });
             pdfDoc.fontSize(16).text(record.doctorId.name, {
 
@@ -613,7 +613,7 @@ exports.getMedicalRecord = (req, res) => {
             });
 
             // Patient name
-            pdfDoc.moveDown(0.5);
+            pdfDoc.moveDown(1);
             pdfDoc.fontSize(18).text("Patient Name:", { bold: true, underlined: true });
             pdfDoc.fontSize(16).text(record.patientId.name, {
 
@@ -621,7 +621,7 @@ exports.getMedicalRecord = (req, res) => {
             });
 
             // Date
-            pdfDoc.moveDown(0.5);
+            pdfDoc.moveDown(1);
             pdfDoc.fontSize(18).text("Date:", { bold: true, underlined: true });
             pdfDoc.fontSize(16).text(record.date, {
 
@@ -629,7 +629,7 @@ exports.getMedicalRecord = (req, res) => {
             });
 
             // Blood Pressure
-            pdfDoc.moveDown(0.5);
+            pdfDoc.moveDown(1);
             pdfDoc.fontSize(18).text("Blood Pressure:", { bold: true, underlined: true });
             pdfDoc.fontSize(16).text(record.bloodPressure, {
                 
@@ -637,7 +637,7 @@ exports.getMedicalRecord = (req, res) => {
             });
 
             // Temperature
-            pdfDoc.moveDown(0.5);
+            pdfDoc.moveDown(1);
             pdfDoc.fontSize(18).text("Temperature:", { bold: true, underlined: true });
             pdfDoc.fontSize(16).text(record.temperature, {
                 
@@ -645,14 +645,14 @@ exports.getMedicalRecord = (req, res) => {
             });
 
             // Medications
-            pdfDoc.moveDown(0.5);
+            pdfDoc.moveDown(1);
             pdfDoc.fontSize(18).text("Medications:", { bold: true, underlined: true });
             record.medicines.forEach((medicine, index) => {
                 pdfDoc.fontSize(16).text(`${index + 1}. ${medicine}`);
             });
 
             // Medical Tests
-            pdfDoc.moveDown(0.5);
+            pdfDoc.moveDown(1);
             pdfDoc.fontSize(18).text("Medical Tests:", { bold: true, underlined: true });
             if (record.medicalTests.length > 0) {
                 record.medicalTests.forEach((test, index) => {
@@ -663,7 +663,7 @@ exports.getMedicalRecord = (req, res) => {
             }
 
             // Surgery Requirement
-            pdfDoc.moveDown(0.5);
+            pdfDoc.moveDown(1);
             pdfDoc.fontSize(18).text("Surgery Requirement:", { bold: true, underlined: true });
             pdfDoc.fontSize(16).text(record.surgery, {
                 
@@ -671,7 +671,7 @@ exports.getMedicalRecord = (req, res) => {
             });
 
             // Doctor's Note
-            pdfDoc.moveDown(0.5);
+            pdfDoc.moveDown(1);
             pdfDoc.fontSize(18).text("Doctor's Note:", { bold: true, underlined: true });
             pdfDoc.fontSize(16).text(record.note, {
                 
