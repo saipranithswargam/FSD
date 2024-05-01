@@ -6,6 +6,7 @@ const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const Doctors = require("../models/doctors");
 const Hospitals = require("../models/hospitals");
+const CacheClient = require('../cacheClient/redis-client')
 const jwt = require('jsonwebtoken');
 const fs = require("fs")
 let config = {
@@ -541,8 +542,10 @@ exports.uploadImage = async (req, res) => {
 
         const user = await Hospital.findById(req._id);
 
-        await Hospital.findByIdAndUpdate(req._id, { image: imagePath });
-
+        const newHospital = await Hospital.findByIdAndUpdate(req._id, { image: imagePath });
+        console.log(newHospital);
+        await CacheClient.set(newHospital._id, JSON.stringify({ ...newHospital._doc, type: "hospitals" }))
+        await CacheClient.expire(req._id, 1800);
         return res.json({ path: req.file.path });
     } catch (error) {
         console.error(error);

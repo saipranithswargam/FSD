@@ -9,6 +9,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const path = require('path')
 const fs = require('fs');
+const CacheClient = require('../cacheClient/redis-client')
 exports.postLogin = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -704,8 +705,11 @@ exports.uploadImage = async (req, res) => {
 
         const user = await Patient.findById(req._id);
 
-        await Patient.findByIdAndUpdate(req._id, { image: imagePath });
+        const newPatient = await Patient.findByIdAndUpdate(req._id, { image: imagePath });
 
+        console.log(newPatient);
+        await CacheClient.set(newPatient._id, JSON.stringify({ ...newPatient._doc, type: "hospitals" }))
+        await CacheClient.expire(req._id, 1800);
         return res.json({ path: req.file.path });
     } catch (error) {
         console.error(error);

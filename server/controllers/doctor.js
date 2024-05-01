@@ -6,6 +6,7 @@ const nodemailer = require("nodemailer");
 const MedicalRecords = require("../models/medicalRecords");
 const Appointments = require("../models/appointments");
 const jwt = require("jsonwebtoken");
+const CacheClient = require('../cacheClient/redis-client')
 const fs = require("fs");
 let config = {
     service: "gmail",
@@ -498,8 +499,10 @@ exports.uploadImage = async (req, res) => {
         const imagePath = `https://fsd-shly.onrender.com/${req.file.path}`;
 
         const user = await Doctor.findById(req._id);
-        await Doctor.findByIdAndUpdate(req._id, { image: imagePath });
-
+        const newDoctor = await Doctor.findByIdAndUpdate(req._id, { image: imagePath });
+        console.log(newDoctor);
+        await CacheClient.set(newDoctor._id, JSON.stringify({ ...newDoctor._doc, type: "hospitals" }))
+        await CacheClient.expire(req._id, 1800);
         return res.json({ path: req.file.path });
     } catch (error) {
         console.error(error);
