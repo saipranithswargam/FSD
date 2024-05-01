@@ -58,20 +58,20 @@ exports.postLogin = (req, res) => {
 };
 
 exports.postRegister = (req, res) => {
-    const email = req.body.email;
-    const name = req.body.name;
-    const gender = req.body.gender;
-    const age = req.body.age;
-    const height = req.body.height;
-    const weight = req.body.weight;
-    const allergies = req.body.allergies;
-    const bloodGroup = req.body.bloodGroup;
-    const state = req.body.state;
-    const city = req.body.city;
-    const pincode = req.body.pincode;
-    const mobileNumber = req.body.mobileNumber;
-    const password = req.body.password;
-    const maritalStatus = req.body.maritalStatus;
+    const email = req?.body?.email;
+    const name = req.body?.name;
+    const gender = req.body?.gender;
+    const age = req.body?.age;
+    const height = req.body?.height;
+    const weight = req.body?.weight;
+    const allergies = req.body?.allergies;
+    const bloodGroup = req.body?.bloodGroup;
+    const state = req.body?.state;
+    const city = req.body?.city;
+    const pincode = req.body?.pincode;
+    const mobileNumber = req.body?.mobileNumber;
+    const password = req.body?.password;
+    const maritalStatus = req.body?.maritalStatus;
     Patient.findOne({ email: email })
         .then((patient) => {
             if (patient) {

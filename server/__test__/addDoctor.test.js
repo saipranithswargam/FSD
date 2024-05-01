@@ -1,25 +1,25 @@
 const request = require('supertest');
-const { app } = require('../server'); 
-const Patients = require('../models/patients'); 
+const { app } = require('../server');
+const Doctor = require('../models/doctors');
 
-jest.mock('../models/patients');
+jest.mock('../models/doctors');
 
-describe('POST /addpatient', () => {
+describe('POST /addDoctor', () => {
     it('responds with 200 status and saves the patient', async () => {
         const newPatient = {
             name: 'John Doe',
             email: 'johndoe@example.com',
         };
 
-        Patients.prototype.save.mockResolvedValue();
+        Doctor.prototype.save.mockResolvedValue();
 
         const response = await request(app)
-            .post('/addpatient')
+            .post('/addDoctor')
             .send(newPatient);
 
         expect(response.status).toBe(200);
 
-        expect(Patients.prototype.save).toHaveBeenCalled();
+        expect(Doctor.prototype.save).toHaveBeenCalled();
     }, 10000);
 
 });

@@ -185,9 +185,32 @@ app.get("/getappointments", async (req, res) => {
     }
 })
 
+app.post('/addpatient', async (req, res) => {
+    try {
+        const { name, email } = req.body;
+        const patient = new Patients({ name, email });
+        await patient.save();
+        return res.status(200).send(patient)
+    }
+    catch (err) {
+        console.log(err)
+    }
+})
+
+app.post("/addDoctor", async (req, res) => {
+    try {
+        const { name, email } = req.body;
+        const doctor = new Doctors({ name, email });
+        await doctor.save();
+        return res.status(200).send(doctor);
+    }
+    catch (err) {
+        console.log(err);
+    }
+})
+
 mongoose
-    // .connect(process.env.MONGO_URI)
-    .connect("mongodb://localhost:27017/chs")
+    .connect(process.env.MONGO_URI)
     .then(() => {
         console.log("database connected");
     })
@@ -195,4 +218,3 @@ mongoose
         console.log(err);
     });
 module.exports = { app };
-//this is testing chages
