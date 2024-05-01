@@ -15,7 +15,7 @@ const Doctors = () => {
     const { id } = params;
     const fetchData = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/patients/doctorlist/${id}`, {
+            const response = await fetch(`https://fsd-shly.onrender.com/patients/doctorlist/${id}`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {

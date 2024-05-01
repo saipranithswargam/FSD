@@ -25,7 +25,7 @@ const DoctorsListCard = ({ doctor, hospitalId }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5050/patients/bookdoctor', {
+            const response = await fetch('https://fsd-shly.onrender.com/patients/bookdoctor', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

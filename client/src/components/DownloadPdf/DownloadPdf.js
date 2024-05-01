@@ -3,7 +3,7 @@ const DownloadPDFButton = ({ id }) => {
     const handleDownloadPDF = async () => {
         try {
             console.log(id);
-            const response = await fetch(`http://localhost:5050/patients/medicalrecord/${id}`, {
+            const response = await fetch(`https://fsd-shly.onrender.com/patients/medicalrecord/${id}`, {
                 credentials: 'include',
                 method: 'GET'
             });

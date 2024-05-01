@@ -20,7 +20,7 @@ const PatientsRequestedAppointments = ({ type }) => {
         }
         if (dataType === '') { return; }
         try {
-            const response = await fetch('http://localhost:5050/patients/cancleRequestedAppointment', {
+            const response = await fetch('https://fsd-shly.onrender.com/patients/cancleRequestedAppointment', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -47,7 +47,7 @@ const PatientsRequestedAppointments = ({ type }) => {
     };
 
     const fetchAppointments = () => {
-        const apiUrl = `http://localhost:5050/patients/${appointmentType}`;
+        const apiUrl = `https://fsd-shly.onrender.com/patients/${appointmentType}`;
         setLoading(true);
         fetch(apiUrl, {
             method: 'GET',
