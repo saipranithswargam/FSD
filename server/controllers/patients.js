@@ -481,8 +481,100 @@ exports.sendPdf = (req, res) => {
     });
 
 }
+// exports.getMedicalRecord = (req, res) => {
+//     const medicalRecordId = req.params.medicalrecordId;
+//     MedicalRecords.findById(medicalRecordId)
+//         .populate("hospitalId doctorId patientId")
+//         .then((record) => {
+//             if (!record) {
+//                 return res.send("no medical record found");
+//             }
+//             const RecordName = "MedicalRecord-" + medicalRecordId + ".pdf";
+//             const pdfDoc = new PDFDocument();
+//             res.setHeader("Content-Type", "application/pdf");
+//             res.setHeader(
+//                 "Content-Disposition",
+//                 'inline; filename="' + RecordName + '"'
+//             );
+//             pdfDoc.pipe(res);
+//             pdfDoc.fontSize(26).text(record.hospitalId.name, {
+//                 underline: true,
+//                 align: "center",
+//             });
+//             pdfDoc.moveDown(0.5);
+//             pdfDoc.fontSize(10).text("DoctorName:" + record.doctorId.name, {
+//                 align: "left",
+//             });
+//             pdfDoc.moveUp(1);
+//             pdfDoc.fontSize(10).text("PatientName:" + record.patientId.name, {
+//                 align: "center",
+//             });
+//             pdfDoc.moveUp(1);
+//             pdfDoc.fontSize(10).text("Date:" + record.date, {
+//                 align: "right",
+//             });
+//             pdfDoc.moveDown(1);
+//             pdfDoc.fontSize(10).text("B.P:" + record.bloodPressure, {
+//                 align: "left",
+//             });
+//             pdfDoc.moveUp(1);
+//             pdfDoc.fontSize(10).text("Temperature:" + record.temperature, {
+//                 align: "center",
+//             });
+//             pdfDoc.moveUp(1);
+//             pdfDoc.fontSize(10).text("oxygen:" + record.oxygen, {
+//                 align: "right",
+//             });
+//             pdfDoc.moveDown(1.5);
+//             pdfDoc.fontSize(15).text("Medications:", {
+//                 align: "left",
+//             });
+//             let count = 1;
+//             const splitMedicines = record.medicines[0].split(",");
+//             splitMedicines.forEach((medicine) => {
+//                 pdfDoc.moveDown(0.3);
+//                 pdfDoc.fontSize(10).text(count + ". " + medicine);
+//                 count += 1;
+//             });
+//             pdfDoc.moveDown(1.5);
+//             pdfDoc.fontSize(15).text("Medical Tests:", {
+//                 align: "left",
+//             });
+//             count = 1;
+//             const splitTests = record.medicalTests[0].split(",");
+//             if (splitTests.length !== 0) {
+//                 splitTests.forEach((test) => {
+//                     pdfDoc.moveDown(0.3);
+//                     pdfDoc.fontSize(10).text(count + ". " + test);
+//                     count += 1;
+//                 });
+//             }
+//             if (splitTests.length === 0) {
+//                 pdfDoc.moveDown(0.3);
+//                 pdfDoc.fontSize(10).text("No Tests Required");
+//             }
+//             pdfDoc.moveDown(1.5);
+//             pdfDoc.fontSize(12).text("Surgery Required : " + record.surgery, {
+//                 align: "left",
+//             });
+//             pdfDoc.moveDown(1.5);
+//             pdfDoc.fontSize(15).text("Doctors Note : ", {
+//                 align: "left",
+//             });
+//             pdfDoc.moveDown(0.5);
+//             pdfDoc.fontSize(11).text(record.note, {
+//                 align: "left",
+//             });
+//             pdfDoc.end();
+//         })
+//         .catch((err) => {
+//             console.log(err);
+//         });
+// };
+
+
 exports.getMedicalRecord = (req, res) => {
-    const medicalRecordId = req.params.medicalrecordId;
+    const medicalRecordId = '65d7cdb1af39f0c490c829a1';
     MedicalRecords.findById(medicalRecordId)
         .populate("hospitalId doctorId patientId")
         .then((record) => {
@@ -497,80 +589,116 @@ exports.getMedicalRecord = (req, res) => {
                 'inline; filename="' + RecordName + '"'
             );
             pdfDoc.pipe(res);
-            pdfDoc.fontSize(26).text(record.hospitalId.name, {
+
+            // Centralized Healthcare System heading
+            pdfDoc.fontSize(18).text("Centralized Healthcare System", {
+                bold: true,
+                align: "center",
+            });
+
+            // Hospital name
+            pdfDoc.moveDown(0.5);
+            pdfDoc.fontSize(14).text("Hospital Name:", { bold: true });
+            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(12).text(record.hospitalId.name, {
                 underline: true,
                 align: "center",
+                bold: true,
             });
+
+            // Doctor name
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(10).text("DoctorName:" + record.doctorId.name, {
-                align: "left",
-            });
-            pdfDoc.moveUp(1);
-            pdfDoc.fontSize(10).text("PatientName:" + record.patientId.name, {
+            pdfDoc.fontSize(14).text("Doctor Name:", { bold: true });
+            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(12).text(record.doctorId.name, {
+                underline: true,
                 align: "center",
+                bold: true,
             });
-            pdfDoc.moveUp(1);
-            pdfDoc.fontSize(10).text("Date:" + record.date, {
-                align: "right",
-            });
-            pdfDoc.moveDown(1);
-            pdfDoc.fontSize(10).text("B.P:" + record.bloodPressure, {
-                align: "left",
-            });
-            pdfDoc.moveUp(1);
-            pdfDoc.fontSize(10).text("Temperature:" + record.temperature, {
+
+            // Patient name
+            pdfDoc.moveDown(0.5);
+            pdfDoc.fontSize(14).text("Patient Name:", { bold: true });
+            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(12).text(record.patientId.name, {
+                underline: true,
                 align: "center",
+                bold: true,
             });
-            pdfDoc.moveUp(1);
-            pdfDoc.fontSize(10).text("oxygen:" + record.oxygen, {
-                align: "right",
+
+            // Date
+            pdfDoc.moveDown(0.5);
+            pdfDoc.fontSize(14).text("Date:", { bold: true });
+            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(12).text(record.date, {
+                underline: true,
+                align: "center",
+                bold: true,
             });
-            pdfDoc.moveDown(1.5);
-            pdfDoc.fontSize(15).text("Medications:", {
-                align: "left",
+
+            // Blood Pressure
+            pdfDoc.moveDown(0.5);
+            pdfDoc.fontSize(14).text("Blood Pressure:", { bold: true });
+            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(12).text(record.bloodPressure, {
+                align: "center",
+                bold: true,
             });
-            let count = 1;
-            const splitMedicines = record.medicines[0].split(",");
-            splitMedicines.forEach((medicine) => {
-                pdfDoc.moveDown(0.3);
-                pdfDoc.fontSize(10).text(count + ". " + medicine);
-                count += 1;
+
+            // Temperature
+            pdfDoc.moveDown(0.5);
+            pdfDoc.fontSize(14).text("Temperature:", { bold: true });
+            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(12).text(record.temperature, {
+                align: "center",
+                bold: true,
             });
-            pdfDoc.moveDown(1.5);
-            pdfDoc.fontSize(15).text("Medical Tests:", {
-                align: "left",
+
+            // Medications
+            pdfDoc.moveDown(0.5);
+            pdfDoc.fontSize(14).text("Medications:", { bold: true });
+            pdfDoc.moveDown(0.2);
+            record.medicines.forEach((medicine, index) => {
+                pdfDoc.fontSize(12).text(`${index + 1}. ${medicine}`);
             });
-            count = 1;
-            const splitTests = record.medicalTests[0].split(",");
-            if (splitTests.length !== 0) {
-                splitTests.forEach((test) => {
-                    pdfDoc.moveDown(0.3);
-                    pdfDoc.fontSize(10).text(count + ". " + test);
-                    count += 1;
+
+            // Medical Tests
+            pdfDoc.moveDown(0.5);
+            pdfDoc.fontSize(14).text("Medical Tests:", { bold: true });
+            pdfDoc.moveDown(0.2);
+            if (record.medicalTests.length > 0) {
+                record.medicalTests.forEach((test, index) => {
+                    pdfDoc.fontSize(12).text(`${index + 1}. ${test}`);
                 });
+            } else {
+                pdfDoc.fontSize(12).text("No medical tests required.");
             }
-            if (splitTests.length === 0) {
-                pdfDoc.moveDown(0.3);
-                pdfDoc.fontSize(10).text("No Tests Required");
-            }
-            pdfDoc.moveDown(1.5);
-            pdfDoc.fontSize(12).text("Surgery Required : " + record.surgery, {
-                align: "left",
-            });
-            pdfDoc.moveDown(1.5);
-            pdfDoc.fontSize(15).text("Doctors Note : ", {
-                align: "left",
-            });
+
+            // Surgery Requirement
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(11).text(record.note, {
-                align: "left",
+            pdfDoc.fontSize(14).text("Surgery Requirement:", { bold: true });
+            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(12).text(record.surgery, {
+                align: "center",
+                bold: true,
             });
+
+            // Doctor's Note
+            pdfDoc.moveDown(0.5);
+            pdfDoc.fontSize(14).text("Doctor's Note:", { bold: true });
+            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(12).text(record.note, {
+                align: "center",
+                bold: true,
+            });
+
             pdfDoc.end();
         })
         .catch((err) => {
             console.log(err);
         });
 };
+
 
 exports.getConsultedHospitals = (req, res) => {
     MedicalRecords.find({ patientId: req.patient._id })
