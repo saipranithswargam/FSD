@@ -537,14 +537,9 @@ exports.uploadImage = async (req, res) => {
             return res.status(400).json({ error: 'Invalid _id' });
         }
 
-        const imagePath = `http://localhost:5050/${req.file.path}`;
+        const imagePath = `https://fsd-shly.onrender.com/${req.file.path}`;
 
         const user = await Hospital.findById(req._id);
-
-        if (user.image) {
-            const previousImagePath = user.image.replace('http://localhost:5050/', '');
-            fs.unlinkSync(previousImagePath);
-        }
 
         await Hospital.findByIdAndUpdate(req._id, { image: imagePath });
 

@@ -704,8 +704,6 @@ exports.uploadImage = async (req, res) => {
 
         const user = await Patient.findById(req._id);
 
-
-        // Update the user with the provided _id with the imagePath
         await Patient.findByIdAndUpdate(req._id, { image: imagePath });
 
         return res.json({ path: req.file.path });
