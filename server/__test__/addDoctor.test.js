@@ -1,7 +1,7 @@
 const request = require('supertest');
 const { app } = require('../server');
 const Doctor = require('../models/doctors');
-
+const redisClient = require("../cacheClient/redis-client")
 jest.mock('../models/doctors');
 
 describe('POST /addDoctor', () => {
@@ -22,4 +22,10 @@ describe('POST /addDoctor', () => {
         expect(Doctor.prototype.save).toHaveBeenCalled();
     }, 10000);
 
+});
+
+afterAll(done => {
+    // Closing the DB connection allows Jest to exit successfully.
+    redisClient.quit()
+    done();
 });

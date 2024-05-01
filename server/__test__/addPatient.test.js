@@ -1,7 +1,7 @@
 const request = require('supertest');
-const { app } = require('../server'); 
-const Patients = require('../models/patients'); 
-
+const { app } = require('../server');
+const Patients = require('../models/patients');
+const redisClient = require("../cacheClient/redis-client")
 jest.mock('../models/patients');
 
 describe('POST /addpatient', () => {
@@ -22,4 +22,8 @@ describe('POST /addpatient', () => {
         expect(Patients.prototype.save).toHaveBeenCalled();
     }, 10000);
 
+});
+afterAll(done => {
+    redisClient.quit();
+    done();
 });

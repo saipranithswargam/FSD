@@ -574,7 +574,7 @@ exports.sendPdf = (req, res) => {
 
 
 exports.getMedicalRecord = (req, res) => {
-    const medicalRecordId = '65d7cdb1af39f0c490c829a1';
+    const medicalRecordId = req.params.medicalrecordId;
     MedicalRecords.findById(medicalRecordId)
         .populate("hospitalId doctorId patientId")
         .then((record) => {
@@ -591,15 +591,14 @@ exports.getMedicalRecord = (req, res) => {
             pdfDoc.pipe(res);
 
             // Centralized Healthcare System heading
-            pdfDoc.fontSize(18).text("Centralized Healthcare System", {
+            pdfDoc.fontSize(28).text("Centralized Healthcare System", {
                 bold: true,
                 align: "center",
             });
 
             // Hospital name
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(14).text("Hospital Name:", { bold: true });
-            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(18).text("Hospital Name:", { bold: true });
             pdfDoc.fontSize(12).text(record.hospitalId.name, {
                 underline: true,
                 align: "center",
@@ -608,8 +607,7 @@ exports.getMedicalRecord = (req, res) => {
 
             // Doctor name
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(14).text("Doctor Name:", { bold: true });
-            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(18).text("Doctor Name:", { bold: true });
             pdfDoc.fontSize(12).text(record.doctorId.name, {
                 underline: true,
                 align: "center",
@@ -618,8 +616,7 @@ exports.getMedicalRecord = (req, res) => {
 
             // Patient name
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(14).text("Patient Name:", { bold: true });
-            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(18).text("Patient Name:", { bold: true });
             pdfDoc.fontSize(12).text(record.patientId.name, {
                 underline: true,
                 align: "center",
@@ -628,8 +625,7 @@ exports.getMedicalRecord = (req, res) => {
 
             // Date
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(14).text("Date:", { bold: true });
-            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(18).text("Date:", { bold: true });
             pdfDoc.fontSize(12).text(record.date, {
                 underline: true,
                 align: "center",
@@ -638,8 +634,7 @@ exports.getMedicalRecord = (req, res) => {
 
             // Blood Pressure
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(14).text("Blood Pressure:", { bold: true });
-            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(18).text("Blood Pressure:", { bold: true });
             pdfDoc.fontSize(12).text(record.bloodPressure, {
                 align: "center",
                 bold: true,
@@ -647,8 +642,7 @@ exports.getMedicalRecord = (req, res) => {
 
             // Temperature
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(14).text("Temperature:", { bold: true });
-            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(18).text("Temperature:", { bold: true });
             pdfDoc.fontSize(12).text(record.temperature, {
                 align: "center",
                 bold: true,
@@ -656,16 +650,14 @@ exports.getMedicalRecord = (req, res) => {
 
             // Medications
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(14).text("Medications:", { bold: true });
-            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(18).text("Medications:", { bold: true });
             record.medicines.forEach((medicine, index) => {
                 pdfDoc.fontSize(12).text(`${index + 1}. ${medicine}`);
             });
 
             // Medical Tests
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(14).text("Medical Tests:", { bold: true });
-            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(18).text("Medical Tests:", { bold: true });
             if (record.medicalTests.length > 0) {
                 record.medicalTests.forEach((test, index) => {
                     pdfDoc.fontSize(12).text(`${index + 1}. ${test}`);
@@ -676,8 +668,7 @@ exports.getMedicalRecord = (req, res) => {
 
             // Surgery Requirement
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(14).text("Surgery Requirement:", { bold: true });
-            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(18).text("Surgery Requirement:", { bold: true });
             pdfDoc.fontSize(12).text(record.surgery, {
                 align: "center",
                 bold: true,
@@ -685,8 +676,7 @@ exports.getMedicalRecord = (req, res) => {
 
             // Doctor's Note
             pdfDoc.moveDown(0.5);
-            pdfDoc.fontSize(14).text("Doctor's Note:", { bold: true });
-            pdfDoc.moveDown(0.2);
+            pdfDoc.fontSize(18).text("Doctor's Note:", { bold: true });
             pdfDoc.fontSize(12).text(record.note, {
                 align: "center",
                 bold: true,
