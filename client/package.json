@@ -37,7 +37,7 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
-        "test": "react-scripts test",
+        "test": "react-scripts test --reporters=default --reporters=jest-html-reporters",
         "eject": "react-scripts eject",
         "coverage": "npm test -- --coverage"
     },
@@ -65,6 +65,7 @@
         "babel-jest": "^29.7.0",
         "jest": "^27.5.1",
         "jest-html-reporter": "^3.10.2",
+        "jest-html-reporters": "^3.1.7",
         "jest-junit": "^16.0.0",
         "jest-junit-reporter": "^1.1.0"
     },

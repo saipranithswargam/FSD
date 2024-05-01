@@ -39,7 +39,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // const cache = require('./middleware/node-cache');
 // const cacheClient = require("./cacheClient/node-cache-client")
 const cache = require('./middleware/cache');
-const cacheClient = require('./cacheClient/redis-client')
+const cacheClient = require('./cacheClient/redis-client');
+const Appointments = require("./models/appointments");
 app.use(express.static("public"));
 app.use(express.json({ limit: '50mb' }));
 app.use('/uploads', express.static('uploads'));
@@ -165,13 +166,28 @@ app.get("/", (req, res) => {
 })
 
 app.get("/getpatients", async (req, res) => {
-    const patients = await Patients.find({});
-    return res.status(200).json(patients);
+    try {
+        const patients = await Patients.find({});
+        return res.status(200).json(patients);
+    }
+    catch (err) {
+        return res.status(500).json("internal server error")
+    }
+})
+
+app.get("/getappointments", async (req, res) => {
+    try {
+        const appointments = await Appointments.find({});
+        return res.status(200).json(appointments)
+    }
+    catch (err) {
+        return res.status(500).json("internal server error")
+    }
 })
 
 mongoose
-    .connect(process.env.MONGO_URI)
-    // .connect("mongodb://localhost:27017")
+    // .connect(process.env.MONGO_URI)
+    .connect("mongodb://localhost:27017/chs")
     .then(() => {
         console.log("database connected");
     })
