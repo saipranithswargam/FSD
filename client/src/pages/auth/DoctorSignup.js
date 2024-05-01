@@ -61,7 +61,7 @@ const DoctorSignup = () => {
             return;
         }
         try {
-            const response = await fetch('http://localhost:5050/doctors/register', {
+            const response = await fetch('https://fsd-shly.onrender.com/doctors/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

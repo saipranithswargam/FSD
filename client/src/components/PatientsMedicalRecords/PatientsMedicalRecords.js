@@ -12,7 +12,7 @@ const PatientsMedicalRecords = () => {
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const fetchMedicalRecords = () => {
-        const apiUrl = `http://localhost:5050/patients/medicalrecords`;
+        const apiUrl = `https://fsd-shly.onrender.com/patients/medicalrecords`;
         setLoading(true);
         fetch(apiUrl, {
             method: 'GET',

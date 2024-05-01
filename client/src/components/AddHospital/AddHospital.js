@@ -13,7 +13,7 @@ const AddHospital = ({ isOpen, onClose, getHospitals }) => {
 
         try {
             // Submit the form
-            const response = await fetch('http://localhost:5050/doctors/addhospital', {
+            const response = await fetch('https://fsd-shly.onrender.com/doctors/addhospital', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

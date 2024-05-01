@@ -15,7 +15,7 @@ const Hospitals = () => {
         try {
             setLoading(true);
             const filterData = { speciality: specialityFilter, distance: radiusFilter, latitude: user.latitude, longitude: user.longitude }
-            const response = await fetch(`http://localhost:5050/patients/hospitals/${radiusFilter}/${user.longitude}/${user.latitude}/${specialityFilter}`);
+            const response = await fetch(`https://fsd-shly.onrender.com/patients/hospitals/${radiusFilter}/${user.longitude}/${user.latitude}/${specialityFilter}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }

@@ -19,12 +19,12 @@ function Upload() {
         formData.append('image', image);
 
         try {
-            const response = await axios.post('http://localhost:5050/patients/upload', formData, {
+            const response = await axios.post('https://fsd-shly.onrender.com/patients/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            setImagePath(`http://localhost:5050/${response.data.path}`);
+            setImagePath(`https://fsd-shly.onrender.com/${response.data.path}`);
             setShowSaveButton(false); // Hide the save button after successful upload
         } catch (error) {
             console.error(error);

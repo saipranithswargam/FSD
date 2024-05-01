@@ -12,7 +12,7 @@ const ViewRequestedAppointments = () => {
     const submitConfirmAppointment = async (appointment) => {
         console.log(appointment)
         try {
-            const response = await fetch('http://localhost:5050/hospitals/acceptappointment', {
+            const response = await fetch('https://fsd-shly.onrender.com/hospitals/acceptappointment', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -56,7 +56,7 @@ const ViewRequestedAppointments = () => {
             doctorName: selectedAppointment.doctorId.name,
         }
         try {
-            const response = await fetch('http://localhost:5050/hospitals/resheduleappointment', {
+            const response = await fetch('https://fsd-shly.onrender.com/hospitals/resheduleappointment', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -76,7 +76,7 @@ const ViewRequestedAppointments = () => {
     };
 
     const fetchAppointments = () => {
-        const apiUrl = 'http://localhost:5050/hospitals/requestedappointments';
+        const apiUrl = 'https://fsd-shly.onrender.com/hospitals/requestedappointments';
 
         fetch(apiUrl, {
             method: 'GET',

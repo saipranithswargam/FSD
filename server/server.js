@@ -48,7 +48,7 @@ app.use(
     cors({
         origin: [
             "http://localhost:3000",
-            "https://centralisedhealthcare.vercel.app/",
+            "https://centralisedhealthcare.vercel.app",
             "http://127.0.0.1:5500",
             "*",
         ],

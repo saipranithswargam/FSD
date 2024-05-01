@@ -27,14 +27,14 @@ const ProfileImageUpdate = () => {
         formData.append('image', image);
 
         try {
-            const response = await axios.post(`http://localhost:5050/${user.type}/upload`, formData, {
+            const response = await axios.post(`https://fsd-shly.onrender.com/${user.type}/upload`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
                 withCredentials: true
             });
             if (response.status === 200) {
-                dispatch(userActions.setImage(`http://localhost:5050/${response?.data?.path}`))
+                dispatch(userActions.setImage(`https://fsd-shly.onrender.com/${response?.data?.path}`))
                 setShowSaveButton(false);
             }
 

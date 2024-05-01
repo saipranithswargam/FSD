@@ -26,7 +26,7 @@ const DoctorsBookedAppointments = () => {
     const submitConfirmAppointment = async (appointment) => {
         console.log(appointment)
         try {
-            const response = await fetch('http://localhost:5050/hospitals/resheduleappointment', {
+            const response = await fetch('https://fsd-shly.onrender.com/hospitals/resheduleappointment', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -47,7 +47,7 @@ const DoctorsBookedAppointments = () => {
     };
     const fetchMedicalRecords = async (appointment) => {
         try {
-            const response = await fetch(`http://localhost:5050/doctors/medicalrecords/${appointment.patientId._id}`, {
+            const response = await fetch(`https://fsd-shly.onrender.com/doctors/medicalrecords/${appointment.patientId._id}`, {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -93,7 +93,7 @@ const DoctorsBookedAppointments = () => {
         console.log(prescriptionData)
         const dataBody = { ...prescriptionData, patientId: selectedAppointment.patientId._id, hospitalId: selectedAppointment.hospitalId, appointmentId: selectedAppointment._id }
         console.log(dataBody);
-        const response = await fetch('http://localhost:5050/doctors/prescribe', {
+        const response = await fetch('https://fsd-shly.onrender.com/doctors/prescribe', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -143,7 +143,7 @@ const DoctorsBookedAppointments = () => {
             doctorName: selectedAppointment.doctorId.name,
         }
         try {
-            const response = await fetch('http://localhost:5050/hospitals/resheduleappointment', {
+            const response = await fetch('https://fsd-shly.onrender.com/hospitals/resheduleappointment', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -164,7 +164,7 @@ const DoctorsBookedAppointments = () => {
 
 
     const fetchAppointments = () => {
-        const apiUrl = 'http://localhost:5050/doctors/bookedappointments';
+        const apiUrl = 'https://fsd-shly.onrender.com/doctors/bookedappointments';
         fetch(apiUrl, {
             method: 'GET',
             credentials: 'include',
