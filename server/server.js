@@ -48,7 +48,7 @@ app.use(
     cors({
         origin: [
             "http://localhost:3000",
-            "https://golden-zabaione-725504.netlify.app",
+            "https://centralisedhealthcare.vercel.app/",
             "http://127.0.0.1:5500",
             "*",
         ],
