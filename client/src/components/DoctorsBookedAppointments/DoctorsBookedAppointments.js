@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import styles from "./DoctorsBookedAppointments.module.css"
 import DownloadPdf from "../DownloadPdf/DownloadPdf";
+import { toast } from "react-toastify";
 const DoctorsBookedAppointments = () => {
     const [prescriptionData, setPrescriptionData] = useState({
         bloodPressure: '',

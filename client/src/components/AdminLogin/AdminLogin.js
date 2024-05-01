@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import styles from './AdminLogin.module.css';
-
+import { toast } from "react-toastify";
 const AdminLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -22,11 +22,16 @@ const AdminLogin = () => {
 
             // Handle the response as needed
             console.log('Admin Login Successful', response);
-            // You can also redirect or update the UI based on the response
+            toast.success("Admin Login Successful!", {
+                position: "top-right",
+            });
         } catch (error) {
             // Handle errors and set the error message
-            console.error('Admin Login Error', error);
             setErrorMessage('Invalid email or password. Please try again.');
+            toast.error("Invalid email or password. Please try again.", {
+                position: "top-right",
+            });
+            console.error('Admin Login Error', error);
         }
     };
 

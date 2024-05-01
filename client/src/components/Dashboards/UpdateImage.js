@@ -6,6 +6,7 @@ import { userActions } from "../../features/userSlice";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "./UpdateImage.module.css";
+import { toast } from "react-toastify";
 const ProfileImageUpdate = () => {
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.user);
@@ -36,10 +37,16 @@ const ProfileImageUpdate = () => {
             if (response.status === 200) {
                 dispatch(userActions.setImage(`https://fsd-shly.onrender.com/${response?.data?.path}`))
                 setShowSaveButton(false);
+                toast.success("Image Added Successfully!", {
+                    position: "top-right",
+                });
             }
 
         } catch (error) {
             console.error(error);
+            toast.error("Error adding Image!", {
+                position: "top-right",
+            });
         }
     };
     return (
