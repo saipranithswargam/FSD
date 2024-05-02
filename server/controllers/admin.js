@@ -56,7 +56,7 @@ exports.postLogin = (req, res) => {
                         );
                         res.cookie("chs", token, {
                             httpOnly: true,
-                            SameSite: "None",
+                            sameSite: "none",
                             secure: true,
                             maxAge: 24 * 60 * 60 * 1000,
                         });

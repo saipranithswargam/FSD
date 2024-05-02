@@ -78,7 +78,7 @@ app.get("/check", verify, cache, async (req, res) => {
             var modified_patients = { ...patients._doc, type: "patients" };
             // cacheClient.set(req._id, JSON.stringify(modified_patients), 1800)
             await cacheClient.set(req._id, JSON.stringify(modified_patients));
-            await cacheClient.expire(req._id, 1800);
+            await cacheClient.expire(req._id, 30);
             const value = await cacheClient.get(req._id);
             console.log("value in cache", value);
             return res.status(200).json(modified_patients);
@@ -100,7 +100,7 @@ app.get("/check", verify, cache, async (req, res) => {
             var modified_user = { ...user._doc, type: "doctors" };
             // cacheClient.set(req._id, JSON.stringify(modified_user), 1800)
             await cacheClient.set(req._id, JSON.stringify(modified_patients));
-            await cacheClient.expire(req._id, 1800);
+            await cacheClient.expire(req._id, 30);
             const value = await cacheClient.get(req._id);
             console.log("value in redis", value);
             return res.status(200).json(modified_user);
@@ -120,8 +120,7 @@ app.get("/check", verify, cache, async (req, res) => {
             var modified_hospital = { ...hospital._doc, type: "hospitals" };
             // cacheClient.set(req._id, JSON.stringify(modified_hospital), 1800)
             await cacheClient.set(req._id, JSON.stringify(modified_patients));
-            await cacheClient.expire(req._id, 1800);
-            await cacheClient.expire(req._id, 1800);
+            await cacheClient.expire(req._id, 30);
             const value = await cacheClient.get(req._id);
             console.log("value in redis", value);
             return res.status(200).json(modified_hospital);
@@ -141,8 +140,7 @@ app.get("/check", verify, cache, async (req, res) => {
             var modified_admin = { ...admin._doc, type: "admin" };
             // cacheClient.set(req._id, JSON.stringify(modified_admin), 1800)
             await cacheClient.set(req._id, JSON.stringify(modified_patients));
-            await cacheClient.expire(req._id, 1800);
-            await cacheClient.expire(req._id, 1800);
+            await cacheClient.expire(req._id, 30);
             const value = await cacheClient.get(req._id);
             console.log("value in redis", value);
             return res.status(200).json(modified_admin);

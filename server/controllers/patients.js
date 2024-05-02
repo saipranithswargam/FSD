@@ -44,7 +44,7 @@ exports.postLogin = (req, res) => {
                         );
                         res.cookie("chs", token, {
                             httpOnly: true,
-                            SameSite: "None",
+                            sameSite: "none",
                             secure: true,
                             maxAge: 24 * 60 * 60 * 1000,
                         });
@@ -830,10 +830,6 @@ exports.uploadImage = async (req, res) => {
 
         await Patient.findByIdAndUpdate(req._id, { image: imagePath });
 
-        const newPatient = await Patient.findOne({ _id: req._id });
-        console.log(newPatient);
-        await CacheClient.set(newPatient._id, JSON.stringify({ ...newPatient._doc, type: "patients" }))
-        await CacheClient.expire(req._id, 1800);
         return res.json({ path: req.file.path });
     } catch (error) {
         console.error(error);
