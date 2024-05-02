@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import styles from "./DoctorsBookedAppointments.module.css"
 import DownloadPdf from "../DownloadPdf/DownloadPdf";
+import FetchLoader from '../Loaders/fetchLoader';
 import { toast } from "react-toastify";
 const DoctorsBookedAppointments = () => {
+    const [loading, setLoading] = useState(false);
     const [prescriptionData, setPrescriptionData] = useState({
         bloodPressure: '',
         temperature: '',
@@ -166,6 +168,7 @@ const DoctorsBookedAppointments = () => {
 
     const fetchAppointments = () => {
         const apiUrl = 'https://fsd-shly.onrender.com/doctors/bookedappointments';
+        setLoading(true)
         fetch(apiUrl, {
             method: 'GET',
             credentials: 'include',
@@ -173,8 +176,10 @@ const DoctorsBookedAppointments = () => {
             .then((response) => response.json())
             .then((data) => {
                 if (data.error) {
+                    setLoading(false)
                     setError(data.error);
                 } else {
+                    setLoading(false)
                     setAppointments(data);
                 }
             })
@@ -189,6 +194,11 @@ const DoctorsBookedAppointments = () => {
 
     return (
         <div>
+            <div>
+                {
+                    loading && <FetchLoader />
+                }
+            </div>
             <div className={styles.appointmentmain}>
                 {appointments.map((appointment) => (
                     <div key={appointment._id} className={styles.appointmentCard}>

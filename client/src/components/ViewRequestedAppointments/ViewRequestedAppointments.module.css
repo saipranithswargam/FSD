@@ -4,6 +4,7 @@
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 }
 .appointmentCard {
     border-radius: 9px;

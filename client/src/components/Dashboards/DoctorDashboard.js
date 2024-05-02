@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import ViewHospitalsWorking from "../ViewHospitalsWorking/ViewHospitalsWorking";
 import DoctorsBookedAppointments from "../DoctorsBookedAppointments/DoctorsBookedAppointments";
+import FetchLoader from '../Loaders/fetchLoader';
 const DoctorsDashboard = () => {
   const [profile, setProfile] = useState(true);
   const [addHospitals, setAddHospital] = useState(false);

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import styles from "./ViewRequestedAppointments.module.css"
+import Spinner from 'react-bootstrap/Spinner';
 const ViewRequestedAppointments = () => {
+    const [loading, setLoading] = useState(true);
     const [appointments, setAppointments] = useState([]);
     const [error, setError] = useState(null);
     const [appointmentDate, setAppointmentDate] = useState('');
@@ -76,6 +78,7 @@ const ViewRequestedAppointments = () => {
     };
 
     const fetchAppointments = () => {
+        setLoading(true)
         const apiUrl = 'https://fsd-shly.onrender.com/hospitals/requestedappointments';
 
         fetch(apiUrl, {
@@ -85,8 +88,10 @@ const ViewRequestedAppointments = () => {
             .then((response) => response.json())
             .then((data) => {
                 if (data.error) {
+                    setLoading(false)
                     setError(data.error);
                 } else {
+                    setLoading(false)
                     setAppointments(data);
                 }
             })
@@ -101,6 +106,17 @@ const ViewRequestedAppointments = () => {
 
     return (
         <div>
+            <div>
+                {
+                    loading && (
+                        <div className="d-flex justify-content-center align-items-center" style={{ width: "70%", height: "50vh", margin: "0 auto" }}>
+                            <Spinner animation="border" role="status" style={{ borderTopColor: '#49c1a5', borderRightColor: '#00BFFF' }}>
+                                <span className="sr-only">Loading...</span>
+                            </Spinner>
+                        </div>
+                    )
+                }
+            </div>
             <div className={styles.appointmentmain}>
                 {appointments?.map((appointment) => (
                     <div key={appointment._id} className={styles.appointmentCard}>
