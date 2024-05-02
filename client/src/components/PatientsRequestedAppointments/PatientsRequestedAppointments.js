@@ -92,7 +92,6 @@ const PatientsRequestedAppointments = ({ type }) => {
                                     e.preventDefault();
                                     submitCancleAppointment(appointment);
                                 }}>Cancle appointment</button>
-                                {appointmentType === 'confirmendappointments' && <ChatButton unreadCount={2} />}
                             </div>
                         </div>
                     ))
