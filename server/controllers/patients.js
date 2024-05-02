@@ -377,6 +377,24 @@ exports.getDoctorsList = (req, res) => {
         });
 };
 
+exports.getDoctorsListbyReg = (req, res) => {
+    const regNo = req.params.regNo;
+    Hospitals.findOne({regNo: regNo})
+        .then((hospital) => {
+            hospital.populate("doctorsWorking").then((results) => {
+                return res.status(200).json(results.doctorsWorking);
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+            const errorResponse = {
+                success: false,
+                message: "Internal server error"
+            };
+            return res.status(500).json(errorResponse);
+        });
+};
+
 exports.getBookDoctor = (req, res) => {
     const hospitalId = req.params.hospitalId;
     const doctorId = req.params.doctorId;

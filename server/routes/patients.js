@@ -326,6 +326,32 @@ Router.get("/doctorlist/:id", PatientController.getDoctorsList);
 
 /**
  * @swagger
+ * /patients/doctorlist/open/{regNo}:
+ *   get:
+ *     summary: Get list of doctors for a patient by Hospital Reg No
+ *     tags: [Patients]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: regNo
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Successfully fetched doctors list
+ *       '401':
+ *         description: Unauthorized access
+ *       '404':
+ *         description: No doctors found
+ */
+
+Router.get("/doctorlist/open/:regNo", PatientController.getDoctorsListbyReg);
+
+
+/**
+ * @swagger
  * /patients/bookdoctor/{hospitalId}/{doctorId}:
  *   get:
  *     summary: Book a doctor appointment
