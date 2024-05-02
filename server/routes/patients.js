@@ -322,7 +322,7 @@ Router.get("/hospitals/:radius/:longitude/:latitude/:speciality", PatientControl
  *         description: No doctors found
  */
 
-Router.get("/doctorlist/:id", isAuth, PatientController.getDoctorsList);
+Router.get("/doctorlist/:id", PatientController.getDoctorsList);
 
 /**
  * @swagger
