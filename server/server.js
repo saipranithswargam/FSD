@@ -191,6 +191,19 @@ app.post('/addpatient', async (req, res) => {
         return res.status(200).send(patient)
     }
     catch (err) {
+        res.status(500).sendFile("internal server error")
+        console.log(err)
+    }
+})
+
+app.post('/addhospital', async (req, res) => {
+    try {
+        const { name, email } = req.body;
+        const hospital = new Hospitals({ name, email });
+        await hospital.save();
+        return res.status(200).send(hospital)
+    } catch (err) {
+        res.status(500).sendFile("internal server error")
         console.log(err)
     }
 })
@@ -203,6 +216,28 @@ app.post("/addDoctor", async (req, res) => {
         return res.status(200).send(doctor);
     }
     catch (err) {
+        res.status(500).sendFile("internal server error")
+        console.log(err);
+    }
+})
+
+app.get("/gethospitals", async (req, res) => {
+    try {
+        const hospitals = await Hospitals.find({});
+        return res.status(200).json(hospitals);
+    }
+    catch (err) {
+        res.status(500).sendFile("internal server error")
+        console.log(err);
+    }
+})
+
+app.get("/getdoctors", async (req, res) => {
+    try {
+        const doctors = await Doctors.find({});
+        return res.status(200).json(doctors);
+    } catch (err) {
+        res.status(500).sendFile("internal server error")
         console.log(err);
     }
 })
